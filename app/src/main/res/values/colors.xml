@@ -2,4 +2,9 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
+    <color name="background">#FF202020</color>
+    <color name="redText">#FFF15142</color>
+    <color name="redBackground">#FFF15142</color>
+    <color name="darkRedBackground">#FFA1362C</color>
+    <color name="ic_logo_background">#202020</color>
 </resources>
