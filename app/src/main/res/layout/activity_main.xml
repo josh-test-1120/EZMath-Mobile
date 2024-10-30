@@ -18,7 +18,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/logoImage"
             android:layout_width="75dp"
             android:layout_height="75dp"
             app:srcCompat="@mipmap/ic_logo"
@@ -37,6 +37,7 @@
     </LinearLayout>
     
     <LinearLayout
+        android:id="@+id/redSeparator"
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:orientation="horizontal"
@@ -51,13 +52,57 @@
         android:orientation="vertical"/>
 
     <!-- Navigation Footer Layout -->
-    <LinearLayout
+    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
         android:id="@+id/navigationLayout"
-        android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
         android:orientation="horizontal"
+        android:background="@color/redBackground"
+        android:columnCount="4"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"/>
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/hamburger"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/home"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/calendar"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/notification"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
