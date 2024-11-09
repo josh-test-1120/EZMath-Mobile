@@ -43,13 +43,54 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
         android:background="@drawable/redseparator"/>
-
-    <!-- Content View Pager -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/mainViewPager"
+    <!-- Welcome Message -->
+    <TextView
+        android:id="@+id/welcomeMessage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/redSeparator" />
+    <!-- Upcoming Exam Message -->
+    <TextView
+        android:id="@+id/upcomingExamMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage" />
+    <!-- Unread Notification Message -->
+    <TextView
+        android:id="@+id/unreadNotificationMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/upcomingExamMessage" />
+
+    <!-- Notification View Content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainNotificationView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:background="@drawable/notificationsback"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/unreadNotificationMessage"
+        app:layout_constraintBottom_toTopOf="@id/navigationLayout"
+        android:layout_margin="15dp"/>
 
     <!-- Navigation Footer Layout -->
     <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
@@ -64,7 +105,7 @@
         app:layout_constraintStart_toStartOf="parent">
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/menuButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
@@ -74,7 +115,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/homeButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
@@ -94,7 +135,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/messageButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
