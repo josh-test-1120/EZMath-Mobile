@@ -1,4 +1,5 @@
 package com.example.ezmathmobile;
+
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
@@ -50,6 +51,10 @@ public class MainActivity extends AppCompatActivity {
                 "FUN1", LocalTime.now(), LocalDate.now());
 
         notifications.add(notification1);
+
+        // Set the adaptor with the current notifications
+        final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
+        notificationsView.setAdapter(notificationAdapter);
 
 
 //        int testManagerBtn: ImageView = findViewById(R.id.testManagerButton)
