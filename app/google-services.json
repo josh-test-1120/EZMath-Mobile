@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "493909226906",
+    "firebase_url": "https://ezmath-mobile-default-rtdb.firebaseio.com",
+    "project_id": "ezmath-mobile",
+    "storage_bucket": "ezmath-mobile.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:493909226906:android:ab6797fa7d1aacfa1df623",
+        "android_client_info": {
+          "package_name": "com.example.ezmathmobile"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDOUSUBZir3VG_1JMemCADm_H0v9JYMnkM"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
