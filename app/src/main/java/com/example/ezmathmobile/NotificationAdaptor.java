@@ -54,7 +54,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
 
     /**
      * This is an override of the getItemCount method
-     * @return the size of the posters list
+     * @return the size of the notifications list
      */
     @Override
     public int getItemCount() {

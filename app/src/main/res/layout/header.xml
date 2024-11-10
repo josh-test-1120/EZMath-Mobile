@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layoutHeader"
+    android:background="@color/background">
+
+    <!-- Header Layout -->
+    <LinearLayout
+        android:id="@+id/headerLayout"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/logoImage"
+            android:layout_width="75dp"
+            android:layout_height="75dp"
+            app:srcCompat="@mipmap/ic_logo"
+            android:scaleType="fitXY"
+            android:contentDescription="@string/logoDescription"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/titleName"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:text="@string/app_name_formatted"
+            android:textSize="42sp"
+            android:textColor="@color/redText"
+            android:textAlignment="center"
+            app:layout_constraintStart_toEndOf="@id/logoImage" />
+
+    </LinearLayout>
+    <!-- Header separator -->
+    <LinearLayout
+        android:id="@+id/redSeparator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/headerLayout"
+        android:background="@drawable/redseparator"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

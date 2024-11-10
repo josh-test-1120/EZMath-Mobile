@@ -7,42 +7,17 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/background">
+
     <!-- Header Layout -->
-    <LinearLayout
-        android:id="@+id/headerLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/headerView"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/logoImage"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:srcCompat="@mipmap/ic_logo"
-            android:scaleType="fitXY"/>
-
-        <TextView
-            android:id="@+id/titleName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/app_name_formatted"
-            android:textSize="42sp"
-            android:textColor="@color/redText">
-        </TextView>
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/redSeparator"
-        android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        android:background="@drawable/redseparator"/>
     <!-- Welcome Message -->
     <TextView
         android:id="@+id/welcomeMessage"
@@ -54,7 +29,8 @@
         android:textStyle="bold"
         android:textAlignment="center"
         android:text="@string/app_name"
-        app:layout_constraintTop_toBottomOf="@id/redSeparator" />
+        app:layout_constraintTop_toBottomOf="@id/headerView" />
+
     <!-- Upcoming Exam Message -->
     <TextView
         android:id="@+id/upcomingExamMessage"
@@ -66,6 +42,7 @@
         android:textAlignment="center"
         android:text="@string/app_name"
         app:layout_constraintTop_toBottomOf="@id/welcomeMessage" />
+    
     <!-- Unread Notification Message -->
     <TextView
         android:id="@+id/unreadNotificationMessage"
@@ -89,61 +66,19 @@
         android:background="@drawable/notificationsback"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/unreadNotificationMessage"
-        app:layout_constraintBottom_toTopOf="@id/navigationLayout"
+        app:layout_constraintBottom_toTopOf="@id/navigationView"
         android:layout_margin="15dp"/>
 
     <!-- Navigation Footer Layout -->
-    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
-        android:id="@+id/navigationLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/redBackground"
-        android:columnCount="4"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/menuButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/hamburger"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/homeButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/home"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/testManagerButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/calendar"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/messageButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/notification"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-    </GridLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
