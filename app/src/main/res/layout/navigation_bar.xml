@@ -1,0 +1,112 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/navigation_bar"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/background">
+
+    <!-- Navigation Footer Layout -->
+    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
+        android:id="@+id/navigationLayout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/redBackground"
+        android:columnCount="9"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <!-- Space separator between home button and left edge -->
+        <LinearLayout
+            android:id="@+id/btnSeparator1"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+        <!-- Home button -->
+        <ImageButton
+            android:id="@+id/homeBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            android:background="@drawable/home"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"
+            />
+
+        <!-- Space separator between home button and test manager button -->
+        <LinearLayout
+            android:id="@+id/btnSeparator2"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+        <!-- Test manager button -->
+        <ImageButton
+            android:id="@+id/testManagerBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            android:background="@drawable/calendar"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"
+            />
+
+        <!-- Space separator between test manager button and chat button -->
+        <LinearLayout
+            android:id="@+id/btnSeparator3"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+        <!-- Chat button -->
+        <ImageButton
+            android:id="@+id/chatBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            android:background="@drawable/chat"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"
+            />
+
+        <!-- Space separator between chat button and notification button -->
+        <LinearLayout
+            android:id="@+id/btnSeparator4"
+            android:layout_width="20dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+        <!-- notification button -->
+        <ImageButton
+            android:id="@+id/notificationBtn"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            android:background="@drawable/notification_bell"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"
+            />
+
+        <!-- Space separator between notification button and right edge -->
+        <LinearLayout
+            android:id="@+id/btnSeparator5"
+            android:layout_width="10dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            />
+
+    </GridLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
