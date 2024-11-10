@@ -42,7 +42,7 @@
         android:textAlignment="center"
         android:text="@string/app_name"
         app:layout_constraintTop_toBottomOf="@id/welcomeMessage" />
-    
+
     <!-- Unread Notification Message -->
     <TextView
         android:id="@+id/unreadNotificationMessage"
