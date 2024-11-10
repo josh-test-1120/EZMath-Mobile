@@ -1,10 +1,9 @@
 package com.example.ezmathmobile;
-
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
-import android.widget.LinearLayout;
-import android.widget.TextView;
+import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
@@ -25,6 +24,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     // Private variables
     private Button buttonWatchList;
+    private ImageView testManagerBtn;
 
     /**
      * This is an override of the onCreate method
@@ -42,35 +42,27 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Bind the variables to the view IDs
-        RecyclerView headerView = findViewById(R.id.headerView);
         RecyclerView notificationsView = findViewById(R.id.mainNotificationView);
-        RecyclerView navigationView = findViewById(R.id.navigationView);
-        TextView welcomeMessage = findViewById(R.id.welcomeMessage);
-        TextView upcomingExamMessage = findViewById(R.id.upcomingExamMessage);
-        TextView unreadNotificationMessage = findViewById(R.id.unreadNotificationMessage);
 
+        // Prepare the data
         List<Notification> notifications = new ArrayList<>();
-        // This is where we should pull user details from database
-        welcomeMessage.setText("Welcome EZMath Student");
-        upcomingExamMessage.setText("FUN1 - 3:00 PM on 12/2/2025");
-        unreadNotificationMessage.setText("Unread Notifications: 0");
 
-        // Create the notifications
+        // Create the posters
         Notification notification1 = new Notification(1,12345,
             "Exam notification","An exam is scheduled for this user",
                 "FUN1", LocalTime.now(), LocalDate.now());
 
-        // Add the notifications to the List
         notifications.add(notification1);
 
-        // Set the adaptor with the current notifications
-        final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
-        notificationsView.setAdapter(notificationAdapter);
-        // Set the adaptor with the current header
-        final HeaderAdaptor headerAdapter = new HeaderAdaptor();
-        headerView.setAdapter(headerAdapter);
-        // Set the adaptor with the current navigation
-        final FooterAdaptor footerAdapter = new FooterAdaptor();
-        navigationView.setAdapter(footerAdapter);
+        /*
+        Ready to add when navbar is redone
+        testManagerBtn = findViewById(R.id.testManagerButton);
+
+        testManagerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TestManagerActivity.class));
+            }
+        });*/
     }
 }
