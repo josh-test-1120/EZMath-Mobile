@@ -8,5 +8,166 @@
     tools:context=".TestManagerActivity"
     android:background="@color/background">
 
+    <TextView
+        android:id="@+id/topText"
+        android:layout_width="match_parent"
+        android:layout_height="75dp"
+        android:gravity="center"
+        android:text="Test Menu"
+        android:textSize="42sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/blueSeperator"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/topText"
+        android:background="@color/blue_seperator"/>
+    <!--Should be some sort of get month call from database-->
+    <TextView
+        android:id="@+id/monthText"
+        android:layout_width="match_parent"
+        android:layout_height="30dp"
+        android:gravity="left"
+        android:text="Month"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="@id/blueSeperator"/>
+
+    <LinearLayout
+        android:id="@+id/whiteSeperator"
+        android:layout_width="match_parent"
+        android:layout_height="2dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@id/monthText"
+        android:background="@color/white"/>
+
+    <LinearLayout
+        android:id="@+id/testNameAndTime"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/whiteSeperator">
+
+        <TextView
+            android:id="@+id/testName"
+            android:layout_width="150dp"
+            android:layout_height="35dp"
+            android:text="Test name"
+            android:textSize="30sp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/testTime"
+            android:layout_width="181dp"
+            android:layout_height="35dp"
+            android:text="- Test time"
+            android:textColor="@color/white"
+            android:textSize="30sp" />
+
+        <ImageView
+            android:id="@+id/testDelete"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:src="@drawable/delete_test"/>
+
+        <ImageView
+            android:id="@+id/testEdit"
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:layout_marginLeft="8dp"
+            android:src="@drawable/edit_test" />
+
+
+    </LinearLayout>
+
+    <TextView
+        android:id="@+id/testDate"
+        android:layout_width="match_parent"
+        android:layout_height="35dp"
+        android:gravity="left"
+        android:text="Test date"
+        android:textSize="30sp"
+        android:textColor="@color/white"
+        app:layout_constraintTop_toBottomOf="@id/testNameAndTime"/>
+
+    <!--Navbar-->
+
+    <Button
+        android:id="@+id/buttonAddTest"
+        android:layout_width="250dp"
+        android:layout_height="50dp"
+        android:backgroundTint="@color/blue_seperator"
+        android:includeFontPadding="false"
+        android:text="Schedule a Test"
+        android:textSize="25sp"
+        android:textAlignment="center"
+        android:layout_marginRight="5dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/testDate"/>
+
+    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
+        android:id="@+id/navigationLayout"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:orientation="horizontal"
+        android:background="@color/redBackground"
+        android:columnCount="4"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent">
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/hamburger"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/home"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/testManagerButton"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            android:background="@color/darkRedBackground"
+            app:srcCompat="@drawable/calendar"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+        <ImageView
+            android:id="@+id/imageView"
+            android:layout_width="0dp"
+            android:layout_height="0dp"
+            android:padding="5dp"
+            app:srcCompat="@drawable/notification"
+            android:layout_columnWeight="1"
+            android:layout_rowWeight="1"
+            grid:layout_gravity="center"/>
+
+    </GridLayout>
+
+
+
 
 </androidx.constraintlayout.widget.ConstraintLayout>

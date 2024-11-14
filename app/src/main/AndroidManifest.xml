@@ -13,6 +13,9 @@
         android:theme="@style/Theme.EZMathMobile"
         tools:targetApi="31">
         <activity
+            android:name=".TestAddActivity"
+            android:exported="false" />
+        <activity
             android:name=".TestManagerActivity"
             android:exported="false" />
         <activity
