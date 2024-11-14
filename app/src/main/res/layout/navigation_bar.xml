@@ -22,7 +22,7 @@
         <!-- Space separator between home button and left edge -->
         <LinearLayout
             android:id="@+id/btnSeparator1"
-            android:layout_width="10dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             />
@@ -42,7 +42,7 @@
         <!-- Space separator between home button and test manager button -->
         <LinearLayout
             android:id="@+id/btnSeparator2"
-            android:layout_width="20dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             />
@@ -62,7 +62,7 @@
         <!-- Space separator between test manager button and chat button -->
         <LinearLayout
             android:id="@+id/btnSeparator3"
-            android:layout_width="20dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             />
@@ -82,7 +82,7 @@
         <!-- Space separator between chat button and notification button -->
         <LinearLayout
             android:id="@+id/btnSeparator4"
-            android:layout_width="20dp"
+            android:layout_width="40dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             />
@@ -102,7 +102,7 @@
         <!-- Space separator between notification button and right edge -->
         <LinearLayout
             android:id="@+id/btnSeparator5"
-            android:layout_width="10dp"
+            android:layout_width="30dp"
             android:layout_height="match_parent"
             android:orientation="vertical"
             />
