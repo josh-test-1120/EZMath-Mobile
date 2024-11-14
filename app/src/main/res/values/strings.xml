@@ -1,5 +1,9 @@
 <resources>
     <string name="app_name">EZMathMobile</string>
     <string name="app_name_formatted">EZ Math Mobile</string>
+    <string name="hyphen">-</string>
+    <string name="On">on</string>
+    <string name="logoDescription">logo</string>
+    <string name="headerDescription">Header</string>
     <string name="reminders">Reminders</string>
 </resources>
