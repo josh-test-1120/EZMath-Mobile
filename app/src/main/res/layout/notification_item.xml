@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/layoutNotification"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center"
+        android:padding="10dp"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <TextView
+            android:id="@+id/examName"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:textColor="@color/white"
+            android:textAlignment="center"
+            android:text="@string/app_name"
+            app:layout_constraintStart_toStartOf="parent" />
+
+        <TextView
+            android:id="@+id/hyphen"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:textColor="@color/white"
+            android:text="@string/hyphen"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@+id/examName" />
+
+        <TextView
+            android:id="@+id/examTime"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:textColor="@color/white"
+            android:text="@string/app_name"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@+id/hyphen"/>
+
+        <TextView
+            android:id="@+id/OnWord"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/On"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@+id/examTime" />
+
+        <TextView
+            android:id="@+id/examDate"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:textColor="@color/white"
+            android:text="@string/app_name"
+            android:layout_marginLeft="10dp"
+            app:layout_constraintLeft_toRightOf="@+id/OnWord"/>
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

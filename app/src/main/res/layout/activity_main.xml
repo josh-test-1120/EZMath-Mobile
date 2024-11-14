@@ -7,102 +7,78 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity"
     android:background="@color/background">
+
     <!-- Header Layout -->
-    <LinearLayout
-        android:id="@+id/headerLayout"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/headerView"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toTopOf="parent" />
 
-        <ImageView
-            android:id="@+id/logoImage"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:srcCompat="@mipmap/ic_logo"
-            android:scaleType="fitXY"/>
-
-        <TextView
-            android:id="@+id/titleName"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
-            android:text="@string/app_name_formatted"
-            android:textSize="42sp"
-            android:textColor="@color/redText">
-        </TextView>
-        
-    </LinearLayout>
-    
-    <LinearLayout
-        android:id="@+id/redSeparator"
+    <!-- Welcome Message -->
+    <TextView
+        android:id="@+id/welcomeMessage"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
-        android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        android:background="@drawable/redseparator"/>
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="25dp"
+        android:textStyle="bold"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/headerView" />
 
-    <!-- Content View Pager -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/mainViewPager"
+    <!-- Upcoming Exam Message -->
+    <TextView
+        android:id="@+id/upcomingExamMessage"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/welcomeMessage" />
+
+    <!-- Unread Notification Message -->
+    <TextView
+        android:id="@+id/unreadNotificationMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:padding="15dp"
+        android:textColor="@color/white"
+        android:textSize="15dp"
+        android:textAlignment="center"
+        android:text="@string/app_name"
+        app:layout_constraintTop_toBottomOf="@id/upcomingExamMessage" />
+
+    <!-- Notification View Content -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/mainNotificationView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        android:padding="5dp"
+        android:background="@drawable/notificationsback"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintTop_toBottomOf="@+id/unreadNotificationMessage"
+        app:layout_constraintBottom_toTopOf="@id/navigationView"
+        android:layout_margin="15dp"/>
 
     <!-- Navigation Footer Layout -->
-    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
-        android:id="@+id/navigationLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/redBackground"
-        android:columnCount="4"
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/navigationView"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:clipToPadding="false"
+        android:orientation="vertical"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/hamburger"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/home"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/testManagerButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/calendar"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/notification"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-    </GridLayout>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
