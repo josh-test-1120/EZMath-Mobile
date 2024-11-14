@@ -15,30 +15,30 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import java.util.List;
 
-public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapter.NotificationViewHolder> {
+public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
     /**
-     * NotificationAdapter fields
+     * ReminderAdapter fields
      */
-    private List<Notification>  notificationList;
+    private List<Reminder> reminderList;
 
     /**
-     * Constructor for the NotificationAdapter that connects the field objects.
-     * @param notificationList List class type list of notifications.
+     * Constructor for the ReminderAdapter that connects the field objects.
+     * @param reminderList List class type list of notifications.
      */
-    public NotificationAdapter(List<Notification> notificationList) {
-        this.notificationList = notificationList;
+    public ReminderAdapter(List<Reminder> reminderList) {
+        this.reminderList = reminderList;
     }
 
 
     @NonNull
     @Override
-    public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+    public ReminderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return null;
     }
 
     @Override
-    public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
 
     }
 
@@ -48,7 +48,7 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
     }
 
 
-    class NotificationViewHolder extends RecyclerView.ViewHolder {
+    class ReminderViewHolder extends RecyclerView.ViewHolder {
 
         /**
          * Fields to be connected to the GUI elements.
@@ -63,13 +63,13 @@ public class NotificationAdapter extends RecyclerView.Adapter<NotificationAdapte
          * GUI references to the fields.
          * @param itemView The view screen of the app.
          */
-        public NotificationViewHolder(@NonNull View itemView) {
+        public ReminderViewHolder(@NonNull View itemView) {
             super(itemView);
 
             //Connecting GUI elements
-            layoutNotifications = itemView.findViewById(R.id.layoutNotifications);
+            layoutNotifications = itemView.findViewById(R.id.layoutReminders);
             viewBackground = itemView.findViewById(R.id.viewBackground);
-            noticeText = itemView.findViewById(R.id.notificationText);
+            noticeText = itemView.findViewById(R.id.reminderText);
         }
     }
 }

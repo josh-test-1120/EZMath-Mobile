@@ -1,5 +1,5 @@
 <resources>
     <string name="app_name">EZMathMobile</string>
     <string name="app_name_formatted">EZ Math Mobile</string>
-    <string name="notifications">Notifications</string>
+    <string name="reminders">Reminders</string>
 </resources>

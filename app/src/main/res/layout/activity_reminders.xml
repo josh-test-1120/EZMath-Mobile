@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- Telmen Enkhtuvshin: Notifications Page Layout -->
+<!-- Telmen Enkhtuvshin: Reminders Page Layout -->
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/notifications"
+    android:id="@+id/reminders"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/background">
     <!-- Header Layout -->
     <LinearLayout
-        android:id="@+id/notificationHeader"
+        android:id="@+id/reminderHeader"
         android:layout_width="match_parent"
         android:layout_height="110dp"
         android:orientation="vertical"
@@ -30,7 +30,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:gravity="center"
-            android:text="@string/notifications"
+            android:text="@string/reminders"
             android:textSize="29sp"
             android:textColor="@color/white">
         </TextView>
@@ -42,11 +42,11 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:orientation="horizontal"
-        app:layout_constraintTop_toBottomOf="@id/notificationHeader"
+        app:layout_constraintTop_toBottomOf="@id/reminderHeader"
         android:background="@drawable/orangeseparator"/>
 
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/notificationsRecyclerView"
+        android:id="@+id/remindersRecyclerView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
@@ -107,7 +107,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/navbarNotifications"
+            android:id="@+id/navbarReminders"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
