@@ -7,4 +7,6 @@
     <color name="redBackground">#FFF15142</color>
     <color name="darkRedBackground">#FFA1362C</color>
     <color name="ic_logo_background">#202020</color>
+    <color name="notificationsOrange">#E68524</color>
+    <color name="reminderGreen">#7DC170</color>
 </resources>
