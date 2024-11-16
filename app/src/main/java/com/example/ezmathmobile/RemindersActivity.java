@@ -38,7 +38,7 @@ public class RemindersActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Connecting recycler view to GUI
-        RecyclerView reminderRecyclerView = findViewById(R.id.remindersRecyclerView);
+        RecyclerView reminderRecyclerView = findViewById(R.id.remindersWithDateRecyclerView);
 
         // Reminders list
         List<Reminder> remindersList = new ArrayList<>();
