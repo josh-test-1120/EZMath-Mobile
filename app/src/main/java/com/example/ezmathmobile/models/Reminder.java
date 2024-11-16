@@ -16,4 +16,14 @@ public class Reminder {
     // Red   -- 2
     // Blue  -- 3
     public String type;
+
+    /**
+     * Constructor for the Reminder object
+     * @param text String text to display
+     * @param type String type of reminder
+     */
+    public Reminder(String text, String type) {
+        this.text = text;
+        this.type = type;
+    }
 }

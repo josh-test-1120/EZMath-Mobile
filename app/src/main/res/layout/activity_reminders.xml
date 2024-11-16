@@ -45,24 +45,34 @@
         app:layout_constraintTop_toBottomOf="@id/reminderHeader"
         android:background="@drawable/orangeseparator"/>
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/remindersRecyclerView"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="0dp"
-        android:clipToPadding="false"
-        android:orientation="vertical"
-        android:padding="5dp"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintBottom_toTopOf="@id/mainViewPager"
-        app:layout_constraintTop_toBottomOf="@id/orangeSeparator"
-        />
+        android:layout_height="560dp"
+        android:animateLayoutChanges="true"
+        app:layout_constraintBottom_toTopOf="@+id/navigationLayout"
+        app:layout_constraintTop_toBottomOf="@id/orangeSeparator">
 
-    <!-- Content View Pager -->
-    <androidx.viewpager2.widget.ViewPager2
-        android:id="@+id/mainViewPager"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical"/>
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/remindersRecyclerView"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:clipToPadding="false"
+            android:orientation="vertical"
+            android:padding="5dp"
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+            app:layout_constraintBottom_toTopOf="@id/navigationLayout"
+            app:layout_constraintTop_toBottomOf="@id/orangeSeparator" />
+
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center"
+            android:visibility="invisible" />
+    </FrameLayout>
+
+
 
     <!-- Navigation Footer Layout -->
     <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"

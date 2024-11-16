@@ -30,6 +30,10 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RemindersActivity"
+            android:exported="false">
+        </activity>
 
         <service
             android:name=".firebase.MessagingService"
