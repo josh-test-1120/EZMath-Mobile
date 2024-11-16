@@ -3,6 +3,7 @@ package com.example.ezmathmobile;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -25,6 +26,7 @@ import java.util.List;
 public class MainActivity extends AppCompatActivity {
     // Private variables
     private Button buttonWatchList;
+    private ImageView testManagerBtn;
 
     /**
      * This is an override of the onCreate method
@@ -72,5 +74,16 @@ public class MainActivity extends AppCompatActivity {
         // Set the adaptor with the current navigation
         final FooterAdaptor footerAdapter = new FooterAdaptor();
         navigationView.setAdapter(footerAdapter);
+
+         /*
+        Ready to add when navbar is redone
+        testManagerBtn = findViewById(R.id.testManagerButton);
+
+        testManagerBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                startActivity(new Intent(MainActivity.this, TestManagerActivity.class));
+            }
+        });*/
     }
 }
