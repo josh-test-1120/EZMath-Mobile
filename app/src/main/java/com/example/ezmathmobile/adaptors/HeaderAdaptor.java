@@ -1,4 +1,4 @@
-package com.example.ezmathmobile;
+package com.example.ezmathmobile.adaptors;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -9,6 +9,8 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ezmathmobile.R;
 
 /**
  * This is the HeaderAdaptor that is used in the RecycleView Adaptor
