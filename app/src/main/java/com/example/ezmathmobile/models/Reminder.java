@@ -12,5 +12,8 @@ public class Reminder {
     public String text;
     //Reminder type which includes test schedule confirmation,
     // initial day's test number notice, and warning 15 minutes before test.
-    public int type;
+    // Green -- 1
+    // Red   -- 2
+    // Blue  -- 3
+    public String type;
 }
