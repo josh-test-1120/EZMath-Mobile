@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestManagerActivity"
+    tools:context=".activities.TestManagerActivity"
     android:background="@color/background">
 
     <TextView
@@ -78,8 +78,7 @@
             android:gravity="left"
             android:text="Test Date:"
             android:textSize="30sp"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/testNameAndTime"/>
+            android:textColor="@color/white"/>
 
         <EditText
             android:id="@+id/inputTestDate"
@@ -153,8 +152,7 @@
             android:gravity="left"
             android:text="Class ID:"
             android:textSize="30sp"
-            android:textColor="@color/white"
-            app:layout_constraintTop_toBottomOf="@id/testNameAndTime"/>
+            android:textColor="@color/white"/>
 
         <EditText
             android:id="@+id/inputTestClass"
@@ -192,6 +190,13 @@
             android:textSize="45dp"
             tools:layout_editor_absoluteX="211dp" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="150dp"
@@ -227,7 +232,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageView2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
@@ -248,7 +253,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageView3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"

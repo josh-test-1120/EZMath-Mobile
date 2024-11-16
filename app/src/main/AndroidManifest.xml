@@ -13,13 +13,16 @@
         android:theme="@style/Theme.EZMathMobile"
         tools:targetApi="31">
         <activity
-            android:name=".TestAddActivity"
+            android:name=".activities.TestManagerActivity"
             android:exported="false" />
         <activity
-            android:name=".TestManagerActivity"
+            android:name=".activities.SignInActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".activities.SignUpActivity"
+            android:exported="false" />
+        <activity
+            android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -27,6 +30,15 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <service
+            android:name=".firebase.MessagingService"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="com.google.firebase.MESSAGING_EVENT"/>
+            </intent-filter>
+        </service>
+
     </application>
 
 </manifest>

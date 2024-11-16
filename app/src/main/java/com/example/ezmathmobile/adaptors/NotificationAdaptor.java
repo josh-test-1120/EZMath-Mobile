@@ -1,4 +1,4 @@
-package com.example.ezmathmobile;
+package com.example.ezmathmobile.adaptors;
 
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,6 +8,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.models.Notification;
 
 import java.util.List;
 
@@ -87,14 +90,13 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
-         * @param notification this is the poster to bind actions to
+         * @param notification this is the notification to bind actions to
          */
         void bindNotification(final Notification notification) {
             // Update the view with the poster information
             notificationName.setText(notification.examName);
             notificationTime.setText(notification.examTime.toString());
             notificationDate.setText(notification.examDate.toString());
-
         }
     }
 }

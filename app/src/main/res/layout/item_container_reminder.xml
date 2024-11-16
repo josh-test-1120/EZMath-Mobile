@@ -19,7 +19,7 @@
         android:id="@+id/viewBackground"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:background="@drawable/background_reminder_container"
+        android:background="@drawable/background_reminder_container_green"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         />
@@ -33,6 +33,7 @@
         android:textSize="16sp"
         android:textStyle="bold"
         android:gravity="center"
+        android:maxLines="2"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"

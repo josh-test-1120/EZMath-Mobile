@@ -5,7 +5,7 @@
     android:id="@+id/main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TestManagerActivity"
+    tools:context=".activities.TestManagerActivity"
     android:background="@color/background">
 
     <TextView
@@ -28,6 +28,7 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/topText"
         android:background="@color/blue_seperator"/>
+
     <!--Should be some sort of get month call from database-->
     <TextView
         android:id="@+id/monthText"
@@ -49,54 +50,20 @@
         app:layout_constraintTop_toBottomOf="@id/monthText"
         android:background="@color/white"/>
 
-    <LinearLayout
-        android:id="@+id/testNameAndTime"
+    <ScrollView
+        android:id="@+id/scrollView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
+        android:layout_height="0dp"
+        android:layout_weight="1"
         app:layout_constraintTop_toBottomOf="@id/whiteSeperator">
 
-        <TextView
-            android:id="@+id/testName"
-            android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:text="Test name"
-            android:textSize="30sp"
-            android:textColor="@color/white"/>
-
-        <TextView
-            android:id="@+id/testTime"
-            android:layout_width="181dp"
-            android:layout_height="35dp"
-            android:text="- Test time"
-            android:textColor="@color/white"
-            android:textSize="30sp" />
-
-        <ImageView
-            android:id="@+id/testDelete"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/delete_test"/>
-
-        <ImageView
-            android:id="@+id/testEdit"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:layout_marginLeft="8dp"
-            android:src="@drawable/edit_test" />
-
-
-    </LinearLayout>
-
-    <TextView
-        android:id="@+id/testDate"
-        android:layout_width="match_parent"
-        android:layout_height="35dp"
-        android:gravity="left"
-        android:text="Test date"
-        android:textSize="30sp"
-        android:textColor="@color/white"
-        app:layout_constraintTop_toBottomOf="@id/testNameAndTime"/>
+        <LinearLayout
+            android:id="@+id/testContainer"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            app:layout_constraintTop_toBottomOf="@id/whiteSeperator"/>
+    </ScrollView>
 
     <!--Navbar-->
 
@@ -111,7 +78,7 @@
         android:textAlignment="center"
         android:layout_marginRight="5dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/testDate"/>
+        app:layout_constraintTop_toBottomOf="@id/scrollView"/>
 
     <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
         android:id="@+id/navigationLayout"
@@ -135,7 +102,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageView2"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
@@ -156,7 +123,7 @@
             grid:layout_gravity="center"/>
 
         <ImageView
-            android:id="@+id/imageView"
+            android:id="@+id/imageView3"
             android:layout_width="0dp"
             android:layout_height="0dp"
             android:padding="5dp"
