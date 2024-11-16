@@ -1,4 +1,4 @@
-package com.example.ezmathmobile;
+package com.example.ezmathmobile.models;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
@@ -7,10 +7,10 @@ import java.time.LocalTime;
  * This is the Notification model for notification objects
  */
 public class Notification {
-    String description, message, examName;
-    int id, studentID;
-    LocalTime examTime;
-    LocalDate examDate;
+    public String description, message, examName;
+    public int id, studentID;
+    public LocalTime examTime;
+    public LocalDate examDate;
 
     /**
      * This is the Notification constructor

@@ -1,12 +1,9 @@
-package com.example.ezmathmobile;
+package com.example.ezmathmobile.activities;
 
 import android.os.Bundle;
-import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
-import android.widget.LinearLayout;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -14,6 +11,12 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ezmathmobile.adaptors.FooterAdaptor;
+import com.example.ezmathmobile.adaptors.HeaderAdaptor;
+import com.example.ezmathmobile.models.Notification;
+import com.example.ezmathmobile.adaptors.NotificationAdaptor;
+import com.example.ezmathmobile.R;
 
 import java.time.LocalDate;
 import java.time.LocalTime;

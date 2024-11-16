@@ -3,7 +3,7 @@
  * The information will be fetched from the Firebase database.
  * @author Telmen Enkhtuvshin
  */
-package com.example.ezmathmobile;
+package com.example.ezmathmobile.adaptors;
 
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +12,9 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.models.Reminder;
 
 import java.util.List;
 
