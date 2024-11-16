@@ -6,39 +6,113 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
-import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
+import com.example.ezmathmobile.utilities.Constants;
+import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.google.firebase.firestore.FirebaseFirestore;
+
+import java.util.HashMap;
 
 public class TestAddActivity extends AppCompatActivity {
+
+    private ActivityTestAddBinding binding;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_test_add);
-        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
-            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
-            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
-            return insets;
-        });
+        binding = ActivityTestAddBinding.inflate(getLayoutInflater());
+        setContentView(binding.getRoot());
 
-        Button btnSubmit = findViewById(R.id.buttonSubmit);
-        /**
-         * Function to start the test manager activity when calendar button is pressed
-         */
-        btnSubmit.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                startActivity(new Intent(TestAddActivity.this, TestManagerActivity.class));
-                //If test successfully added...
-                Toast.makeText(TestAddActivity.this, "Test successfully added", Toast.LENGTH_SHORT).show();
-                //If test unsuccessfully added...
+        onListeners();
+    }
+
+    /**
+     * Listeners for submit and cancel buttons. Either test will be added or user will
+     * be taken back to test manager
+     */
+    private void onListeners() {
+        binding.buttonSubmit.setOnClickListener(v -> {
+            if(isValidExamDetails()){
+                AddTest();
             }
         });
+        binding.buttonCancel.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
+            startActivity(intent);
+        });
+    }
+
+    /**
+     * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
+     * @param message Message to be displayed
+     */
+    private void showToast(String message){
+        Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * Method for adding test, user will be sent back to test manager activity and
+     * test will be added to the database
+     */
+    private void AddTest(){
+        loading(true);
+
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        HashMap<String, String> exam = new HashMap<>();
+        exam.put(Constants.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+        exam.put(Constants.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+        exam.put(Constants.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+        exam.put(Constants.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+
+        database.collection(Constants.KEY_COLLECTION_EXAMS)
+                .add(exam)
+                .addOnSuccessListener(documentReference -> {
+
+                    Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                }).addOnFailureListener(exception -> {
+                    loading(false);
+                    showToast(exception.getMessage());
+                });
+    }
+
+    /**
+     * Validating user details for each of the edit texts
+     * @return Whether or not the details are valid
+     */
+    private Boolean isValidExamDetails(){
+        if (binding.inputTestTime.getText().toString().trim().isEmpty()){
+            showToast("Please Enter test time");
+            return false;
+        } else if (binding.inputTestDate.getText().toString().trim().isEmpty()){
+            showToast("Please Enter test date");
+            return false;
+        } else if (binding.inputTestExam.getText().toString().trim().isEmpty()){
+            showToast("Please Enter exam ID");
+            return false;
+        } else if (binding.inputTestClass.getText().toString().trim().isEmpty()){
+            showToast("Please enter class ID");
+            return false;
+        } else {
+            return true;
+        }
+    }
+
+    /**
+     * Setting up progress bar visibility if user is loading or not
+     * @param isLoading Whether the program is loading or not
+     */
+    private void loading(Boolean isLoading){
+        if(isLoading){
+            binding.buttonSubmit.setVisibility(View.INVISIBLE);
+            binding.progressBar.setVisibility(View.VISIBLE);
+        } else {
+            binding.progressBar.setVisibility(View.INVISIBLE);
+            binding.buttonSubmit.setVisibility(View.VISIBLE);
+        }
     }
 }
