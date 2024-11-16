@@ -1,5 +1,6 @@
 package com.example.ezmathmobile.adaptors;
 
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -8,10 +9,16 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
+import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Notification;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -41,7 +48,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
     @NonNull
     @Override
     public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NotificationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item,parent,false));
+        return new NotificationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item, parent, false));
     }
 
     /**
@@ -52,7 +59,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
      */
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
-        holder.bindNotification(notifications.get(position));
+        if (position < notifications.size()) holder.bindNotification(notifications.get(position));
     }
 
     /**
@@ -67,7 +74,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
     /**
      * This is the NotificationViewHolder class that extends the RecycleView.ViewHolder
      */
-    public class NotificationViewHolder extends RecyclerView.ViewHolder {
+    public static class NotificationViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
         ConstraintLayout layoutNotification;
         //View viewBackground;
@@ -93,10 +100,22 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
          * @param notification this is the notification to bind actions to
          */
         void bindNotification(final Notification notification) {
+            Log.d("Notif Data",notification.toString());
             // Update the view with the poster information
             notificationName.setText(notification.examName);
-            notificationTime.setText(notification.examTime.toString());
-            notificationDate.setText(notification.examDate.toString());
+//            notificationTime.setText(notification.examTime.toString());
+            if (notification.examDate != null) {
+                Date date = notification.examDate.toDate();
+                // Get the time
+                // Convert Date to LocalTime
+                //LocalTime localTime = date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalTime();
+                // Format LocalTime to string
+                //String timeString = localTime.format(DateTimeFormatter.ofPattern("HH:mm:ss"));
+                //notificationTime.setText(localDateTime.toString());
+                // Convert Date to LocalDate using Instant
+                LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+                notificationDate.setText(localDate.toString());
+            }
         }
     }
 }

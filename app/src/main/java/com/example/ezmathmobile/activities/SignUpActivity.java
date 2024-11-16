@@ -118,7 +118,8 @@ public class SignUpActivity extends AppCompatActivity {
                     loadingData(false);
                     // Save the user information to Preference Manager
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
-                    preferenceManager.putString(Constants.KEY_USERID,Integer.toString(studentID));
+                    preferenceManager.putString(Constants.KEY_USERID,documentReference.getId());
+//                    preferenceManager.putString(Constants.KEY_USERID,Integer.toString(studentID));
                     preferenceManager.putString(Constants.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
                     preferenceManager.putString(Constants.KEY_LASTNAME,binding.inputLastName.getText().toString());
                     preferenceManager.putString(Constants.KEY_IMAGE,encodedImage);
