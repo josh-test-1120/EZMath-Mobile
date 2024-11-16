@@ -102,7 +102,9 @@ public class SignUpActivity extends AppCompatActivity {
         // Initialize the database object and user Hash
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String, String> user = new HashMap<>();
+        int studentID = 1 + (int)(Math.random() * 65535); // 1 to 65535
         // Create the user according to database contract hash
+        user.put(Constants.KEY_USERID,Integer.toString(studentID));
         user.put(Constants.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
         user.put(Constants.KEY_LASTNAME,binding.inputLastName.getText().toString());
         user.put(Constants.KEY_EMAIL,binding.inputEmail.getText().toString());
@@ -116,6 +118,7 @@ public class SignUpActivity extends AppCompatActivity {
                     loadingData(false);
                     // Save the user information to Preference Manager
                     preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
+                    preferenceManager.putString(Constants.KEY_USERID,Integer.toString(studentID));
                     preferenceManager.putString(Constants.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
                     preferenceManager.putString(Constants.KEY_LASTNAME,binding.inputLastName.getText().toString());
                     preferenceManager.putString(Constants.KEY_IMAGE,encodedImage);

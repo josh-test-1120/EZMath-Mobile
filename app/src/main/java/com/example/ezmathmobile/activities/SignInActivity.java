@@ -11,8 +11,10 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.adaptors.HeaderAdaptor;
 import com.example.ezmathmobile.databinding.ActivitySignInBinding;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
@@ -43,6 +45,11 @@ public class SignInActivity extends AppCompatActivity {
         preferenceManager = new PreferenceManager(getApplicationContext());
         // Attach the button listeners
         setListeners();
+        // Bind the variables to the view IDs
+        RecyclerView headerView = findViewById(R.id.headerView);
+        // Set the adaptor with the current header
+        final HeaderAdaptor headerAdapter = new HeaderAdaptor();
+        headerView.setAdapter(headerAdapter);
     }
 
     /**
@@ -87,7 +94,7 @@ public class SignInActivity extends AppCompatActivity {
                         DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         // Update the preferences
                         preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
-                        preferenceManager.putString(Constants.KEY_USERID,documentSnapshot.getId());
+                        preferenceManager.putString(Constants.KEY_USERID,documentSnapshot.getString(Constants.KEY_USERID));
                         preferenceManager.putString(Constants.KEY_FIRSTNAME,documentSnapshot.getString(Constants.KEY_FIRSTNAME));
                         preferenceManager.putString(Constants.KEY_LASTNAME,documentSnapshot.getString(Constants.KEY_LASTNAME));
                         preferenceManager.putString(Constants.KEY_IMAGE,documentSnapshot.getString(Constants.KEY_IMAGE));
