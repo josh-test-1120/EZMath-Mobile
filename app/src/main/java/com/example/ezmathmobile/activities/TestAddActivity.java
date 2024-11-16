@@ -26,6 +26,8 @@ public class TestAddActivity extends AppCompatActivity {
         binding = ActivityTestAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
 
+        preferenceManager = new PreferenceManager(getApplicationContext());
+
         onListeners();
     }
 
@@ -35,7 +37,7 @@ public class TestAddActivity extends AppCompatActivity {
      */
     private void onListeners() {
         binding.buttonSubmit.setOnClickListener(v -> {
-            if(isValidExamDetails()){
+            if (isValidExamDetails()) {
                 AddTest();
             }
         });
@@ -47,9 +49,10 @@ public class TestAddActivity extends AppCompatActivity {
 
     /**
      * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
+     *
      * @param message Message to be displayed
      */
-    private void showToast(String message){
+    private void showToast(String message) {
         Toast.makeText(getApplicationContext(), message, Toast.LENGTH_SHORT).show();
     }
 
@@ -57,7 +60,7 @@ public class TestAddActivity extends AppCompatActivity {
      * Method for adding test, user will be sent back to test manager activity and
      * test will be added to the database
      */
-    private void AddTest(){
+    private void AddTest() {
         loading(true);
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -70,6 +73,12 @@ public class TestAddActivity extends AppCompatActivity {
         database.collection(Constants.KEY_COLLECTION_EXAMS)
                 .add(exam)
                 .addOnSuccessListener(documentReference -> {
+                    //Save exam details to preference manager
+                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
+                    preferenceManager.putString(Constants.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+                    preferenceManager.putString(Constants.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+                    preferenceManager.putString(Constants.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+                    preferenceManager.putString(Constants.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
                     Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -82,19 +91,20 @@ public class TestAddActivity extends AppCompatActivity {
 
     /**
      * Validating user details for each of the edit texts
+     *
      * @return Whether or not the details are valid
      */
-    private Boolean isValidExamDetails(){
-        if (binding.inputTestTime.getText().toString().trim().isEmpty()){
+    private Boolean isValidExamDetails() {
+        if (binding.inputTestTime.getText().toString().trim().isEmpty()) {
             showToast("Please Enter test time");
             return false;
-        } else if (binding.inputTestDate.getText().toString().trim().isEmpty()){
+        } else if (binding.inputTestDate.getText().toString().trim().isEmpty()) {
             showToast("Please Enter test date");
             return false;
-        } else if (binding.inputTestExam.getText().toString().trim().isEmpty()){
+        } else if (binding.inputTestExam.getText().toString().trim().isEmpty()) {
             showToast("Please Enter exam ID");
             return false;
-        } else if (binding.inputTestClass.getText().toString().trim().isEmpty()){
+        } else if (binding.inputTestClass.getText().toString().trim().isEmpty()) {
             showToast("Please enter class ID");
             return false;
         } else {
@@ -104,10 +114,11 @@ public class TestAddActivity extends AppCompatActivity {
 
     /**
      * Setting up progress bar visibility if user is loading or not
+     *
      * @param isLoading Whether the program is loading or not
      */
-    private void loading(Boolean isLoading){
-        if(isLoading){
+    private void loading(Boolean isLoading) {
+        if (isLoading) {
             binding.buttonSubmit.setVisibility(View.INVISIBLE);
             binding.progressBar.setVisibility(View.VISIBLE);
         } else {
