@@ -14,4 +14,10 @@ public class Constants {
     public static final String KEY_IS_SIGNED_IN = "isSignedIn";
     public static final String KEY_PREFERENCE_NAME = "chatAppPreference";
     public static final String KEY_IMAGE = "image";
+
+    public static final String KEY_COLLECTION_EXAMS = "Exams";
+    public static final String KEY_EXAM_ID = "exam_id";
+    public static final String KEY_CLASS_ID = "class_id";
+    public static final String KEY_TEST_DATE = "test_date";
+    public static final String KEY_TEST_TIME = "test_time";
 }
