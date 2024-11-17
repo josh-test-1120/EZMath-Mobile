@@ -5,6 +5,7 @@
  */
 package com.example.ezmathmobile.adaptors;
 
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
@@ -17,6 +18,7 @@ import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Reminder;
 
 import java.util.List;
+import java.util.Objects;
 
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
@@ -34,20 +36,40 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
     }
 
 
+    /**
+     * An overridden method that listens to CreateViewHolder action and inflates the
+     * item_container_reminder layout file.
+     * @param parent The ViewGroup into which the new View will be added after it is bound to
+     *               an adapter position.
+     * @param viewType The view type of the new View.
+     *
+     * @return Retunrs ReminderViewHolder for the Reminders page.
+     */
     @NonNull
     @Override
     public ReminderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return null;
+        return new ReminderViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.item_container_reminder, parent, false));
     }
 
+    /**
+     * An overridden method that listens to the BindViewHolder action and binds the
+     * individual reminders to the page.
+     * @param holder The ViewHolder which should be updated to represent the contents of the
+     *        item at the given position in the data set.
+     * @param position The position of the item within the adapter's data set.
+     */
     @Override
     public void onBindViewHolder(@NonNull ReminderViewHolder holder, int position) {
-
+        holder.bindReminders(reminderList.get(position));
     }
 
+    /**
+     * An overridden method that returns the size of the reminderList ArrayList.
+     * @return Integer type size of reminderList ArrayList.
+     */
     @Override
     public int getItemCount() {
-        return 0;
+        return reminderList.size();
     }
 
 
@@ -73,6 +95,27 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
             layoutNotifications = itemView.findViewById(R.id.layoutReminders);
             viewBackground = itemView.findViewById(R.id.viewBackground);
             noticeText = itemView.findViewById(R.id.reminderText);
+        }
+
+        /**
+         * Helper method that binds the content information to the GUI elements.
+         * @param reminder Reminder element.
+         */
+        void bindReminders(final Reminder reminder) {
+            // Setting text
+            noticeText.setText(reminder.text);
+
+            // Setting background
+            // If the type is green
+            if (reminder.type.equals("green")) {
+                viewBackground.setBackgroundResource(R.drawable.background_reminder_container_green);
+            // If the type is red
+            } else if (reminder.type.equals("red")) {
+                viewBackground.setBackgroundResource(R.drawable.background_reminder_container_red);
+            // If the type is blue
+            } else if (reminder.type.equals("blue")) {
+                viewBackground.setBackgroundResource(R.drawable.background_reminder_container_blue);
+            }
         }
     }
 }

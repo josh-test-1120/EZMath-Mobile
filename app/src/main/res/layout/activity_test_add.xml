@@ -190,6 +190,13 @@
             android:textSize="45dp"
             tools:layout_editor_absoluteX="211dp" />
 
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
+
         <Button
             android:id="@+id/buttonCancel"
             android:layout_width="150dp"
