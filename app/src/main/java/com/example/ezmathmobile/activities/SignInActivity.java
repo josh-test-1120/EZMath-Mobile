@@ -81,11 +81,11 @@ public class SignInActivity extends AppCompatActivity {
         // Initialize the database object
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         // Get from firebase database
-        database.collection(Constants.KEY_COLLECTION_USERS)
+        database.collection(Constants.User.KEY_COLLECTION_USERS)
                 // ensure password matches
-                .whereEqualTo(Constants.KEY_PASSWORD,binding.inputPassword.getText().toString())
+                .whereEqualTo(Constants.User.KEY_PASSWORD,binding.inputPassword.getText().toString())
                 // ensure email matches
-                .whereEqualTo(Constants.KEY_EMAIL,binding.inputEmail.getText().toString())
+                .whereEqualTo(Constants.User.KEY_EMAIL,binding.inputEmail.getText().toString())
                 .get()
                 // If all matches
                 .addOnCompleteListener(task -> {
@@ -93,12 +93,12 @@ public class SignInActivity extends AppCompatActivity {
                         // Get the database document data
                         DocumentSnapshot documentSnapshot = task.getResult().getDocuments().get(0);
                         // Update the preferences
-                        preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
-                        preferenceManager.putString(Constants.KEY_USERID,documentSnapshot.getId());
+                        preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,true);
+                        preferenceManager.putString(Constants.User.KEY_USERID,documentSnapshot.getId());
                         //preferenceManager.putString(Constants.KEY_USERID,documentSnapshot.getString(Constants.KEY_USERID));
-                        preferenceManager.putString(Constants.KEY_FIRSTNAME,documentSnapshot.getString(Constants.KEY_FIRSTNAME));
-                        preferenceManager.putString(Constants.KEY_LASTNAME,documentSnapshot.getString(Constants.KEY_LASTNAME));
-                        preferenceManager.putString(Constants.KEY_IMAGE,documentSnapshot.getString(Constants.KEY_IMAGE));
+                        preferenceManager.putString(Constants.User.KEY_FIRSTNAME,documentSnapshot.getString(Constants.User.KEY_FIRSTNAME));
+                        preferenceManager.putString(Constants.User.KEY_LASTNAME,documentSnapshot.getString(Constants.User.KEY_LASTNAME));
+                        preferenceManager.putString(Constants.User.KEY_IMAGE,documentSnapshot.getString(Constants.User.KEY_IMAGE));
                         // Notify that login was valid
                         showToast("Login Successful");
                         // Change to the Main Activity view

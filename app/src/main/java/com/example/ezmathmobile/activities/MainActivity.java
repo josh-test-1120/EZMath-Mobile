@@ -25,6 +25,7 @@ import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.models.User;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeConverter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -65,7 +66,7 @@ public class MainActivity extends AppCompatActivity {
         });
 
         // Determine current user status
-        Boolean loggedIn = preferenceManager.getBoolean(Constants.KEY_IS_SIGNED_IN);
+        Boolean loggedIn = preferenceManager.getBoolean(Constants.User.KEY_IS_SIGNED_IN);
         // Used to flush the preferences in testing
         //preferenceManager.clear();
         // If logged in, we have enough information to load the main page
@@ -78,108 +79,18 @@ public class MainActivity extends AppCompatActivity {
             TextView upcomingExamMessage = findViewById(R.id.upcomingExamMessage);
             TextView unreadNotificationMessage = findViewById(R.id.unreadNotificationMessage);
 
-
-            // Generate the user's name
-            String first_name = preferenceManager.getString(Constants.KEY_FIRSTNAME);
-            String last_name = preferenceManager.getString(Constants.KEY_LASTNAME);
+            // Generate the user's name from shared preferences
+            String first_name = preferenceManager.getString(Constants.User.KEY_FIRSTNAME);
+            String last_name = preferenceManager.getString(Constants.User.KEY_LASTNAME);
             String name = String.format("Welcome %s %s!",first_name,last_name);
-
-            database = FirebaseFirestore.getInstance();
-            String userID = preferenceManager.getString(Constants.KEY_USERID);
-            DatabaseService database1 = new DatabaseService(Constants.KEY_COLLECTION_USERS);
-            database1.getID(userID);
-            int timeout = 0;
-            while (database1.documents.size() == 0 && timeout < 3900) { timeout++; };
-            Log.d("Notifications Size",Integer.toString(database1.documents.size()));
-
-
-            // Get the notifications
-            database.collection("Notifications")
-                    .whereEqualTo(Constants.KEY_USERID,userID)
-                    // Get the record
-                    .get()
-                    // If no error fetching
-                    .addOnCompleteListener(task -> {
-                        //Log.d("This is the status of task: %s", Boolean.toString(task.isSuccessful()));
-                        //Log.d("This is the status of task: %s", task.getResult().toString());
-                        if (task.isSuccessful() && task.getResult() != null) {
-                            final List<Notification> notifications = new ArrayList<>();
-                            //Log.d("Database record was found %s","True");
-                            // Get the database document data
-                            List<DocumentSnapshot> documents = task.getResult().getDocuments();
-                            Log.d("Inner Notif:",Integer.toString(task.getResult().size()));
-                            for (DocumentSnapshot document : documents) {
-                                Notification notification = document.toObject(Notification.class);
-                                if (notification != null && Objects.equals(notification.type, "exam")) {
-                                    // Get the scheduled exams
-                                    database.collection("Scheduled")
-                                        .document(notification.typeid)
-                                        .get()
-                                        .addOnCompleteListener(scheduletask -> {
-                                            DocumentSnapshot scheduledDocument = scheduletask.getResult();
-                                            Scheduled scheduled = scheduledDocument.toObject(Scheduled.class);
-                                            notification.examDate = scheduled.date;
-                                            Log.d("Exam ID",scheduled.examid);
-                                            // Get the scheduled exams
-                                            database.collection("Exams")
-                                                    .document(scheduled.examid)
-                                                    .get()
-                                                    .addOnCompleteListener(examtask -> {
-                                                        DocumentSnapshot examDocument = examtask.getResult();
-                                                        Exam exam = examDocument.toObject(Exam.class);
-                                                        notification.examName = exam.getName();
-                                                        Log.d("Full Notif",notification.toString());
-                                                        notifications.add(notification);
-                                                        if (notifications.size() == documents.size()) {
-                                                            // Set the adaptor with the current notifications
-                                                            final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
-                                                            notificationsView.setAdapter(notificationAdapter);
-                                                        }
-                                                    });
-                                        });
-                                }
-                            }
-                            Log.d("Notifications Size:",Integer.toString(notifications.size()));
-                            if (notifications.size() > 0) {
-                                // Set the adaptor with the current notifications
-                                final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
-                                notificationsView.setAdapter(notificationAdapter);
-                            }
-
-
-                            //Log.d("Database:",documentSnapshot[0].toString());
-                            //Log.d("Notifications Size:",Integer.toString(notifications.size()));
-                        }
-                    });
-
-
             welcomeMessage.setText(name);
-            upcomingExamMessage.setText("FUN1 - 3:00 PM on 12/2/2025");
-            unreadNotificationMessage.setText("Unread Notifications: 0");
 
-
-//            // Create the notifications
-//            Notification notification1 = new Notification(1,"12345",
-//                    "Exam notification","An exam is scheduled for this user",
-//                    "FUN1", "exam", Timestamp.now());
-//
-//            // Add the notifications to the List
-//            notifications.add(notification1);
-
-            Query query = FirebaseFirestore.getInstance()
-                    .collection("Notifications")
-                    .whereEqualTo(Constants.KEY_USERID,userID)
-                    .limit(20);
-
-            // Configure recycler adapter options:
-            //  * query is the Query object defined above.
-            //  * Notification.class instructs the adapter to convert each DocumentSnapshot to a Notification object
-            FirestoreRecyclerOptions<Notification> options = new FirestoreRecyclerOptions.Builder<Notification>()
-                    .setQuery(query, Notification.class)
-                    .build();
-//            // Set the adaptor with the current notifications
-//            final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
-//            notificationsView.setAdapter(notificationAdapter);
+            // Get the data from the database
+            database = FirebaseFirestore.getInstance();
+            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
+            // Get the notifications
+            queryNotifications(preferenceManager,upcomingExamMessage,unreadNotificationMessage,notificationsView);
+            
             // Set the adaptor with the current header
             final HeaderAdaptor headerAdapter = new HeaderAdaptor();
             headerView.setAdapter(headerAdapter);
@@ -196,9 +107,77 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    private void handleDatabaseResults(DocumentSnapshot document) {
-        User user =  document.toObject(User.class);
-        Log.d("User:",user.toString());
+    public void queryNotifications(PreferenceManager preferences,TextView latestView, TextView numberView,
+                                   RecyclerView notificationsView) {
+        // Get information from preferences
+        String userID = preferences.getString(Constants.User.KEY_USERID);
+        // Get the notifications
+        database.collection("Notifications")
+                .whereEqualTo(Constants.User.KEY_USERID,userID)
+                // Get the record
+                .get()
+                // If no error fetching data
+                .addOnCompleteListener(task -> {
+                    if (task.isSuccessful() && task.getResult() != null) {
+                        // Finalize the notifications for use in lambda's
+                        final List<Notification> notifications = new ArrayList<>();
+                        // Get the database document data
+                        final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                        for (DocumentSnapshot document : documents) {
+                            // Serialize the document to the class
+                            Notification notification = document.toObject(Notification.class);
+                            if (notification != null && Objects.equals(notification.type, "exam")) {
+                                // Get the scheduled exam
+                                database.collection("Scheduled")
+                                        .document(notification.typeid)
+                                        .get()
+                                        // If no errors fetching data
+                                        .addOnCompleteListener(scheduletask -> {
+                                            DocumentSnapshot scheduledDocument = scheduletask.getResult();
+                                            // Serialize the document to the class
+                                            Scheduled scheduled = scheduledDocument.toObject(Scheduled.class);
+                                            // Attach the date to the notification
+                                            notification.examDate = scheduled.date;
+                                            // Get the Exam detail
+                                            database.collection("Exams")
+                                                    .document(scheduled.examid)
+                                                    .get()
+                                                    // If no errors fetching data
+                                                    .addOnCompleteListener(examtask -> {
+                                                        DocumentSnapshot examDocument = examtask.getResult();
+                                                        // Serialize the document to the class
+                                                        Exam exam = examDocument.toObject(Exam.class);
+                                                        // Attach the exam name to the notification
+                                                        notification.examName = exam.getName();
+                                                        // Push the notification into the list
+                                                        notifications.add(notification);
+                                                        // When we have processed all callbacks for each notification
+                                                        if (notifications.size() == documents.size()) updateHomePage(notifications,latestView,numberView,notificationsView);
+                                                    });
+                                        });
+                            }
+                        }
+                    }
+                });
+    }
+    
+    public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
+                               RecyclerView notificationsView) {
+        // Find the latest date
+        int index = TimeConverter.findLatestDate(notifications);
+        Notification latest = notifications.get(index);
+        // Get localized string from the timestamp
+        String time = TimeConverter.localizeTime(latest.examDate);
+        String date = TimeConverter.localizeDate(latest.examDate);
+        // String formatters
+        String latestNotification = String.format("%s - %s on %s",latest.examName, time, date);
+        String sizeNotifications = String.format("Unread Notifications: %d",notifications.size());
+        // Update the UI
+        latestView.setText(latestNotification);
+        numberView.setText(sizeNotifications);
 
+        // Set the adaptor with the current notifications
+        final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
+        notificationsView.setAdapter(notificationAdapter);
     }
 }

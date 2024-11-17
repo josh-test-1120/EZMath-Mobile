@@ -21,7 +21,7 @@ public class PreferenceManager {
      * @param context this is the current Context to get preference data from
      */
     public PreferenceManager(Context context) {
-        sharedPreferences = context.getSharedPreferences(Constants.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(Constants.User.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
     }
 
     /**
