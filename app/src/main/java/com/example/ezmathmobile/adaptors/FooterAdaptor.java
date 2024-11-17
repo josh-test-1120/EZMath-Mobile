@@ -1,5 +1,6 @@
 package com.example.ezmathmobile.adaptors;
 
+import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -17,7 +18,6 @@ import com.example.ezmathmobile.R;
  * This extends the RecycleView.Adaptor class
  */
 public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterViewHolder> {
-
     /**
      * This is the constructor for the Adaptor
      */
@@ -34,7 +34,7 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
     @NonNull
     @Override
     public FooterViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.footer, parent, false));
+        return new FooterViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.navigation_bar_2, parent, false));
     }
 
     /**
@@ -54,7 +54,6 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
      */
     @Override
     public int getItemCount() { return 1; }
-
     /**
      * This is the FooterViewHolder class that extends the RecycleView.ViewHolder
      */
@@ -62,7 +61,7 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
         // These are the objects in the view
         ConstraintLayout layoutHeader;
         GridLayout navigationGrid;
-        ImageView menuButton, homeButton, testManagerButton, messageButton;
+        ImageView menuButton, homeButton, testManagerButton, messageButton, remindersButton;
 
         /**
          * This is the FooterViewHolder constructor
@@ -73,12 +72,29 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
             // Run the parent class constructor
             super(itemView);
             // Bind the objects to the view IDs
-            layoutHeader = itemView.findViewById(R.id.layoutHeader);
-            navigationGrid = itemView.findViewById(R.id.navigationGrid);
-            menuButton = itemView.findViewById(R.id.menuButton);
-            homeButton = itemView.findViewById(R.id.homeButton);
-            testManagerButton = itemView.findViewById(R.id.testManagerButton);
-            messageButton = itemView.findViewById(R.id.messageButton);
+            layoutHeader = itemView.findViewById(R.id.navigation_bar);
+            navigationGrid = itemView.findViewById(R.id.navigationLayout);
+            //menuButton = itemView.findViewById(R.id.homeBtn);
+            homeButton = itemView.findViewById(R.id.homeBtn);
+            testManagerButton = itemView.findViewById(R.id.testManagerBtn);
+            messageButton = itemView.findViewById(R.id.chatBtn);
+            remindersButton = itemView.findViewById(R.id.remindersBtn);
+        }
+
+        /**
+         * This is the onClick method to change background color of the button being clicked
+         *
+         * @param imageView the current button that is being clicked
+         */
+        public void onClick(ImageView imageView) {
+            // if user clicks button, change color to black
+            if (imageView.isSelected()) {
+                imageView.setBackgroundColor(Color.BLACK);
+            }
+            else // if not clicked button, change back to white
+            {
+                imageView.setBackgroundColor(Color.WHITE);
+            }
         }
     }
 }

@@ -22,6 +22,9 @@
             android:name=".activities.SignUpActivity"
             android:exported="false" />
         <activity
+            android:name=".activities.NavigationBarActivity"
+            android:exported="false"/>
+        <activity
             android:name=".activities.MainActivity"
             android:exported="true">
             <intent-filter>
