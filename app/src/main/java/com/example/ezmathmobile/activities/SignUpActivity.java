@@ -104,24 +104,25 @@ public class SignUpActivity extends AppCompatActivity {
         HashMap<String, String> user = new HashMap<>();
         int studentID = 1 + (int)(Math.random() * 65535); // 1 to 65535
         // Create the user according to database contract hash
-        user.put(Constants.KEY_USERID,Integer.toString(studentID));
-        user.put(Constants.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
-        user.put(Constants.KEY_LASTNAME,binding.inputLastName.getText().toString());
-        user.put(Constants.KEY_EMAIL,binding.inputEmail.getText().toString());
-        user.put(Constants.KEY_PASSWORD,binding.inputPassword.getText().toString());
-        user.put(Constants.KEY_IMAGE,encodedImage);
+        user.put(Constants.User.KEY_USERID,Integer.toString(studentID));
+        user.put(Constants.User.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
+        user.put(Constants.User.KEY_LASTNAME,binding.inputLastName.getText().toString());
+        user.put(Constants.User.KEY_EMAIL,binding.inputEmail.getText().toString());
+        user.put(Constants.User.KEY_PASSWORD,binding.inputPassword.getText().toString());
+        user.put(Constants.User.KEY_IMAGE,encodedImage);
         // Post to firebase database
-        database.collection(Constants.KEY_COLLECTION_USERS)
+        database.collection(Constants.User.KEY_COLLECTION_USERS)
                 .add(user)
                 // Success adding user
                 .addOnSuccessListener(documentReference -> {
                     loadingData(false);
                     // Save the user information to Preference Manager
-                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN,true);
-                    preferenceManager.putString(Constants.KEY_USERID,Integer.toString(studentID));
-                    preferenceManager.putString(Constants.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
-                    preferenceManager.putString(Constants.KEY_LASTNAME,binding.inputLastName.getText().toString());
-                    preferenceManager.putString(Constants.KEY_IMAGE,encodedImage);
+                    preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,true);
+                    preferenceManager.putString(Constants.User.KEY_USERID,documentReference.getId());
+//                    preferenceManager.putString(Constants.KEY_USERID,Integer.toString(studentID));
+                    preferenceManager.putString(Constants.User.KEY_FIRSTNAME,binding.inputFirstName.getText().toString());
+                    preferenceManager.putString(Constants.User.KEY_LASTNAME,binding.inputLastName.getText().toString());
+                    preferenceManager.putString(Constants.User.KEY_IMAGE,encodedImage);
                     // Change activity to MainActivity
                     Intent intent = new Intent(getApplicationContext(),MainActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
