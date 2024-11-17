@@ -22,5 +22,11 @@ public class Constants {
 
     }
 
-
+    public class Exam {
+        public static final String KEY_COLLECTION_EXAMS = "Exams";
+        public static final String KEY_EXAM_ID = "exam_id";
+        public static final String KEY_CLASS_ID = "class_id";
+        public static final String KEY_TEST_DATE = "test_date";
+        public static final String KEY_TEST_TIME = "test_time";
+    }
 }

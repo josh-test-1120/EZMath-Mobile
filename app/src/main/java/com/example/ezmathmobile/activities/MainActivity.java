@@ -90,7 +90,7 @@ public class MainActivity extends AppCompatActivity {
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
             // Get the notifications
             queryNotifications(preferenceManager,upcomingExamMessage,unreadNotificationMessage,notificationsView);
-            
+
             // Set the adaptor with the current header
             final HeaderAdaptor headerAdapter = new HeaderAdaptor();
             headerView.setAdapter(headerAdapter);
