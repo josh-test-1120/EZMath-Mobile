@@ -107,6 +107,14 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    /**
+     * This will query the notifications from the firestore database
+     * and do the relational sub-queries to put all the information together
+     * @param preferences This is the preferences for the application
+     * @param latestView This is the TextView that holds the latest notification
+     * @param numberView This is the TextView that holds the number of notifications
+     * @param notificationsView This is the RecycleView that we update the notifications in
+     */
     public void queryNotifications(PreferenceManager preferences,TextView latestView, TextView numberView,
                                    RecyclerView notificationsView) {
         // Get information from preferences
@@ -160,7 +168,14 @@ public class MainActivity extends AppCompatActivity {
                     }
                 });
     }
-    
+
+    /**
+     * This will update the home page with all the latest notification details
+     * @param notifications These are the notifications to process
+     * @param latestView This is the TextView that holds the latest notification
+     * @param numberView This is the TextView that holds the number of notifications
+     * @param notificationsView This is the RecycleView that we update the notifications in
+     */
     public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
                                RecyclerView notificationsView) {
         // Find the latest date
