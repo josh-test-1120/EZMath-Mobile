@@ -46,16 +46,16 @@ public class TestManagerActivity extends AppCompatActivity {
      */
     private void loadTestDetails() {
         //loading(true);
-        database.collection(Constants.KEY_COLLECTION_EXAMS)
+        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     //Clearing up views before loading everything in
                    binding.testContainer.removeAllViews();
                     //Getting details from firestore
                    for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                       String examID = document.getString(Constants.KEY_EXAM_ID);
-                       String examTime = document.getString(Constants.KEY_TEST_TIME);
-                       String examDate = document.getString(Constants.KEY_TEST_DATE);
+                       String examID = document.getString(Constants.Exam.KEY_EXAM_ID);
+                       String examTime = document.getString(Constants.Exam.KEY_TEST_TIME);
+                       String examDate = document.getString(Constants.Exam.KEY_TEST_DATE);
                         //Calling createNewTestView to set the text into each of the xml components
                        View testView = createTestView(examID, examTime, examDate);
                        binding.testContainer.addView(testView);
@@ -96,12 +96,12 @@ public class TestManagerActivity extends AppCompatActivity {
     }
 
     private void deleteTest(String examID) {
-        database.collection(Constants.KEY_COLLECTION_EXAMS)
-                .whereEqualTo(Constants.KEY_EXAM_ID, examID)
+        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                .whereEqualTo(Constants.Exam.KEY_EXAM_ID, examID)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                        database.collection(Constants.KEY_COLLECTION_EXAMS)
+                        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                                 .document(document.getId())
                                 .delete()
                                 .addOnSuccessListener(unused -> {
