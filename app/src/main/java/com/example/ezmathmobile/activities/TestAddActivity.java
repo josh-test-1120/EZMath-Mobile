@@ -65,20 +65,20 @@ public class TestAddActivity extends AppCompatActivity {
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String, String> exam = new HashMap<>();
-        exam.put(Constants.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-        exam.put(Constants.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-        exam.put(Constants.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
-        exam.put(Constants.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+        exam.put(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+        exam.put(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+        exam.put(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+        exam.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
-        database.collection(Constants.KEY_COLLECTION_EXAMS)
+        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                 .add(exam)
                 .addOnSuccessListener(documentReference -> {
                     //Save exam details to preference manager
-                    preferenceManager.putBoolean(Constants.KEY_IS_SIGNED_IN, true);
-                    preferenceManager.putString(Constants.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-                    preferenceManager.putString(Constants.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-                    preferenceManager.putString(Constants.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
-                    preferenceManager.putString(Constants.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+                    preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN, true);
+                    preferenceManager.putString(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+                    preferenceManager.putString(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+                    preferenceManager.putString(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+                    preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
                     Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
                     intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
