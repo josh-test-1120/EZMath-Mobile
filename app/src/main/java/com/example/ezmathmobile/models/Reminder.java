@@ -4,6 +4,9 @@
  */
 package com.example.ezmathmobile.models;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+
 public class Reminder {
     /**
      * Fields of the Reminder object class.
@@ -17,13 +20,18 @@ public class Reminder {
     // Blue  -- 3
     public String type;
 
+    // Date
+    public LocalDateTime date;
+
     /**
      * Constructor for the Reminder object
      * @param text String text to display
      * @param type String type of reminder
+     * @param date Google Date type date of the reminder's creation.
      */
-    public Reminder(String text, String type) {
+    public Reminder(String text, String type, LocalDateTime date) {
         this.text = text;
         this.type = type;
+        this.date = date;
     }
 }

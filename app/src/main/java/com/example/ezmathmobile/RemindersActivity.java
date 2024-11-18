@@ -15,12 +15,15 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.adaptors.ReminderAdapter;
+import com.example.ezmathmobile.adaptors.ReminderGroupAdapter;
 import com.example.ezmathmobile.databinding.ActivityRemindersBinding;
 import com.example.ezmathmobile.models.Reminder;
+import com.example.ezmathmobile.models.ReminderDateBlock;
 import com.example.ezmathmobile.utilities.Constants;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -38,20 +41,64 @@ public class RemindersActivity extends AppCompatActivity {
         setContentView(binding.getRoot());
 
         // Connecting recycler view to GUI
-        RecyclerView reminderRecyclerView = findViewById(R.id.remindersWithDateRecyclerView);
-
-        // Reminders list
-        List<Reminder> remindersList = new ArrayList<>();
+        RecyclerView reminderWithDateRecyclerView = findViewById(R.id.remindersWithDateRecyclerView);
         loading(true);
 
-        Reminder r1 = new Reminder("R1 test has been successfully scheduled", "green");
-        remindersList.add(r1);
+        // Reminders list
+        List<Reminder> remindersList1 = new ArrayList<>();
 
-        Reminder r2 = new Reminder("You have 1 upcoming test today", "blue");
-        remindersList.add(r2);
+        Reminder r1 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r1 = new Reminder("R1 test has been successfully scheduled", "green", LocalDateTime.now().minusDays(1));
+        }
+        remindersList1.add(r1);
 
-        Reminder r3 = new Reminder("R1 test starts in 15 minutes", "red");
-        remindersList.add(r3);
+        Reminder r2 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r2 = new Reminder("You have 1 upcoming test today", "blue", LocalDateTime.now().minusDays(1));
+        }
+        remindersList1.add(r2);
+
+
+        Reminder r3 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r3 = new Reminder("R1 test starts in 15 minutes", "red", LocalDateTime.now().minusDays(1));
+        }
+        remindersList1.add(r3);
+
+        // 2nd Reminder list
+        List<Reminder> remindersList2 = new ArrayList<>();
+        Reminder r4 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r4 = new Reminder("List 2 R1", "green", LocalDateTime.now().minusDays(1));
+        }
+        remindersList2.add(r4);
+
+        Reminder r5 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r5 = new Reminder("List 2 R2", "blue", LocalDateTime.now());
+        }
+        remindersList2.add(r5);
+
+
+        Reminder r6 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            r6 = new Reminder("R1 test starts in 15 minutes", "red", LocalDateTime.now());
+        }
+        remindersList2.add(r6);
+
+
+        ReminderDateBlock rdb1 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            rdb1 = new ReminderDateBlock(remindersList1, LocalDateTime.now().minusDays(1));
+        }
+        ReminderDateBlock rdb2 = null;
+        if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
+            rdb2 = new ReminderDateBlock(remindersList2, LocalDateTime.now());
+        }
+        List<ReminderDateBlock> remindersWithDateList = new ArrayList<>();
+        remindersWithDateList.add(rdb1);
+        remindersWithDateList.add(rdb2);
 
 //        // Populating with data from the database
 //        FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -77,8 +124,8 @@ public class RemindersActivity extends AppCompatActivity {
 
 
         //Declaring the Reminder adapter
-        final ReminderAdapter reminderAdapter = new ReminderAdapter(remindersList);
-        reminderRecyclerView.setAdapter(reminderAdapter);
+        final ReminderGroupAdapter reminderWithDateAdapter = new ReminderGroupAdapter(remindersWithDateList);
+        reminderWithDateRecyclerView.setAdapter(reminderWithDateAdapter);
         loading(false);
     }
 
