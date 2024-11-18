@@ -1,26 +1,24 @@
 package com.example.ezmathmobile.activities;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.graphics.Insets;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.utilities.Constants;
+import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 public class TestManagerActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private ActivityTestManagerBinding binding;
+    private PreferenceManager preferenceManager;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -90,7 +88,7 @@ public class TestManagerActivity extends AppCompatActivity {
 
         //Add some listeners for the delete and edit test buttons
         testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
-        //testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID));
+        testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID));
 
         return testView;
     }
@@ -115,6 +113,26 @@ public class TestManagerActivity extends AppCompatActivity {
                     }
                 });
     }
+
+    /**
+     * With the edit test mehtod, we will return to the addtest activity. However, we will take the
+     * information within that view and return it to the addtest activity, wherein that activity can
+     * populate the edit text areas with that information.
+     * @param examID ID of specified exam needing to be changed
+     */
+    private void editTest(String examID) {
+        binding.buttonAddTest.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), TestAddActivity.class);
+            intent.putExtra("testTime", preferenceManager.getString(Constants.Exam.KEY_TEST_TIME));
+            intent.putExtra("testDate", preferenceManager.getString(Constants.Exam.KEY_TEST_DATE));
+            intent.putExtra("examID", examID);
+            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
+            startActivity(intent);
+        });
+
+    }
+
+
 
 
 

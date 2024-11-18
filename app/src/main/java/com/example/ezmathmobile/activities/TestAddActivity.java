@@ -3,7 +3,6 @@ package com.example.ezmathmobile.activities;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
-import android.widget.Button;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
@@ -25,6 +24,14 @@ public class TestAddActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         binding = ActivityTestAddBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+
+        //If edit test button was pressed...
+        if(getIntent().getExtras() != null) {
+            binding.inputTestDate.setText(getIntent().getStringExtra("testDate"));
+            binding.inputTestTime.setText(getIntent().getStringExtra("testTime"));
+            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
+            binding.inputTestExam.setText(getIntent().getStringExtra("examID"));
+        }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 
