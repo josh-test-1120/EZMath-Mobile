@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".RemindersActivity"
+            android:name=".activities.RemindersActivity"
             android:exported="false">
         </activity>
 
