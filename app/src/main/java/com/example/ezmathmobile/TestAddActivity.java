@@ -13,6 +13,8 @@ import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+import com.example.ezmathmobile.activities.TestManagerActivity;
+
 public class TestAddActivity extends AppCompatActivity {
 
     @Override

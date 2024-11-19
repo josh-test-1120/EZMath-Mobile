@@ -1,18 +1,14 @@
 package com.example.ezmathmobile.activities;
 
-import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.View;
 import android.widget.GridLayout;
-import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.constraintlayout.widget.ConstraintLayout;
 
 import com.example.ezmathmobile.R;
-import com.example.ezmathmobile.RemindersActivity;
 
 /**
  * This is the NavigationBarActivity class

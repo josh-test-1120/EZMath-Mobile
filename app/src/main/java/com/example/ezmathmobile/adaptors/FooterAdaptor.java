@@ -1,5 +1,7 @@
 package com.example.ezmathmobile.adaptors;
 
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +14,9 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.activities.RemindersActivity;
+import com.example.ezmathmobile.activities.MainActivity;
+import com.example.ezmathmobile.activities.TestManagerActivity;
 
 /**
  * This is the FooterAdaptor that is used in the RecycleView Adaptor
@@ -71,6 +76,9 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
         public FooterViewHolder(@NonNull View itemView) {
             // Run the parent class constructor
             super(itemView);
+
+            Context mainPageLayout = itemView.getContext();
+
             // Bind the objects to the view IDs
             layoutHeader = itemView.findViewById(R.id.navigation_bar);
             navigationGrid = itemView.findViewById(R.id.navigationLayout);
@@ -79,6 +87,9 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
             testManagerButton = itemView.findViewById(R.id.testManagerBtn);
             messageButton = itemView.findViewById(R.id.chatBtn);
             remindersButton = itemView.findViewById(R.id.remindersBtn);
+
+            // Set the listeners
+            setListeners(mainPageLayout);
         }
 
         /**
@@ -95,6 +106,36 @@ public class FooterAdaptor extends RecyclerView.Adapter<FooterAdaptor.FooterView
             {
                 imageView.setBackgroundColor(Color.WHITE);
             }
+        }
+
+        /**
+         * This is the setListeners method for the different buttons in the navigation bar
+         * @param newMain Context to use for loading new Intent
+         **/
+        private void setListeners(Context newMain) {
+            // Change to MainActivity (home screen) if homeButton clicked
+            homeButton.setOnClickListener(v -> {
+                        Intent intent = new Intent(newMain.getApplicationContext(), MainActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        newMain.startActivity(intent);
+                    });
+            // Change to TestManagerActivity if testManagerButton clicked
+            testManagerButton.setOnClickListener(v -> {
+                        Intent intent = new Intent(newMain.getApplicationContext(), TestManagerActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        newMain.startActivity(intent);
+                    });
+            // Change to RemindersActivity if remindersButton clicked
+            remindersButton.setOnClickListener(v -> {
+                        Intent intent = new Intent(newMain.getApplicationContext(), RemindersActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        newMain.startActivity(intent);
+                    });
+        /* This is for the chat feature if we have time:
+        // Change to chat screen activity if chatButton clicked
+        chatButton.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(),MainActivity.class)));
+         */
         }
     }
 }
