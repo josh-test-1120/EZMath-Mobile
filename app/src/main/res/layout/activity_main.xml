@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:grid="http://schemas.android.com/apk/tools"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -51,23 +52,35 @@
 
     <!-- Main Content Recycle View -->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/ContentView"
+        android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:clipToPadding="false"
         android:orientation="vertical"
         app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-        app:layout_constraintTop_toBottomOf="@+id/headerLayout" />
+        app:layout_constraintTop_toBottomOf="@+id/headerLayout"
+        app:layout_constraintBottom_toTopOf="@id/navigationGrid"/>
+
+    <!-- Progress Bar -->
+    <ProgressBar
+        android:layout_width="25dp"
+        android:layout_height="25dp"
+        android:orientation="horizontal"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="@+id/contentView"
+        app:layout_constraintBottom_toBottomOf="@+id/contentView"
+        android:visibility="gone" />
 
     <!-- Navigation Footer Layout -->
-    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
+    <GridLayout
         android:id="@+id/navigationGrid"
         android:layout_width="0dp"
         android:layout_height="50dp"
-        android:orientation="horizontal"
         android:background="@color/redBackground"
         android:columnCount="4"
-        app:layout_constraintTop_toBottomOf="@+id/ContentView"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
@@ -75,43 +88,42 @@
             android:id="@+id/homeButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
             android:padding="5dp"
             app:srcCompat="@drawable/home"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
+            grid:layout_gravity="center" />
 
         <ImageView
             android:id="@+id/testManagerButton"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
             android:padding="5dp"
             app:srcCompat="@drawable/calendar"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
+            grid:layout_gravity="center" />
 
         <!-- Reminders button -->
         <ImageView
             android:id="@+id/remindersBtn"
             android:layout_width="0dp"
             android:layout_height="0dp"
+            android:layout_rowWeight="1"
+            android:layout_columnWeight="1"
             android:padding="5dp"
             android:src="@drawable/reminder_bell"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"
-            />
+            grid:layout_gravity="center" />
 
-<!--        <ImageView-->
-<!--            android:id="@+id/messageButton"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:padding="5dp"-->
-<!--            app:srcCompat="@drawable/notification"-->
-<!--            android:layout_columnWeight="1"-->
-<!--            android:layout_rowWeight="1"-->
-<!--            grid:layout_gravity="center"/>-->
+        <!--        <ImageView-->
+        <!--            android:id="@+id/messageButton"-->
+        <!--            android:layout_width="0dp"-->
+        <!--            android:layout_height="0dp"-->
+        <!--            android:padding="5dp"-->
+        <!--            app:srcCompat="@drawable/notification"-->
+        <!--            android:layout_columnWeight="1"-->
+        <!--            android:layout_rowWeight="1"-->
+        <!--            grid:layout_gravity="center"/>-->
 
     </GridLayout>
 
