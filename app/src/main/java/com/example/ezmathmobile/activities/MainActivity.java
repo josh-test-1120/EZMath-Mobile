@@ -4,11 +4,13 @@ import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
+import android.widget.GridLayout;
 import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -47,6 +49,10 @@ public class MainActivity extends AppCompatActivity {
     private ImageView testManagerBtn;
     private FirebaseFirestore database;
 
+    // These are the objects in the view
+    public GridLayout navigationGrid;
+    public ImageView homeButton, testManagerButton, remindersButton;
+
     /**
      * This is an override of the onCreate method
      * @param savedInstanceState the current saved state of the instance
@@ -69,34 +75,43 @@ public class MainActivity extends AppCompatActivity {
         Boolean loggedIn = preferenceManager.getBoolean(Constants.User.KEY_IS_SIGNED_IN);
         // Used to flush the preferences in testing
         //preferenceManager.clear();
+        // Bind the objects to the Navigation view IDs
+        navigationGrid = findViewById(R.id.navigationGrid);
+        //menuButton = itemView.findViewById(R.id.homeBtn);
+        homeButton = findViewById(R.id.homeButton);
+        testManagerButton = findViewById(R.id.testManagerButton);
+        //messageButton = findViewById(R.id.chatBtn);
+        remindersButton = findViewById(R.id.remindersBtn);
+
+        setListeners();
         // If logged in, we have enough information to load the main page
         if (loggedIn) {
-            // Bind the variables to the view IDs
-            RecyclerView headerView = findViewById(R.id.headerView);
-            RecyclerView notificationsView = findViewById(R.id.mainNotificationView);
-            RecyclerView navigationView = findViewById(R.id.navigationView);
-            TextView welcomeMessage = findViewById(R.id.welcomeMessage);
-            TextView upcomingExamMessage = findViewById(R.id.upcomingExamMessage);
-            TextView unreadNotificationMessage = findViewById(R.id.unreadNotificationMessage);
+//            // Bind the variables to the view IDs
+//            RecyclerView headerView = findViewById(R.id.headerView);
+//            RecyclerView notificationsView = findViewById(R.id.mainNotificationView);
+//            RecyclerView navigationView = findViewById(R.id.navigationView);
+//            TextView welcomeMessage = findViewById(R.id.welcomeMessage);
+//            TextView upcomingExamMessage = findViewById(R.id.upcomingExamMessage);
+//            TextView unreadNotificationMessage = findViewById(R.id.unreadNotificationMessage);
 
-            // Generate the user's name from shared preferences
-            String first_name = preferenceManager.getString(Constants.User.KEY_FIRSTNAME);
-            String last_name = preferenceManager.getString(Constants.User.KEY_LASTNAME);
-            String name = String.format("Welcome %s %s!",first_name,last_name);
-            welcomeMessage.setText(name);
+//            // Generate the user's name from shared preferences
+//            String first_name = preferenceManager.getString(Constants.User.KEY_FIRSTNAME);
+//            String last_name = preferenceManager.getString(Constants.User.KEY_LASTNAME);
+//            String name = String.format("Welcome %s %s!",first_name,last_name);
+//            welcomeMessage.setText(name);
 
-            // Get the data from the database
-            database = FirebaseFirestore.getInstance();
-            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
-            // Get the notifications
-            queryNotifications(preferenceManager,upcomingExamMessage,unreadNotificationMessage,notificationsView);
-
-            // Set the adaptor with the current header
-            final HeaderAdaptor headerAdapter = new HeaderAdaptor();
-            headerView.setAdapter(headerAdapter);
-            // Set the adaptor with the current navigation
-            final FooterAdaptor footerAdapter = new FooterAdaptor();
-            navigationView.setAdapter(footerAdapter);
+//            // Get the data from the database
+//            database = FirebaseFirestore.getInstance();
+//            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
+//            // Get the notifications
+//            queryNotifications(preferenceManager,upcomingExamMessage,unreadNotificationMessage,notificationsView);
+//
+//            // Set the adaptor with the current header
+//            final HeaderAdaptor headerAdapter = new HeaderAdaptor();
+//            headerView.setAdapter(headerAdapter);
+//            // Set the adaptor with the current navigation
+//            final FooterAdaptor footerAdapter = new FooterAdaptor();
+//            navigationView.setAdapter(footerAdapter);
         }
         // else we need to load the SignIn Activity
         else {
@@ -194,5 +209,34 @@ public class MainActivity extends AppCompatActivity {
         // Set the adaptor with the current notifications
         final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
         notificationsView.setAdapter(notificationAdapter);
+    }
+
+    /**
+     * This is the setListeners method for the different buttons in the navigation bar
+     **/
+    private void setListeners() {
+        // Change to MainActivity (home screen) if homeButton clicked
+        homeButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+        // Change to TestManagerActivity if testManagerButton clicked
+        testManagerButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+        // Change to RemindersActivity if remindersButton clicked
+        remindersButton.setOnClickListener(v -> {
+            Intent intent = new Intent(getApplicationContext(), RemindersActivity.class);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+            startActivity(intent);
+        });
+        /* This is for the chat feature if we have time:
+        // Change to chat screen activity if chatButton clicked
+        chatButton.setOnClickListener(v ->
+                startActivity(new Intent(getApplicationContext(),MainActivity.class)));
+         */
     }
 }
