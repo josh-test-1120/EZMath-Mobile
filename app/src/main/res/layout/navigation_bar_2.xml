@@ -7,7 +7,7 @@
     android:layout_height="match_parent"
     tools:context=".activities.NavigationBarActivity">
 
-    <!-- This is the navigation bar to include the chat page feature -->
+    <!-- This is the original navigation bar -->
 
     <!-- Navigation Footer Layout -->
     <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
@@ -16,7 +16,7 @@
         android:layout_height="50dp"
         android:orientation="horizontal"
         android:background="@color/redBackground"
-        android:columnCount="4"
+        android:columnCount="3"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
@@ -40,18 +40,6 @@
             android:layout_height="0dp"
             android:padding="5dp"
             android:src="@drawable/calendar"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"
-            />
-
-        <!-- Chat button -->
-        <ImageView
-            android:id="@+id/chatBtn"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            android:src="@drawable/chat"
             android:layout_columnWeight="1"
             android:layout_rowWeight="1"
             grid:layout_gravity="center"
