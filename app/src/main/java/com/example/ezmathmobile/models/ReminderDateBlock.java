@@ -17,14 +17,14 @@ public class ReminderDateBlock {
     public List<Reminder> reminderList;
 
     // Created date of the reminder
-    public LocalDateTime date;
+    public String date;
 
     /**
      * Constructor for the ReminderDateBlock
      * @param reminderlist Arraylist of reminders
      * @param date Date of the reminders
      */
-    public ReminderDateBlock(List<Reminder> reminderlist, LocalDateTime date) {
+    public ReminderDateBlock(List<Reminder> reminderlist, String date) {
         this.reminderList = reminderlist;
         this.date = date;
     }

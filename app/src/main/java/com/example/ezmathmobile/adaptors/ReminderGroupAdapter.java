@@ -36,7 +36,7 @@ public class ReminderGroupAdapter extends RecyclerView.Adapter<ReminderGroupAdap
 
         String dateText = null;
         if (android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.O) {
-            dateText = group.date.getMonth().toString() + " " + group.date.getDayOfMonth();
+            dateText = group.date;
         }
         // Bind the date to the TextView
         holder.date.setText(dateText);

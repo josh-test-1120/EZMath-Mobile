@@ -23,6 +23,7 @@ import com.example.ezmathmobile.models.Reminder;
 import com.example.ezmathmobile.models.ReminderDateBlock;
 import com.example.ezmathmobile.utilities.Constants;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.time.LocalDateTime;
@@ -95,11 +96,11 @@ public class RemindersActivity extends AppCompatActivity {
 
         ReminderDateBlock rdb1 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            rdb1 = new ReminderDateBlock(remindersList1, LocalDateTime.now().minusDays(1));
+            rdb1 = new ReminderDateBlock(remindersList1, "November 14, 2024");
         }
         ReminderDateBlock rdb2 = null;
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            rdb2 = new ReminderDateBlock(remindersList2, LocalDateTime.now());
+            rdb2 = new ReminderDateBlock(remindersList2, "November 24, 2024");
         }
         List<ReminderDateBlock> remindersWithDateList = new ArrayList<>();
         remindersWithDateList.add(rdb1);
@@ -111,6 +112,7 @@ public class RemindersActivity extends AppCompatActivity {
         // Populating with data from the database
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         database.collection(Constants.KEY_COLLECTION_REMINDERS)
+                .orderBy("dateTime", Query.Direction.DESCENDING)
                 // Getting the query results
                 .get()
                 // When the query is successful
@@ -127,7 +129,11 @@ public class RemindersActivity extends AppCompatActivity {
                                 remindersByDays.computeIfAbsent(reminder.date.format(DateTimeFormatter
                                         .ofPattern("yyyy-MM-dd")), k -> new ArrayList<>()).add(reminder);
                             }
-
+                        }
+                        // Traversing HashMap to computer
+                        for (Map.Entry<String, List<Reminder>> entry : remindersByDays.entrySet()) {
+                            ReminderDateBlock reminderDateBlock = new ReminderDateBlock(entry.getValue(), entry.getKey());
+                            remindersWithDateList.add(reminderDateBlock);
                         }
 
                     }
