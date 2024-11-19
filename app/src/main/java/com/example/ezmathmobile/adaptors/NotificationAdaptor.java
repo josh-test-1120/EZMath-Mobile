@@ -11,21 +11,11 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.utilities.TimeConverter;
-import com.firebase.ui.firestore.FirestoreRecyclerAdapter;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Notification;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.Timestamp;
 
-import java.time.LocalDate;
-import java.time.LocalDateTime;
-import java.time.LocalTime;
-import java.time.ZoneId;
-import java.time.format.DateTimeFormatter;
-import java.util.Date;
 import java.util.List;
-import java.util.Locale;
 
 /**
  * This is the NotificationAdaptor that is used in the RecycleView Adaptor
