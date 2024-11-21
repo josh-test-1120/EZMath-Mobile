@@ -24,6 +24,7 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -59,9 +60,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull MainPageViewHolder holder, int position) {
-//        if (position < notifications.size()) holder.bindNotification(notifications.get(position));
-    }
+    public void onBindViewHolder(@NonNull MainPageViewHolder holder, int position) {}
 
     /**
      * This is an override of the getItemCount method
@@ -220,9 +219,12 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             latestView.setText(latestNotification);
             numberView.setText(sizeNotifications);
 
+            // Convert the notifications into month groups
+            HashMap<String,List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
+
             // Set the adaptor with the current notifications
-            final NotificationAdaptor notificationAdapter = new NotificationAdaptor(notifications);
-            notificationsView.setAdapter(notificationAdapter);
+            final NotificationMonthAdaptor notificationMonthAdaptor = new NotificationMonthAdaptor(groupedByMonth);
+            notificationsView.setAdapter(notificationMonthAdaptor);
         }
     }
 }
