@@ -9,7 +9,10 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 
@@ -46,6 +49,7 @@ public class TimeConverter {
     }
 
     public static int findLatestDate(final List<Notification> notifications) {
+        // Variables
         int index = -1;
         LocalDate currentLatest = null;
 
@@ -64,5 +68,30 @@ public class TimeConverter {
             }
         }
         return index;
+    }
+
+    public static HashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {
+        // Variables
+        HashMap<String,List<Notification>> monthlyNotifications = new HashMap<>();
+        List<Notification> groupedNotifications;
+
+        for (int x = 0; x < notifications.size(); x++) {
+            // Convert timestamp into date
+            Date date = notifications.get(x).examDate.toDate();
+            // Convert Date to LocalDate
+            LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+            // Get the integer month
+            String month = localDate.getMonth().toString();
+            // Get the List from the Map
+            groupedNotifications = monthlyNotifications.get(month);
+            // Ensure the list exists
+            if (groupedNotifications == null || groupedNotifications.size() == 0)
+                groupedNotifications = new ArrayList<>();
+            // Add the notification to the month list
+            groupedNotifications.add(notifications.get(x));
+            // Put the list back into the hash map
+            monthlyNotifications.put(month,groupedNotifications);
+        }
+        return monthlyNotifications;
     }
 }
