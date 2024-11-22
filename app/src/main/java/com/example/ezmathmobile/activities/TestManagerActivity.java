@@ -43,7 +43,7 @@ public class TestManagerActivity extends AppCompatActivity {
      * Method to paste test details into test manager view from firestore
      */
     private void loadTestDetails() {
-        //loading(true);
+        loading(true);
         database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
@@ -60,7 +60,7 @@ public class TestManagerActivity extends AppCompatActivity {
                    }
                 })
                 .addOnFailureListener(exception ->{
-                    //loading(false);
+                    loading(false);
                     showToast(exception.getMessage());
                 });
     }
@@ -141,8 +141,6 @@ public class TestManagerActivity extends AppCompatActivity {
      * Setting up progress bar visibility if user is loading or not
      * @param isLoading Whether the program is loading or not
      */
-    /*
-    Still figuring out where to put the progress bar
     private void loading(Boolean isLoading){
         if(isLoading){
             binding.testContainer.setVisibility(View.INVISIBLE);
@@ -151,6 +149,6 @@ public class TestManagerActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
             binding.testContainer.setVisibility(View.VISIBLE);
         }
-    }*/
+    }
 
 }
