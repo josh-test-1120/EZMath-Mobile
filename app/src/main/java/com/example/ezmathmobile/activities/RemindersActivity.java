@@ -61,8 +61,8 @@ public class RemindersActivity extends AppCompatActivity {
 
         // Populating with data from the database
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        database.collection(Constants.KEY_COLLECTION_REMINDERS)
-                .orderBy(Constants.KEY_REMINDER_DATETIME, Query.Direction.DESCENDING)
+        database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                .orderBy(Constants.Reminders.KEY_REMINDER_DATETIME, Query.Direction.DESCENDING)
                 // Getting the query results
                 .get()
                 // When the query is successful
@@ -74,8 +74,8 @@ public class RemindersActivity extends AppCompatActivity {
                             // Creating individual reminder object
                             Reminder reminder = null;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-                                reminder = new Reminder(document.getString(Constants.KEY_REMINDER_TEXT),
-                                        document.getString(Constants.KEY_REMINDER_TYPE), LocalDateTime.parse(document.getString(Constants.KEY_REMINDER_DATETIME)));
+                                reminder = new Reminder(document.getString(Constants.Reminders.KEY_REMINDER_TEXT),
+                                        document.getString(Constants.Reminders.KEY_REMINDER_TYPE), LocalDateTime.parse(document.getString(Constants.Reminders.KEY_REMINDER_DATETIME)));
                                 remindersByDays.computeIfAbsent(reminder.date.format(DateTimeFormatter
                                         .ofPattern("MMMM d, yyyy")), k -> new ArrayList<>()).add(reminder);
                             }
