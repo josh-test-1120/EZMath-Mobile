@@ -16,6 +16,8 @@ import java.util.Locale;
 
 public class TimeConverter {
 
+    // Constants
+    public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss";
     /**
      * This will convert a Firebase Timestamp into a localized date
      * @param timestamp this is the timestamp to convert to local date
@@ -78,16 +80,15 @@ public class TimeConverter {
      * @return string representation of the timestamp
      */
     public static String timestampToString(Timestamp timestamp) {
-        String pattern = "yyyy-MM-dd HH:mm:ss";
-
         // Convert timestamp into date
         Date date = timestamp.toDate();
-
-        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-
+        // Setup the formatter for the conversion
+        SimpleDateFormat formatter = new SimpleDateFormat(TimestampPattern);
+        // Convert the object to a string
         String timestampString = formatter.format(date);
-
+        // Log the output
         Log.d("TimeConverter: Timestamp->String",timestampString);
+        // Return the string
         return timestampString;
     }
 
@@ -98,20 +99,21 @@ public class TimeConverter {
      * @return Timestamp object from the string
      */
     public static Timestamp stringToTimestamp(String timestampString) {
+        // Try catch to handle exceptions from conversion
         try {
-            String pattern = "yyyy-MM-dd HH:mm:ss";
-
-            SimpleDateFormat formatter = new SimpleDateFormat(pattern);
-
+            // Setup the formatter for the conversion
+            SimpleDateFormat formatter = new SimpleDateFormat(TimestampPattern);
+            // Create the new date object from the string
             Date date = formatter.parse(timestampString);
-
+            // Log the output
             Log.d("TimeConverter: String->Timestamp",new Timestamp(date).toString());
-
-            // Create a Timestamp object from the Date object
+            // return a Timestamp object from the Date object
             return new Timestamp(date);
+        // Handle the exceptions
         } catch (Exception e) {
             e.printStackTrace();
-            return null; // Handle parsing errors appropriately
+            // Handle parsing errors appropriately
+            return null;
         }
     }
 }
