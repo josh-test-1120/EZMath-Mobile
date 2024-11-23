@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ezmathmobile.adaptors.ExamAdaptor;
 import com.example.ezmathmobile.adaptors.FooterAdaptor;
 import com.example.ezmathmobile.adaptors.HeaderAdaptor;
 import com.example.ezmathmobile.adaptors.MainPageAdaptor;
@@ -109,15 +110,21 @@ public class MainActivity extends AppCompatActivity {
     private void setListeners() {
         // Change to MainActivity (home screen) if homeButton clicked
         homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+            // Set the adaptor with the current main page
+            final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
+            contentView.setAdapter(mainPageAdaptor);
         });
         // Change to TestManagerActivity if testManagerButton clicked
         testManagerButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+            // Set the adaptor with the current main page
+            final ExamAdaptor examAdaptor = new ExamAdaptor();
+            contentView.setAdapter(examAdaptor);
         });
         // Change to RemindersActivity if remindersButton clicked
         remindersButton.setOnClickListener(v -> {
