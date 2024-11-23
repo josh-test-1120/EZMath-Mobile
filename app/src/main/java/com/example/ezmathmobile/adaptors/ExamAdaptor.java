@@ -56,10 +56,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
     @NonNull
     @Override
     public ExamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Generate the parent bindings
-        ActivityTestManagerBinding binding = ActivityTestManagerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
-        // Return the view and bindings
-        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_manager, parent, false),binding);
+        // Return the view inflated
+        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_manager, parent, false));
     }
 
     /**
@@ -91,13 +89,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         private FirebaseFirestore database;
         private ActivityTestManagerBinding binding;
         private Context mainPageLayout;
-        private LinearLayout testContainer;
 
         /**
          * This is the ExamViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public ExamViewHolder(@NonNull View itemView, ActivityTestManagerBinding binding) {
+        public ExamViewHolder(@NonNull View itemView) {
             // Run the parent class constructor
             super(itemView);
             // Get the page context
@@ -109,9 +106,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             // Attach the database
             database = FirebaseFirestore.getInstance();
             // Attach the binding
-            LayoutInflater li = LayoutInflater.from(layoutExam.getContext());
-            this.binding = ActivityTestManagerBinding.inflate(li);
-            testContainer = itemView.findViewById(R.id.testContainer);
+            this.binding = ActivityTestManagerBinding.bind(itemView);
             // Populate the view
             loadTestDetails();
         }
@@ -138,8 +133,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         //Clearing up views before loading everything in
-                        //binding.testContainer.removeAllViews();
-                        testContainer.removeAllViews();
+                        binding.testContainer.removeAllViews();
                         //Getting details from firestore
                         for (DocumentSnapshot schedule : queryDocumentSnapshots) {
                             // Serialize the document to the class
@@ -156,8 +150,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                         // Add scheduled to list
                                         scheduled.add(scheduleDB);
                                         View testView = createTestView(scheduleDB, scheduledID);
-                                        //binding.testContainer.addView(testView);
-                                        testContainer.addView(testView);
+                                        binding.testContainer.addView(testView);
                                         Log.d("Test Manager","view added");
                                     })
                                     .addOnFailureListener(exception ->{
