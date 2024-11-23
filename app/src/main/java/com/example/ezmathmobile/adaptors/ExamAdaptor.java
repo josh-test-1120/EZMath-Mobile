@@ -1,19 +1,36 @@
 package com.example.ezmathmobile.adaptors;
 
+import android.app.Activity;
+import android.content.Context;
+import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.ezmathmobile.activities.TestAddActivity;
+import com.example.ezmathmobile.activities.TestManagerActivity;
+import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
+import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Scheduled;
 
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.utilities.Constants;
+import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeConverter;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 
@@ -22,15 +39,11 @@ import java.util.List;
  * This extends the RecycleView.Adaptor class
  */
 public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder> {
-    // These are the private variables
-    private List<Scheduled> exams;
 
     /**
      * This is the constructor for the Adaptor
-     * @param exams This is a List of scheduled exams
      */
-    public ExamAdaptor(List<Scheduled> exams) {
-        this.exams = exams;
+    public ExamAdaptor() {
     }
 
     /**
@@ -43,7 +56,10 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
     @NonNull
     @Override
     public ExamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_manager, parent, false));
+        // Generate the parent bindings
+        ActivityTestManagerBinding binding = ActivityTestManagerBinding.inflate(LayoutInflater.from(parent.getContext()), parent, false);
+        // Return the view and bindings
+        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_manager, parent, false),binding);
     }
 
     /**
@@ -53,9 +69,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
-        if (position < exams.size()) holder.bindExam(exams.get(position));
-    }
+    public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {}
 
     /**
      * This is an override of the getItemCount method
@@ -63,7 +77,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      */
     @Override
     public int getItemCount() {
-        return exams.size();
+        return 1;
     }
 
     /**
@@ -71,38 +85,184 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      */
     public static class ExamViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
-        ConstraintLayout layoutExam;
-        //View viewBackground;
-        TextView notificationName, notificationTime, notificationDate;
+        private ConstraintLayout layoutExam;
+        // Private variables
+        private PreferenceManager preferenceManager;
+        private FirebaseFirestore database;
+        private ActivityTestManagerBinding binding;
+        private Context mainPageLayout;
+        private LinearLayout testContainer;
 
         /**
          * This is the ExamViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public ExamViewHolder(@NonNull View itemView) {
+        public ExamViewHolder(@NonNull View itemView, ActivityTestManagerBinding binding) {
             // Run the parent class constructor
             super(itemView);
+            // Get the page context
+            mainPageLayout = itemView.getContext();
             // Bind the objects to the view IDs
             layoutExam = itemView.findViewById(R.id.main);
+            // Attach the preferences
+            preferenceManager = new PreferenceManager(layoutExam.getContext().getApplicationContext());
+            // Attach the database
+            database = FirebaseFirestore.getInstance();
+            // Attach the binding
+            LayoutInflater li = LayoutInflater.from(layoutExam.getContext());
+            this.binding = ActivityTestManagerBinding.inflate(li);
+            testContainer = itemView.findViewById(R.id.testContainer);
+            // Populate the view
+            loadTestDetails();
         }
 
         /**
-         * This is the bind Exam method that will bind actions
-         * and listeners to the exam
-         * @param exam this is the scheduled exam to bind actions to
+         * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
+         * @param message Message to be displayed
          */
-        void bindExam(final Scheduled exam) {
-            Log.d("Notif Data",exam.toString());
-            // Update the view with the exam information
-//            if (exam.examName != null) notificationName.setText(exam.examName);
-//            if (exam.examDate != null) {
-//                // Get localized string from the timestamp
-//                String time = TimeConverter.localizeTime(exam.examDate);
-//                String date = TimeConverter.localizeDate(exam.examDate);
-//                // Update the UI
-//                notificationTime.setText(time);
-//                notificationDate.setText(date);
-//            }
+        private void showToast(String message){
+            Toast.makeText(mainPageLayout.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
         }
+
+        /**
+         * Method to paste test details into test manager view from firestore
+         */
+        private void loadTestDetails() {
+            // Get the userID
+            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
+            List<Scheduled> scheduled = new ArrayList<>();
+
+            //loading(true);
+            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                    .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_USERID,userID)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        //Clearing up views before loading everything in
+                        //binding.testContainer.removeAllViews();
+                        testContainer.removeAllViews();
+                        //Getting details from firestore
+                        for (DocumentSnapshot schedule : queryDocumentSnapshots) {
+                            // Serialize the document to the class
+                            Scheduled scheduleDB = schedule.toObject(Scheduled.class);
+                            String scheduledID = schedule.getId();
+
+                            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                                    .document(scheduleDB.getExamid())
+                                    .get()
+                                    .addOnSuccessListener(exam -> {
+                                        // Serialize the document to the class
+                                        Exam examDB = exam.toObject(Exam.class);
+                                        if (examDB != null) scheduleDB.setName(examDB.getName());
+                                        // Add scheduled to list
+                                        scheduled.add(scheduleDB);
+                                        View testView = createTestView(scheduleDB, scheduledID);
+                                        //binding.testContainer.addView(testView);
+                                        testContainer.addView(testView);
+                                        Log.d("Test Manager","view added");
+                                    })
+                                    .addOnFailureListener(exception ->{
+                                        //loading(false);
+                                        showToast(exception.getMessage());
+                                    });
+                        }
+                    })
+                    .addOnFailureListener(exception ->{
+                        //loading(false);
+                        showToast(exception.getMessage());
+                    });
+        }
+
+        /**
+         * Creating a view and putting all my test details into it from previous method. This is putting
+         * the details specifically into my exam item container view
+         * @param exam from previous method (firestore)
+         * @return testView which is the container with all the test details
+         */
+        private View createTestView(Scheduled exam, String examID) {
+            Log.d("Test Manager","Starting Test Item Create");
+            // Initialize a Layout Inflator with content for the Layout
+            LayoutInflater li = LayoutInflater.from(layoutExam.getContext());
+            // Create inflated view
+            View testView = li.inflate(R.layout.exam_item_container, binding.testContainer, false);
+
+            //Pull text views from item container and put them into variables in java
+            TextView examIDView = testView.findViewById(R.id.testName);
+            TextView examTimeView = testView.findViewById(R.id.testTime);
+            TextView examDateView = testView.findViewById(R.id.testDate);
+
+            // Get localized string from the timestamp
+            String time = TimeConverter.localizeTime(exam.getDate());
+            String date = TimeConverter.localizeDate(exam.getDate());
+
+            //Setting the view texts to whatever was given
+            examIDView.setText(exam.getName());
+            examTimeView.setText(time);
+            examDateView.setText(date);
+
+            //Add some listeners for the delete and edit test buttons
+            testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
+            testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
+
+            return testView;
+        }
+
+        /**
+         * Delete the test
+         * @param examID this is the examID to delete
+         */
+        private void deleteTest(String examID) {
+            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                    .whereEqualTo(FieldPath.documentId(), examID)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots){
+                            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                                    .document(document.getId())
+                                    .delete()
+                                    .addOnSuccessListener(unused -> {
+                                        Toast.makeText(mainPageLayout, "Test successfully deleted", Toast.LENGTH_SHORT).show();
+                                        //Refresh test list
+                                        loadTestDetails();
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        showToast(e.getMessage());
+                                    });
+                        }
+                    });
+        }
+
+        /**
+         * With the edit test method, we will return to the addtest activity. However, we will take the
+         * information within that view and return it to the addtest activity, wherein that activity can
+         * populate the edit text areas with that information.
+         * @param examID ID of specified exam needing to be changed
+         */
+        private void editTest(String examID, Scheduled exam) {
+            binding.buttonAddTest.setOnClickListener(v -> {
+                Intent intent = new Intent(layoutExam.getContext().getApplicationContext(), TestAddActivity.class);
+                intent.putExtra("examID", examID);
+                intent.putExtra("examDate",TimeConverter.timestampToString(exam.getDate()));
+                intent.putExtra("examName", exam.getName());
+//            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
+                mainPageLayout.startActivity(intent);
+            });
+
+        }
+
+        /**
+         * Setting up progress bar visibility if user is loading or not
+         * @param isLoading Whether the program is loading or not
+         */
+        /*
+        Still figuring out where to put the progress bar
+        private void loading(Boolean isLoading){
+            if(isLoading){
+                binding.testContainer.setVisibility(View.INVISIBLE);
+                binding.progressBar.setVisibility(View.VISIBLE);
+            } else {
+                binding.progressBar.setVisibility(View.INVISIBLE);
+                binding.testContainer.setVisibility(View.VISIBLE);
+            }
+        }*/
     }
 }
