@@ -3,8 +3,12 @@ package com.example.ezmathmobile.utilities;
 import android.content.Context;
 import android.content.SharedPreferences;
 
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
+
 /**
- * Preference Manage that will store preferences
+ * Preference Manager that will store preferences
  * about the user that can be checked while the program
  * is running
  */
@@ -17,7 +21,7 @@ public class PreferenceManager {
      * @param context this is the current Context to get preference data from
      */
     public PreferenceManager(Context context) {
-        sharedPreferences = context.getSharedPreferences(Constants.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
+        sharedPreferences = context.getSharedPreferences(Constants.User.KEY_PREFERENCE_NAME,Context.MODE_PRIVATE);
     }
 
     /**
@@ -56,6 +60,16 @@ public class PreferenceManager {
      */
     public String getString(String key) {
         return sharedPreferences.getString(key,null);
+    }
+
+    public <T> void putList(String key, List<T> documents) {
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Set<String> list = new HashSet<>();
+
+        for (T document: documents) {
+            list.add(document.toString());
+        }
+        editor.putStringSet(key,list);
     }
 
     /**

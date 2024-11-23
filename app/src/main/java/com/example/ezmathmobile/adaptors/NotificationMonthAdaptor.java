@@ -10,27 +10,30 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ezmathmobile.utilities.TimeConverter;
-
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Notification;
+import com.example.ezmathmobile.utilities.TimeConverter;
 
+import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Set;
 
 /**
  * This is the NotificationAdaptor that is used in the RecycleView Adaptor
  * This extends the RecycleView.Adaptor class
  */
-public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdaptor.NotificationViewHolder> {
+public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationMonthAdaptor.NotificationMonthViewHolder> {
     // These are the private variables
-    private List<Notification> notifications;
+    private HashMap<String,List<Notification>> notifications;
 
 
     /**
      * This is the constructor for the Adaptor
      * @param notifications This is a List of Notifications
      */
-    public NotificationAdaptor(List<Notification> notifications) {
+    public NotificationMonthAdaptor(HashMap<String,List<Notification>> notifications) {
+        Log.d("Month Notif",notifications.toString());
         this.notifications = notifications;
     }
 
@@ -43,8 +46,8 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
      */
     @NonNull
     @Override
-    public NotificationViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NotificationViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_item, parent, false));
+    public NotificationMonthViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        return new NotificationMonthViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_month, parent, false),notifications);
     }
 
     /**
@@ -54,8 +57,10 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
-        if (position < notifications.size()) holder.bindNotification(notifications.get(position));
+    public void onBindViewHolder(@NonNull NotificationMonthViewHolder holder, int position) {
+        Object[] keys = notifications.keySet().toArray();
+        String month = (String) keys[position];
+        if (position < notifications.size()) holder.bindNotification(notifications.get(month),month);
     }
 
     /**
@@ -70,42 +75,43 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
     /**
      * This is the NotificationViewHolder class that extends the RecycleView.ViewHolder
      */
-    public static class NotificationViewHolder extends RecyclerView.ViewHolder {
+    public static class NotificationMonthViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
         ConstraintLayout layoutNotification;
         //View viewBackground;
-        TextView notificationName, notificationTime, notificationDate;
+        TextView notificationMonthName, notificationTime, notificationDate;
+        RecyclerView notificationsView;
 
         /**
          * This is the NotificationViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public NotificationViewHolder(@NonNull View itemView) {
+        public NotificationMonthViewHolder(@NonNull View itemView, HashMap<String,List<Notification>> notifications) {
             // Run the parent class constructor
             super(itemView);
             // Bind the objects to the view IDs
-            layoutNotification = itemView.findViewById(R.id.layoutNotification);
-            notificationName = itemView.findViewById(R.id.examName);
-            notificationTime = itemView.findViewById(R.id.examTime);
-            notificationDate = itemView.findViewById(R.id.examDate);
+            layoutNotification = itemView.findViewById(R.id.layoutMonthNotification);
+            notificationMonthName = itemView.findViewById(R.id.monthName);
+            notificationsView = itemView.findViewById(R.id.notificationsView);
+
         }
 
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
-         * @param notification this is the notification to bind actions to
+         * @param List<notification> this is a List of notifications to bind actions to
          */
-        void bindNotification(final Notification notification) {
-            Log.d("Notif Data",notification.toString());
-            // Update the view with the poster information
-            if (notification.examName != null) notificationName.setText(notification.examName);
-            if (notification.examDate != null) {
-                // Get localized string from the timestamp
-                String time = TimeConverter.localizeTime(notification.examDate);
-                String date = TimeConverter.localizeDate(notification.examDate);
-                // Update the UI
-                notificationTime.setText(time);
-                notificationDate.setText(date);
+        void bindNotification(final List<Notification> notifications, String month) {
+            Log.d("Month Notif",String.valueOf(month));
+            if (notifications != null) {
+                Log.d("Month Notif",String.valueOf(month));
+                Log.d("Month Notif", notifications.toString());
+                // Set the name
+                notificationMonthName.setText(String.valueOf(month));
+
+                // Set the adaptor with the current month notifications
+                final NotificationAdaptor notificationAdaptor = new NotificationAdaptor(notifications);
+                notificationsView.setAdapter(notificationAdaptor);
             }
         }
     }

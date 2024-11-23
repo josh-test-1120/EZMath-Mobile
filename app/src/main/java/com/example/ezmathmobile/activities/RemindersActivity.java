@@ -106,5 +106,4 @@ public class RemindersActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
     }
-
 }
