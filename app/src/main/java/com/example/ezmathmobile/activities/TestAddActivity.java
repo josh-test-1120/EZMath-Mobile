@@ -2,6 +2,7 @@ package com.example.ezmathmobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.CalendarView;
 import android.widget.Toast;
@@ -39,6 +40,12 @@ public class TestAddActivity extends AppCompatActivity {
             examID = getIntent().getStringExtra("examID");
             binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
             timestamp = TimeConverter.stringToTimestamp(getIntent().getStringExtra("examDate"));
+            if (timestamp != null) Log.d("Test Add",timestamp.toString());
+            // Get localized string from the timestamp
+            String time = TimeConverter.localizeTime(timestamp);
+            String date = TimeConverter.localizeDate(timestamp);
+            // Update the time field
+            binding.inputTestTime.setText(time);
         }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
