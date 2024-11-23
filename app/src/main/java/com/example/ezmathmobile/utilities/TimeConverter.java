@@ -27,7 +27,7 @@ public class TimeConverter {
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
         // Convert LocalDate to date String and format it
         String dateString = localDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy").withLocale(Locale.US));
-        Log.d("Timestamp->Date",dateString);
+        Log.d("TimeConverter: Timestamp->Date",dateString);
         return dateString;
     }
 
@@ -42,7 +42,7 @@ public class TimeConverter {
         LocalTime localTime = date.toInstant().atZone(java.time.ZoneId.systemDefault()).toLocalTime();
         // Covert LocalTime to time String and format it
         String timeString = localTime.format(DateTimeFormatter.ofPattern("hh:mm:ss a"));
-        Log.d("Timestamp->Date",timeString);
+        Log.d("TimeConverter: Timestamp->Date",timeString);
         return timeString;
     }
 
@@ -82,10 +82,13 @@ public class TimeConverter {
 
         // Convert timestamp into date
         Date date = timestamp.toDate();
-        // Convert Date to LocalDate
-        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
 
-        return localDate.toString();
+        SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+
+        String timestampString = formatter.format(date);
+
+        Log.d("TimeConverter: Timestamp->String",timestampString);
+        return timestampString;
     }
 
     /**
@@ -101,6 +104,8 @@ public class TimeConverter {
             SimpleDateFormat formatter = new SimpleDateFormat(pattern);
 
             Date date = formatter.parse(timestampString);
+
+            Log.d("TimeConverter: String->Timestamp",new Timestamp(date).toString());
 
             // Create a Timestamp object from the Date object
             return new Timestamp(date);
