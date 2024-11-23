@@ -12,14 +12,20 @@ import androidx.appcompat.app.AppCompatActivity;
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeConverter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.type.DateTime;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class TestAddActivity extends AppCompatActivity {
 
     private ActivityTestAddBinding binding;
     private PreferenceManager preferenceManager;
+    private String examID;
+    private Timestamp timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,7 +38,9 @@ public class TestAddActivity extends AppCompatActivity {
 //            binding.inputTestDate.setText(getIntent().getStringExtra("testDate"));
 //            binding.inputTestTime.setText(getIntent().getStringExtra("testTime"));
 //            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
-            binding.inputTestExam.setText(getIntent().getStringExtra("examID"));
+            examID = getIntent().getStringExtra("examID");
+            binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
+            timestamp = TimeConverter.stringToTimestamp(getIntent().getStringExtra("examDate"));
         }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -139,33 +147,29 @@ public class TestAddActivity extends AppCompatActivity {
 
     private void setupCalendar(ActivityTestAddBinding binding) {
         // Add Listener in calendar
-        binding.calendarView
-                .setOnDateChangeListener(
-                        new CalendarView
-                                .OnDateChangeListener() {
-                            @Override
+        binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                @Override
+                // In this Listener have one method
+                // and in this method we will
+                // get the value of DAYS, MONTH, YEARS
+                public void onSelectedDayChange(
+                        @NonNull CalendarView view,
+                        int year,
+                        int month,
+                        int dayOfMonth)
+                {
 
-                            // In this Listener have one method
-                            // and in this method we will
-                            // get the value of DAYS, MONTH, YEARS
-                            public void onSelectedDayChange(
-                                    @NonNull CalendarView view,
-                                    int year,
-                                    int month,
-                                    int dayOfMonth)
-                            {
+                    // Store the value of date with
+                    // format in String type Variable
+                    // Add 1 in month because month
+                    // index is start with 0
+                    String Date
+                            = dayOfMonth + "-"
+                            + (month + 1) + "-" + year;
 
-                                // Store the value of date with
-                                // format in String type Variable
-                                // Add 1 in month because month
-                                // index is start with 0
-                                String Date
-                                        = dayOfMonth + "-"
-                                        + (month + 1) + "-" + year;
-
-                                // set this date in TextView for Display
-                                //binding.date_view.setText(Date);
-                            }
-                        });
+                    // set this date in TextView for Display
+                    //binding.date_view.setText(Date);
+                }
+            });
     }
 }

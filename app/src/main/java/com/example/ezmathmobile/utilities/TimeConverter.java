@@ -4,11 +4,15 @@ import android.util.Log;
 
 import com.example.ezmathmobile.models.Notification;
 import com.google.firebase.Timestamp;
+import com.google.type.DateTime;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
+import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -64,5 +68,32 @@ public class TimeConverter {
             }
         }
         return index;
+    }
+
+    public static String timestampToString(Timestamp timestamp) {
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+
+        // Convert timestamp into date
+        Date date = timestamp.toDate();
+        // Convert Date to LocalDate
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
+        return localDate.toString();
+    }
+
+    public static Timestamp stringToTimestamp(String timestampString) {
+        try {
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+
+            SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+
+            Date date = formatter.parse(timestampString);
+
+            // Create a Timestamp object from the Date object
+            return new Timestamp(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Handle parsing errors appropriately
+        }
     }
 }

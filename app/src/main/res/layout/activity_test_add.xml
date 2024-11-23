@@ -74,9 +74,11 @@
 
     <CalendarView
         android:id="@+id/calendarView"
+        android:theme="@style/Theme.CalendarView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:dateTextAppearance="@color/white"
+        android:dateTextAppearance="@style/Theme.CalendarView"
+        android:weekDayTextAppearance="@style/Theme.CalendarView"
         app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
 <!--    <LinearLayout-->
