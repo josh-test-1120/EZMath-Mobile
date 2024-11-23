@@ -4,15 +4,12 @@ import android.util.Log;
 
 import com.example.ezmathmobile.models.Notification;
 import com.google.firebase.Timestamp;
-import com.google.type.DateTime;
 
 import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
-import java.time.ZonedDateTime;
 import java.time.format.DateTimeFormatter;
-import java.time.temporal.TemporalAccessor;
 import java.util.Date;
 import java.util.List;
 import java.util.Locale;
@@ -49,6 +46,11 @@ public class TimeConverter {
         return timeString;
     }
 
+    /**
+     * This will find the most recent notification by date
+     * @param notifications This is a List of notifications
+     * @return an integer that specifies the list index of the notification
+     */
     public static int findLatestDate(final List<Notification> notifications) {
         int index = -1;
         LocalDate currentLatest = null;
@@ -70,6 +72,11 @@ public class TimeConverter {
         return index;
     }
 
+    /**
+     * This will convert a timestamp to string representation
+     * @param timestamp a timestamp from firestore
+     * @return string representation of the timestamp
+     */
     public static String timestampToString(Timestamp timestamp) {
         String pattern = "yyyy-MM-dd HH:mm:ss";
 
@@ -81,6 +88,12 @@ public class TimeConverter {
         return localDate.toString();
     }
 
+    /**
+     * This will convert a string representation of firestore timestamp
+     * to a timestamp object
+     * @param timestampString the string representation of the timestamp
+     * @return Timestamp object from the string
+     */
     public static Timestamp stringToTimestamp(String timestampString) {
         try {
             String pattern = "yyyy-MM-dd HH:mm:ss";
