@@ -121,7 +121,7 @@ public class TestManagerActivity extends AppCompatActivity {
 
         //Add some listeners for the delete and edit test buttons
         testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
-        testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID));
+        testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
 
         return testView;
     }
@@ -153,12 +153,12 @@ public class TestManagerActivity extends AppCompatActivity {
      * populate the edit text areas with that information.
      * @param examID ID of specified exam needing to be changed
      */
-    private void editTest(String examID) {
+    private void editTest(String examID, Scheduled exam) {
         binding.buttonAddTest.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), TestAddActivity.class);
-//            intent.putExtra("testTime", preferenceManager.getString(Constants.Exam.KEY_TEST_TIME));
-//            intent.putExtra("testDate", preferenceManager.getString(Constants.Exam.KEY_TEST_DATE));
             intent.putExtra("examID", examID);
+            intent.putExtra("examDate",TimeConverter.timestampToString(exam.getDate()));
+            intent.putExtra("examName", exam.getName());
 //            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
             startActivity(intent);
         });

@@ -5,6 +5,7 @@ import android.util.Log;
 import com.example.ezmathmobile.models.Notification;
 import com.google.firebase.Timestamp;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
@@ -45,6 +46,11 @@ public class TimeConverter {
         return timeString;
     }
 
+    /**
+     * This will find the most recent notification by date
+     * @param notifications This is a List of notifications
+     * @return an integer that specifies the list index of the notification
+     */
     public static int findLatestDate(final List<Notification> notifications) {
         int index = -1;
         LocalDate currentLatest = null;
@@ -64,5 +70,43 @@ public class TimeConverter {
             }
         }
         return index;
+    }
+
+    /**
+     * This will convert a timestamp to string representation
+     * @param timestamp a timestamp from firestore
+     * @return string representation of the timestamp
+     */
+    public static String timestampToString(Timestamp timestamp) {
+        String pattern = "yyyy-MM-dd HH:mm:ss";
+
+        // Convert timestamp into date
+        Date date = timestamp.toDate();
+        // Convert Date to LocalDate
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+
+        return localDate.toString();
+    }
+
+    /**
+     * This will convert a string representation of firestore timestamp
+     * to a timestamp object
+     * @param timestampString the string representation of the timestamp
+     * @return Timestamp object from the string
+     */
+    public static Timestamp stringToTimestamp(String timestampString) {
+        try {
+            String pattern = "yyyy-MM-dd HH:mm:ss";
+
+            SimpleDateFormat formatter = new SimpleDateFormat(pattern);
+
+            Date date = formatter.parse(timestampString);
+
+            // Create a Timestamp object from the Date object
+            return new Timestamp(date);
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null; // Handle parsing errors appropriately
+        }
     }
 }
