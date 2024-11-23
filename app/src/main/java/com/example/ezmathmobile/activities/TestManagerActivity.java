@@ -156,8 +156,6 @@ public class TestManagerActivity extends AppCompatActivity {
     private void editTest(String examID, Scheduled exam) {
         binding.buttonAddTest.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), TestAddActivity.class);
-//            intent.putExtra("testTime", preferenceManager.getString(Constants.Exam.KEY_TEST_TIME));
-//            intent.putExtra("testDate", preferenceManager.getString(Constants.Exam.KEY_TEST_DATE));
             intent.putExtra("examID", examID);
             intent.putExtra("examDate",TimeConverter.timestampToString(exam.getDate()));
             intent.putExtra("examName", exam.getName());

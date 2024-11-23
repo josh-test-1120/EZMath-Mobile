@@ -35,8 +35,6 @@ public class TestAddActivity extends AppCompatActivity {
 
         //If edit test button was pressed...
         if(getIntent().getExtras() != null) {
-//            binding.inputTestDate.setText(getIntent().getStringExtra("testDate"));
-//            binding.inputTestTime.setText(getIntent().getStringExtra("testTime"));
 //            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
             examID = getIntent().getStringExtra("examID");
             binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
