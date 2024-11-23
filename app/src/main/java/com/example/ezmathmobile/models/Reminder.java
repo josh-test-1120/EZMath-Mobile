@@ -4,7 +4,6 @@
  */
 package com.example.ezmathmobile.models;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 public class Reminder {
