@@ -110,9 +110,12 @@ public class MainActivity extends AppCompatActivity {
     private void setListeners() {
         // Change to MainActivity (home screen) if homeButton clicked
         homeButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+            // Set the adaptor with the current main page
+            final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
+            contentView.setAdapter(mainPageAdaptor);
         });
         // Change to TestManagerActivity if testManagerButton clicked
         testManagerButton.setOnClickListener(v -> {
