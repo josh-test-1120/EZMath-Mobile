@@ -47,10 +47,10 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="560dp"
+        android:layout_height="0dp"
         android:animateLayoutChanges="true"
-        app:layout_constraintBottom_toTopOf="@+id/navigationLayout"
-        app:layout_constraintTop_toBottomOf="@id/orangeSeparator">
+        app:layout_constraintTop_toBottomOf="@id/orangeSeparator"
+        app:layout_constraintBottom_toBottomOf="parent">
 
 
         <androidx.recyclerview.widget.RecyclerView
@@ -60,9 +60,7 @@
             android:clipToPadding="false"
             android:orientation="vertical"
             android:padding="5dp"
-            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
-            app:layout_constraintBottom_toTopOf="@id/navigationLayout"
-            app:layout_constraintTop_toBottomOf="@id/orangeSeparator" />
+            app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager" />
 
         <ProgressBar
             android:id="@+id/progressBar"
@@ -73,61 +71,5 @@
             android:indeterminateTintMode="src_in"
             android:visibility="invisible" />
     </FrameLayout>
-
-
-
-    <!-- Navigation Footer Layout -->
-    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
-        android:id="@+id/navigationLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/redBackground"
-        android:columnCount="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/navbarMenu"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/hamburger"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/navbarHome"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/home"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/testManagerButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/calendar"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/navbarReminders"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/notification"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-    </GridLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
