@@ -40,11 +40,11 @@ import java.util.List;
  */
 public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder> {
 
+    private String examID;
     /**
      * This is the constructor for the Adaptor
      */
-    public ExamAdaptor() {
-    }
+    public ExamAdaptor() { }
 
     /**
      * This is an override of the onCreateViewHolder method

@@ -1,7 +1,12 @@
 package com.example.ezmathmobile.models;
 
+import com.google.firebase.Timestamp;
+
+import java.util.List;
+
 public class Exam {
-    private String name, professor;
+    private String name, professor, classID;
+    List<Timestamp> times;
 
     public Exam() {}
 
