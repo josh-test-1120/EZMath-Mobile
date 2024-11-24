@@ -18,6 +18,7 @@ import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.activities.TestManagerActivity;
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
+import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
@@ -177,26 +178,48 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             loading(true);
 
             FirebaseFirestore database = FirebaseFirestore.getInstance();
+            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
+
             HashMap<String, String> exam = new HashMap<>();
-            exam.put(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-//        exam.put(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-//        exam.put(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+            exam.put(Constants.Scheduled.KEY_SCHEDULED_TIME, binding.inputTestTime.getText().toString());
+//            exam.put(Constants.Scheduled.KEY_SCHEDULED_DATE, Timestamp.now());
+//            exam.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examID);
             exam.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+            exam.put(Constants.User.KEY_USERID, userID);
 
-            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                    .add(exam)
-                    .addOnSuccessListener(documentReference -> {
-                        //Save exam details to preference manager
-                        preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN, true);
-                        preferenceManager.putString(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-//                    preferenceManager.putString(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-//                    preferenceManager.putString(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
-                        preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+            // Get the exam ID from the exam name
+            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                    .whereEqualTo(Constants.Exam.KEY_TEST_NAME,binding.inputTestExam.getText().toString())
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // Serialize the document to the class
+                        Exam examDB = queryDocumentSnapshots.getDocuments().get(0).toObject(Exam.class);
+                        examID = queryDocumentSnapshots.getDocuments().get(0).getId();
+                        
+                        Log.d("Test Add ExamID",examID);
+                        exam.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID,examID);
 
-                        loading(false);
-                    }).addOnFailureListener(exception -> {
-                        loading(false);
-                        showToast(exception.getMessage());
+                        database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                                .add(exam)
+                                .addOnSuccessListener(documentReference -> {
+
+                                    documentReference.update(Constants.Scheduled.KEY_SCHEDULED_DATE,Timestamp.now());
+                                    //Save exam details to preference manager
+                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME, binding.inputTestTime.getText().toString());
+    //                        preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE, binding.inputTestDate.getText().toString());
+                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_EXAMID, binding.inputTestExam.getText().toString());
+                                    preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
+
+                                    // Set the adaptor with the current main page
+                                    final ExamAdaptor examAdaptor = new ExamAdaptor();
+                                    contentView.setAdapter(examAdaptor);
+
+                                    loading(false);
+                                }).addOnFailureListener(exception -> {
+                                    loading(false);
+                                    showToast(exception.getMessage());
+                                });
+
                     });
         }
 
