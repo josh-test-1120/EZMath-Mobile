@@ -111,6 +111,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             database = FirebaseFirestore.getInstance();
             // Attach the binding
             this.binding = ActivityTestManagerBinding.bind(itemView);
+            // Set the binding for the add new schedule button
+            binding.buttonAddTest.setOnClickListener(v -> {
+                // Set the adaptor with the current main page
+                final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor();
+                contentView.setAdapter(examAddAdaptor);
+            });
             // Populate the view
             loadTestDetails();
         }
@@ -235,11 +241,9 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          * @param examID ID of specified exam needing to be changed
          */
         private void editTest(String examID, Scheduled exam) {
-            binding.buttonAddTest.setOnClickListener(v -> {
-                // Set the adaptor with the current main page
-                final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(examID, exam.getName(),exam.getDate());
-                contentView.setAdapter(examAddAdaptor);
-            });
+            // Set the adaptor with the current main page
+            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(examID, exam.getName(),exam.getDate());
+            contentView.setAdapter(examAddAdaptor);
 
         }
 

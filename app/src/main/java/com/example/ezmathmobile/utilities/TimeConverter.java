@@ -3,6 +3,7 @@ package com.example.ezmathmobile.utilities;
 import android.util.Log;
 
 import com.example.ezmathmobile.models.Notification;
+import com.example.ezmathmobile.models.Scheduled;
 import com.google.firebase.Timestamp;
 
 import java.text.SimpleDateFormat;
@@ -144,5 +145,30 @@ public class TimeConverter {
             monthlyNotifications.put(month,groupedNotifications);
         }
         return monthlyNotifications;
+    }
+
+    public static <T> HashMap<String,List<Scheduled>> sortByMonthExams(final List<Scheduled> exams) {
+        // Variables
+        HashMap<String,List<Scheduled>> monthlyObjects = new HashMap<>();
+        List<Scheduled> groupedObjects;
+
+        for (int x = 0; x < exams.size(); x++) {
+            // Convert timestamp into date
+            Date date = exams.get(x).getDate().toDate();
+            // Convert Date to LocalDate
+            LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+            // Get the integer month
+            String month = localDate.getMonth().toString();
+            // Get the List from the Map
+            groupedObjects = monthlyObjects.get(month);
+            // Ensure the list exists
+            if (groupedObjects == null || groupedObjects.size() == 0)
+                groupedObjects = new ArrayList<>();
+            // Add the notification to the month list
+            groupedObjects.add(exams.get(x));
+            // Put the list back into the hash map
+            monthlyObjects.put(month,groupedObjects);
+        }
+        return monthlyObjects;
     }
 }
