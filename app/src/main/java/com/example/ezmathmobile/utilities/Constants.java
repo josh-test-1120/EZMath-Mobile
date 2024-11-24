@@ -26,7 +26,7 @@ public class Constants {
         public static final String KEY_COLLECTION_EXAMS = "Exams";
         public static final String KEY_CLASS_ID = "classid";
         public static final String KEY_TEST_TIME = "times";
-        public static final String KEY_TEST_ID = "name";
+        public static final String KEY_TEST_NAME = "name";
     }
 
     public class Scheduled {
