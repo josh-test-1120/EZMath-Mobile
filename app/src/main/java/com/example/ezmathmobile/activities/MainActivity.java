@@ -20,6 +20,7 @@ import com.example.ezmathmobile.adaptors.ExamAdaptor;
 import com.example.ezmathmobile.adaptors.FooterAdaptor;
 import com.example.ezmathmobile.adaptors.HeaderAdaptor;
 import com.example.ezmathmobile.adaptors.MainPageAdaptor;
+import com.example.ezmathmobile.adaptors.ReminderPageAdaptor;
 import com.example.ezmathmobile.firebase.DatabaseService;
 import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Notification;
@@ -128,9 +129,12 @@ public class MainActivity extends AppCompatActivity {
         });
         // Change to RemindersActivity if remindersButton clicked
         remindersButton.setOnClickListener(v -> {
-            Intent intent = new Intent(getApplicationContext(), RemindersActivity.class);
-            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-            startActivity(intent);
+//            Intent intent = new Intent(getApplicationContext(), RemindersActivity.class);
+//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+//            startActivity(intent);
+
+            final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
+            contentView.setAdapter(reminderPageAdaptor);
         });
         /* This is for the chat feature if we have time:
         // Change to chat screen activity if chatButton clicked
