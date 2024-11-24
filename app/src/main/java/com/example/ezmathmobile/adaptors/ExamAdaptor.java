@@ -57,7 +57,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
     @Override
     public ExamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         // Return the view inflated
-        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_manager, parent, false));
+        return new ExamViewHolder(LayoutInflater.from(parent.getContext())
+                .inflate(R.layout.activity_test_manager, parent, false), parent);
     }
 
     /**
@@ -84,23 +85,26 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
     public static class ExamViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
         private ConstraintLayout layoutExam;
-        // Private variables
+        // Dependency Objects
         private PreferenceManager preferenceManager;
         private FirebaseFirestore database;
         private ActivityTestManagerBinding binding;
         private Context mainPageLayout;
+        private RecyclerView contentView;
 
         /**
          * This is the ExamViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public ExamViewHolder(@NonNull View itemView) {
+        public ExamViewHolder(@NonNull View itemView, ViewGroup parent) {
             // Run the parent class constructor
             super(itemView);
             // Get the page context
             mainPageLayout = itemView.getContext();
-            // Bind the objects to the view IDs
+            // Bind the objects to the view ID
             layoutExam = itemView.findViewById(R.id.main);
+            // Bind the content view ID
+            contentView = parent.findViewById(R.id.contentView);
             // Attach the preferences
             preferenceManager = new PreferenceManager(layoutExam.getContext().getApplicationContext());
             // Attach the database
@@ -232,12 +236,9 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          */
         private void editTest(String examID, Scheduled exam) {
             binding.buttonAddTest.setOnClickListener(v -> {
-                Intent intent = new Intent(layoutExam.getContext().getApplicationContext(), TestAddActivity.class);
-                intent.putExtra("examID", examID);
-                intent.putExtra("examDate",TimeConverter.timestampToString(exam.getDate()));
-                intent.putExtra("examName", exam.getName());
-//            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
-                mainPageLayout.startActivity(intent);
+                // Set the adaptor with the current main page
+                final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(examID, exam.getName(),exam.getDate());
+                contentView.setAdapter(examAddAdaptor);
             });
 
         }
