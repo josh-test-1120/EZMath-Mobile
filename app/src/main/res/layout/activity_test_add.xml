@@ -63,37 +63,55 @@
 
     </LinearLayout>
 
-    <LinearLayout
-        android:id="@+id/testDateInput"
+    <TextView
+        android:id="@+id/dateText"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/testTimeInput">
+        android:text="Test Date:"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/testTimeInput"/>
 
-        <TextView
-            android:id="@+id/testDate"
-            android:layout_width="150dp"
-            android:layout_height="40dp"
-            android:gravity="left"
-            android:text="Test Date:"
-            android:textSize="30sp"
-            android:textColor="@color/white"/>
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:theme="@style/Theme.CalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:dateTextAppearance="@style/Theme.CalendarView"
+        android:weekDayTextAppearance="@style/Theme.CalendarView"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
 
-        <EditText
-            android:id="@+id/inputTestDate"
-            android:layout_width="250dp"
-            android:layout_height="35dp"
-            android:background="@drawable/round_text_input"
-            android:importantForAutofill="no"
-            android:inputType="text"
-            android:paddingStart="16dp"
-            android:paddingEnd="16dp"
-            android:textAlignment="gravity"
-            android:textColor="@color/input_text"
-            android:textSize="20sp" />
+<!--    <LinearLayout-->
+<!--        android:id="@+id/testDateInput"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="wrap_content"-->
+<!--        android:orientation="horizontal"-->
+<!--        android:layout_marginTop="10dp"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/calendarView">-->
 
-    </LinearLayout>
+<!--        <TextView-->
+<!--            android:id="@+id/testDate"-->
+<!--            android:layout_width="150dp"-->
+<!--            android:layout_height="40dp"-->
+<!--            android:gravity="left"-->
+<!--            android:text="Test Date:"-->
+<!--            android:textSize="30sp"-->
+<!--            android:textColor="@color/white"/>-->
+
+<!--        <EditText-->
+<!--            android:id="@+id/inputTestDate"-->
+<!--            android:layout_width="250dp"-->
+<!--            android:layout_height="35dp"-->
+<!--            android:background="@drawable/round_text_input"-->
+<!--            android:importantForAutofill="no"-->
+<!--            android:inputType="text"-->
+<!--            android:paddingStart="16dp"-->
+<!--            android:paddingEnd="16dp"-->
+<!--            android:textAlignment="gravity"-->
+<!--            android:textColor="@color/input_text"-->
+<!--            android:textSize="20sp" />-->
+
+<!--    </LinearLayout>-->
 
     <LinearLayout
         android:id="@+id/blueSeperatorTwo"
@@ -101,7 +119,7 @@
         android:layout_height="3dp"
         android:orientation="horizontal"
         android:layout_marginTop="15dp"
-        app:layout_constraintTop_toBottomOf="@id/testDateInput"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"
         android:background="@color/blue_seperator"/>
     <!--Exam ID-->
     <LinearLayout
@@ -209,62 +227,6 @@
             tools:layout_editor_absoluteX="211dp" />
 
     </LinearLayout>
-
-    <GridLayout xmlns:grid="http://schemas.android.com/apk/tools"
-        android:id="@+id/navigationLayout"
-        android:layout_width="0dp"
-        android:layout_height="50dp"
-        android:orientation="horizontal"
-        android:background="@color/redBackground"
-        android:columnCount="4"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-
-        <ImageView
-            android:id="@+id/imageView"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/hamburger"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/imageView2"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/home"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/testManagerButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/calendar"
-            android:background="@color/darkRedBackground"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-        <ImageView
-            android:id="@+id/imageView3"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:padding="5dp"
-            app:srcCompat="@drawable/notification"
-            android:layout_columnWeight="1"
-            android:layout_rowWeight="1"
-            grid:layout_gravity="center"/>
-
-    </GridLayout>
-
-
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

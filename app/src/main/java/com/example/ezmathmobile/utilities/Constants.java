@@ -29,9 +29,16 @@ public class Constants {
 
     public class Exam {
         public static final String KEY_COLLECTION_EXAMS = "Exams";
-        public static final String KEY_EXAM_ID = "exam_id";
-        public static final String KEY_CLASS_ID = "class_id";
-        public static final String KEY_TEST_DATE = "test_date";
-        public static final String KEY_TEST_TIME = "test_time";
+        public static final String KEY_CLASS_ID = "classid";
+        public static final String KEY_TEST_TIME = "times";
+        public static final String KEY_TEST_NAME = "name";
+    }
+
+    public class Scheduled {
+        public static final String KEY_COLLECTION_SCHEDULED = "Scheduled";
+        public static final String KEY_SCHEDULED_DATE = "date";
+        public static final String KEY_SCHEDULED_TIME = "time";
+        public static final String KEY_SCHEDULED_EXAMID = "examid";
+        public static final String KEY_SCHEDULED_USERID = "userid";
     }
 }

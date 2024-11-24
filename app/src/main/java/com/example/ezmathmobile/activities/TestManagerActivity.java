@@ -1,7 +1,9 @@
 package com.example.ezmathmobile.activities;
 
+import android.app.Activity;
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -10,26 +12,52 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
+import com.example.ezmathmobile.models.Exam;
+import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeConverter;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class TestManagerActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private ActivityTestManagerBinding binding;
     private PreferenceManager preferenceManager;
+    private final int ADDEXAM_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         binding = ActivityTestManagerBinding.inflate(getLayoutInflater());
         setContentView(binding.getRoot());
+        // Attach the preferences
+        preferenceManager = new PreferenceManager(getApplicationContext());
 
         database = FirebaseFirestore.getInstance();
 
         loadTestDetails();
     }
+
+//    @Override
+//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+//        super.onActivityResult(requestCode, resultCode, data);
+//
+//        if (requestCode == ADDEXAM_ACTIVITY) {
+//            if(resultCode == Activity.RESULT_OK){
+//                String result=data.getStringExtra("result");
+//            }
+//            if (resultCode == Activity.RESULT_CANCELED) {
+//                // Write your code if there's no result
+//            }
+//        }
+//    } //onActivityResult
 
     /**
      * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
@@ -43,21 +71,40 @@ public class TestManagerActivity extends AppCompatActivity {
      * Method to paste test details into test manager view from firestore
      */
     private void loadTestDetails() {
+        // Get the userID
+        String userID = preferenceManager.getString(Constants.User.KEY_USERID);
+        List<Scheduled> scheduled = new ArrayList<>();
+
         //loading(true);
-        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+        database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_USERID,userID)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     //Clearing up views before loading everything in
-                   binding.testContainer.removeAllViews();
+                    binding.testContainer.removeAllViews();
                     //Getting details from firestore
-                   for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                       String examID = document.getString(Constants.Exam.KEY_EXAM_ID);
-                       String examTime = document.getString(Constants.Exam.KEY_TEST_TIME);
-                       String examDate = document.getString(Constants.Exam.KEY_TEST_DATE);
-                        //Calling createNewTestView to set the text into each of the xml components
-                       View testView = createTestView(examID, examTime, examDate);
-                       binding.testContainer.addView(testView);
-                   }
+                    for (DocumentSnapshot schedule : queryDocumentSnapshots) {
+                        // Serialize the document to the class
+                        Scheduled scheduleDB = schedule.toObject(Scheduled.class);
+                        String scheduledID = schedule.getId();
+
+                        database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                                .document(scheduleDB.getExamid())
+                                .get()
+                                .addOnSuccessListener(exam -> {
+                                    // Serialize the document to the class
+                                    Exam examDB = exam.toObject(Exam.class);
+                                    if (examDB != null) scheduleDB.setName(examDB.getName());
+                                    // Add scheduled to list
+                                    scheduled.add(scheduleDB);
+                                    View testView = createTestView(scheduleDB, scheduledID);
+                                    binding.testContainer.addView(testView);
+                                })
+                                .addOnFailureListener(exception ->{
+                                    //loading(false);
+                                    showToast(exception.getMessage());
+                                });
+                    }
                 })
                 .addOnFailureListener(exception ->{
                     //loading(false);
@@ -68,12 +115,10 @@ public class TestManagerActivity extends AppCompatActivity {
     /**
      * Creating a view and putting all my test details into it from previous method. This is putting
      * the details specifically into my exam item container view
-     * @param examID from previous method (firestore)
-     * @param examTime from previous method (firestore)
-     * @param examDate from previous method (firestore)
+     * @param exam from previous method (firestore)
      * @return testView which is the container with all the test details
      */
-    private View createTestView(String examID, String examTime, String examDate) {
+    private View createTestView(Scheduled exam, String examID) {
         View testView = getLayoutInflater().inflate(R.layout.exam_item_container, binding.testContainer, false);
 
         //Pull text views from item container and put them into variables in java
@@ -81,21 +126,25 @@ public class TestManagerActivity extends AppCompatActivity {
         TextView examTimeView = testView.findViewById(R.id.testTime);
         TextView examDateView = testView.findViewById(R.id.testDate);
 
+        // Get localized string from the timestamp
+        String time = TimeConverter.localizeTime(exam.getDate());
+        String date = TimeConverter.localizeDate(exam.getDate());
+
         //Setting the view texts to whatever was given
-        examIDView.setText(examID);
-        examTimeView.setText(examTime);
-        examDateView.setText(examDate);
+        examIDView.setText(exam.getName());
+        examTimeView.setText(time);
+        examDateView.setText(date);
 
         //Add some listeners for the delete and edit test buttons
         testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
-        testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID));
+        testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
 
         return testView;
     }
 
     private void deleteTest(String examID) {
         database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
-                .whereEqualTo(Constants.Exam.KEY_EXAM_ID, examID)
+                .whereEqualTo(FieldPath.documentId(), examID)
                 .get()
                 .addOnSuccessListener(queryDocumentSnapshots -> {
                     for (QueryDocumentSnapshot document : queryDocumentSnapshots){
@@ -115,27 +164,22 @@ public class TestManagerActivity extends AppCompatActivity {
     }
 
     /**
-     * With the edit test mehtod, we will return to the addtest activity. However, we will take the
+     * With the edit test method, we will return to the addtest activity. However, we will take the
      * information within that view and return it to the addtest activity, wherein that activity can
      * populate the edit text areas with that information.
      * @param examID ID of specified exam needing to be changed
      */
-    private void editTest(String examID) {
+    private void editTest(String examID, Scheduled exam) {
         binding.buttonAddTest.setOnClickListener(v -> {
             Intent intent = new Intent(getApplicationContext(), TestAddActivity.class);
-            intent.putExtra("testTime", preferenceManager.getString(Constants.Exam.KEY_TEST_TIME));
-            intent.putExtra("testDate", preferenceManager.getString(Constants.Exam.KEY_TEST_DATE));
             intent.putExtra("examID", examID);
-            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
+            intent.putExtra("examDate",TimeConverter.timestampToString(exam.getDate()));
+            intent.putExtra("examName", exam.getName());
+//            intent.putExtra("classID", preferenceManager.getString(Constants.Exam.KEY_CLASS_ID));
             startActivity(intent);
         });
 
     }
-
-
-
-
-
 
     /**
      * Setting up progress bar visibility if user is loading or not

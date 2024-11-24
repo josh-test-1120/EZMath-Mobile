@@ -2,22 +2,31 @@ package com.example.ezmathmobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
+import android.widget.CalendarView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeConverter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.type.DateTime;
 
+import java.util.Date;
 import java.util.HashMap;
 
 public class TestAddActivity extends AppCompatActivity {
 
     private ActivityTestAddBinding binding;
     private PreferenceManager preferenceManager;
+    private String examID;
+    private Timestamp timestamp;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -27,15 +36,22 @@ public class TestAddActivity extends AppCompatActivity {
 
         //If edit test button was pressed...
         if(getIntent().getExtras() != null) {
-            binding.inputTestDate.setText(getIntent().getStringExtra("testDate"));
-            binding.inputTestTime.setText(getIntent().getStringExtra("testTime"));
-            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
-            binding.inputTestExam.setText(getIntent().getStringExtra("examID"));
+//            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
+            examID = getIntent().getStringExtra("examID");
+            binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
+            timestamp = TimeConverter.stringToTimestamp(getIntent().getStringExtra("examDate"));
+            if (timestamp != null) Log.d("Test Add",timestamp.toString());
+            // Get localized string from the timestamp
+            String time = TimeConverter.localizeTime(timestamp);
+            String date = TimeConverter.localizeDate(timestamp);
+            // Update the time field
+            binding.inputTestTime.setText(time);
         }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
 
         onListeners();
+        setupCalendar(binding);
     }
 
     /**
@@ -73,8 +89,8 @@ public class TestAddActivity extends AppCompatActivity {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String, String> exam = new HashMap<>();
         exam.put(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-        exam.put(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-        exam.put(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+//        exam.put(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+//        exam.put(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
         exam.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
         database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
@@ -83,8 +99,8 @@ public class TestAddActivity extends AppCompatActivity {
                     //Save exam details to preference manager
                     preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN, true);
                     preferenceManager.putString(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
-                    preferenceManager.putString(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
-                    preferenceManager.putString(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
+//                    preferenceManager.putString(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
+//                    preferenceManager.putString(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
                     preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
                     Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
@@ -105,9 +121,9 @@ public class TestAddActivity extends AppCompatActivity {
         if (binding.inputTestTime.getText().toString().trim().isEmpty()) {
             showToast("Please Enter test time");
             return false;
-        } else if (binding.inputTestDate.getText().toString().trim().isEmpty()) {
-            showToast("Please Enter test date");
-            return false;
+//        } else if (binding.calendarView.getText().toString().trim().isEmpty()) {
+//            showToast("Please Enter test date");
+//            return false;
         } else if (binding.inputTestExam.getText().toString().trim().isEmpty()) {
             showToast("Please Enter exam ID");
             return false;
@@ -132,5 +148,33 @@ public class TestAddActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
             binding.buttonSubmit.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void setupCalendar(ActivityTestAddBinding binding) {
+        // Add Listener in calendar
+        binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
+                @Override
+                // In this Listener have one method
+                // and in this method we will
+                // get the value of DAYS, MONTH, YEARS
+                public void onSelectedDayChange(
+                        @NonNull CalendarView view,
+                        int year,
+                        int month,
+                        int dayOfMonth)
+                {
+
+                    // Store the value of date with
+                    // format in String type Variable
+                    // Add 1 in month because month
+                    // index is start with 0
+                    String Date
+                            = dayOfMonth + "-"
+                            + (month + 1) + "-" + year;
+
+                    // set this date in TextView for Display
+                    //binding.date_view.setText(Date);
+                }
+            });
     }
 }
