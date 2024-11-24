@@ -31,7 +31,7 @@ import java.util.List;
 
 
 /**
- * This is the ExamAdaptor that is used in the RecycleView Adaptor
+ * This is the ExamAddAdaptor that is used in the RecycleView Adaptor
  * This extends the RecycleView.Adaptor class
  */
 public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddViewHolder> {
@@ -52,7 +52,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
     }
 
     /**
-     * This is the constructor for the Adaptor
+     * This is the default constructor (empty) for the Adaptor
      */
     public ExamAddAdaptor() {
         this.examID = null;
@@ -65,7 +65,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return A new ExamViewHolder class that has its layout inflated
+     * @return A new ExamAddViewHolder class that has its layout inflated
      */
     @NonNull
     @Override
@@ -91,7 +91,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
     public int getItemCount() { return 1; }
 
     /**
-     * This is the ExamViewHolder class that extends the RecycleView.ViewHolder
+     * This is the ExamAddViewHolder class that extends the RecycleView.ViewHolder
      */
     public static class ExamAddViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
@@ -108,8 +108,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         private Timestamp examDate;
 
         /**
-         * This is the ExamViewHolder constructor
+         * This is the ExamAddViewHolder constructor
          * @param itemView the view that is to be inflated
+         * @param parent this is the parent view for reference
+         * @param examID this is the string reprenstation of the examID
+         * @param examName this is the exam name
+         * @param examDate this is a Timestamp object of the time and date
          */
         public ExamAddViewHolder(@NonNull View itemView, ViewGroup parent, String examID, String examName, Timestamp examDate) {
             // Run the parent class constructor

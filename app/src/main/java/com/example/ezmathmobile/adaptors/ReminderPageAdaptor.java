@@ -6,7 +6,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -14,8 +13,6 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityRemindersBinding;
-import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
-import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.models.Reminder;
 import com.example.ezmathmobile.models.ReminderDateBlock;
 import com.example.ezmathmobile.utilities.Constants;
@@ -48,7 +45,7 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return A new ExamViewHolder class that has its layout inflated
+     * @return A new ReminderPageViewHolder class that has its layout inflated
      */
     @NonNull
     @Override
@@ -91,6 +88,7 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
         /**
          * This is the ReminderPageViewHolder constructor
          * @param itemView the view that is to be inflated
+         * @param parent this is the parent View for references
          */
         public ReminderPageViewHolder(@NonNull View itemView, ViewGroup parent) {
             // Run the parent class constructor
