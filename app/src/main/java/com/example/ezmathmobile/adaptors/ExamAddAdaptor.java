@@ -51,6 +51,15 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
     }
 
     /**
+     * This is the constructor for the Adaptor
+     */
+    public ExamAddAdaptor() {
+        this.examID = null;
+        this.examName = null;
+        this.examDate = null;
+    }
+
+    /**
      * This is an override of the onCreateViewHolder method
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
@@ -125,11 +134,13 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             setupCalendar(binding);
             // Populate the view
             binding.inputTestExam.setText(examName);
-            // Get localized string from the timestamp
-            String time = TimeConverter.localizeTime(examDate);
-            String date = TimeConverter.localizeDate(examDate);
-            // Update the time field
-            binding.inputTestTime.setText(time);
+            if (examDate != null) {
+                // Get localized string from the timestamp
+                String time = TimeConverter.localizeTime(examDate);
+                String date = TimeConverter.localizeDate(examDate);
+                // Update the time field
+                binding.inputTestTime.setText(time);
+            }
         }
 
         /**
