@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
@@ -80,6 +81,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
         //View viewBackground;
         TextView notificationName, notificationTime, notificationDate, welcomeMessage,
                 upcomingExamMessage, unreadNotificationMessage;
+        ProgressBar progressBar;
         RecyclerView notificationsView;
         // Get the application context
         Context mainPageContext;
@@ -88,6 +90,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
 
         /**
          * This is the NotificationViewHolder constructor
+         *
          * @param itemView the view that is to be inflated
          */
         public MainPageViewHolder(@NonNull View itemView) {
@@ -102,27 +105,29 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             welcomeMessage = itemView.findViewById(R.id.welcomeMessage);
             upcomingExamMessage = itemView.findViewById(R.id.upcomingExamMessage);
             unreadNotificationMessage = itemView.findViewById(R.id.unreadNotificationMessage);
+            progressBar = itemView.findViewById(R.id.progressBar);
 
             // Generate the user's name from shared preferences
             String first_name = preferenceManager.getString(Constants.User.KEY_FIRSTNAME);
             String last_name = preferenceManager.getString(Constants.User.KEY_LASTNAME);
-            String name = String.format("Welcome %s %s!",first_name,last_name);
+            String name = String.format("Welcome %s %s!", first_name, last_name);
             welcomeMessage.setText(name);
 
             // Get the data from the database
             database = FirebaseFirestore.getInstance();
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
             // Get the notifications
-            queryNotifications(preferenceManager,upcomingExamMessage,unreadNotificationMessage,notificationsView);
+            queryNotifications(preferenceManager, upcomingExamMessage, unreadNotificationMessage, notificationsView);
         }
 
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
+         *
          * @param notification this is the notification to bind actions to
          */
         void bindNotification(final Notification notification) {
-            Log.d("Notif Data",notification.toString());
+            Log.d("Notif Data", notification.toString());
             // Update the view with the poster information
             if (notification.examName != null) notificationName.setText(notification.examName);
             if (notification.examDate != null) {
@@ -138,18 +143,20 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
         /**
          * This will query the notifications from the firestore database
          * and do the relational sub-queries to put all the information together
-         * @param preferences This is the preferences for the application
-         * @param latestView This is the TextView that holds the latest notification
-         * @param numberView This is the TextView that holds the number of notifications
+         *
+         * @param preferences       This is the preferences for the application
+         * @param latestView        This is the TextView that holds the latest notification
+         * @param numberView        This is the TextView that holds the number of notifications
          * @param notificationsView This is the RecycleView that we update the notifications in
          */
         public void queryNotifications(PreferenceManager preferences, TextView latestView, TextView numberView,
                                        RecyclerView notificationsView) {
             // Get information from preferences
             String userID = preferences.getString(Constants.User.KEY_USERID);
+            loading(true);
             // Get the notifications
             database.collection("Notifications")
-                    .whereEqualTo(Constants.User.KEY_USERID,userID)
+                    .whereEqualTo(Constants.User.KEY_USERID, userID)
                     // Get the record
                     .get()
                     // If no error fetching data
@@ -188,7 +195,10 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                                                             // Push the notification into the list
                                                             notifications.add(notification);
                                                             // When we have processed all callbacks for each notification
-                                                            if (notifications.size() == documents.size()) updateHomePage(notifications,latestView,numberView,notificationsView);
+                                                            if (notifications.size() == documents.size()) {
+                                                                updateHomePage(notifications, latestView, numberView, notificationsView);
+                                                                loading(false);
+                                                            }
                                                         });
                                             });
                                 }
@@ -199,9 +209,10 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
 
         /**
          * This will update the home page with all the latest notification details
-         * @param notifications These are the notifications to process
-         * @param latestView This is the TextView that holds the latest notification
-         * @param numberView This is the TextView that holds the number of notifications
+         *
+         * @param notifications     These are the notifications to process
+         * @param latestView        This is the TextView that holds the latest notification
+         * @param numberView        This is the TextView that holds the number of notifications
          * @param notificationsView This is the RecycleView that we update the notifications in
          */
         public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
@@ -213,18 +224,30 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             String time = TimeConverter.localizeTime(latest.examDate);
             String date = TimeConverter.localizeDate(latest.examDate);
             // String formatters
-            String latestNotification = String.format("%s - %s on %s",latest.examName, time, date);
-            String sizeNotifications = String.format("Unread Notifications: %d",notifications.size());
+            String latestNotification = String.format("%s - %s on %s", latest.examName, time, date);
+            String sizeNotifications = String.format("Unread Notifications: %d", notifications.size());
             // Update the UI
             latestView.setText(latestNotification);
             numberView.setText(sizeNotifications);
 
             // Convert the notifications into month groups
-            HashMap<String,List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
+            HashMap<String, List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
 
             // Set the adaptor with the current notifications
             final NotificationMonthAdaptor notificationMonthAdaptor = new NotificationMonthAdaptor(groupedByMonth);
             notificationsView.setAdapter(notificationMonthAdaptor);
+        }
+
+        /**
+         * Setting up progress bar visibility if user is loading or not
+         * @param isLoading Whether the program is loading or not
+         */
+        private void loading(Boolean isLoading) {
+            if (isLoading) {
+                progressBar.setVisibility(View.VISIBLE);
+            } else {
+                progressBar.setVisibility(View.INVISIBLE);
+            }
         }
     }
 }

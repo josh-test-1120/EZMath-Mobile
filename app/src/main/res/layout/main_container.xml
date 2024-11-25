@@ -62,6 +62,7 @@
 
     <!-- Progress Bar -->
     <ProgressBar
+        android:id="@+id/progressBar"
         android:layout_width="25dp"
         android:layout_height="25dp"
         app:layout_constraintTop_toTopOf="@+id/mainNotificationView"
