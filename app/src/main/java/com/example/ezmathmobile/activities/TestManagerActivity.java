@@ -1,10 +1,12 @@
 package com.example.ezmathmobile.activities;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -75,7 +77,7 @@ public class TestManagerActivity extends AppCompatActivity {
         String userID = preferenceManager.getString(Constants.User.KEY_USERID);
         List<Scheduled> scheduled = new ArrayList<>();
 
-        //loading(true);
+        loading(true);
         database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                 .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_USERID,userID)
                 .get()
@@ -101,13 +103,13 @@ public class TestManagerActivity extends AppCompatActivity {
                                     binding.testContainer.addView(testView);
                                 })
                                 .addOnFailureListener(exception ->{
-                                    //loading(false);
+                                    loading(false);
                                     showToast(exception.getMessage());
                                 });
                     }
                 })
                 .addOnFailureListener(exception ->{
-                    //loading(false);
+                    loading(false);
                     showToast(exception.getMessage());
                 });
     }
@@ -185,8 +187,6 @@ public class TestManagerActivity extends AppCompatActivity {
      * Setting up progress bar visibility if user is loading or not
      * @param isLoading Whether the program is loading or not
      */
-    /*
-    Still figuring out where to put the progress bar
     private void loading(Boolean isLoading){
         if(isLoading){
             binding.testContainer.setVisibility(View.INVISIBLE);
@@ -195,6 +195,6 @@ public class TestManagerActivity extends AppCompatActivity {
             binding.progressBar.setVisibility(View.INVISIBLE);
             binding.testContainer.setVisibility(View.VISIBLE);
         }
-    }*/
+    }
 
 }

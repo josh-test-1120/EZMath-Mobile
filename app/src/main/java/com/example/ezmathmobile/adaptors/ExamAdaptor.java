@@ -137,7 +137,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
             List<Scheduled> scheduled = new ArrayList<>();
 
-            //loading(true);
+            loading(true);
             database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                     .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_USERID,userID)
                     .get()
@@ -161,16 +161,17 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                         scheduled.add(scheduleDB);
                                         View testView = createTestView(scheduleDB, scheduledID);
                                         binding.testContainer.addView(testView);
+                                        loading(false);
                                         Log.d("Test Manager","view added");
                                     })
                                     .addOnFailureListener(exception ->{
-                                        //loading(false);
+                                        loading(false);
                                         showToast(exception.getMessage());
                                     });
                         }
                     })
                     .addOnFailureListener(exception ->{
-                        //loading(false);
+                        loading(false);
                         showToast(exception.getMessage());
                     });
         }
@@ -251,8 +252,6 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          * Setting up progress bar visibility if user is loading or not
          * @param isLoading Whether the program is loading or not
          */
-        /*
-        Still figuring out where to put the progress bar
         private void loading(Boolean isLoading){
             if(isLoading){
                 binding.testContainer.setVisibility(View.INVISIBLE);
@@ -261,6 +260,6 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                 binding.progressBar.setVisibility(View.INVISIBLE);
                 binding.testContainer.setVisibility(View.VISIBLE);
             }
-        }*/
+        }
     }
 }

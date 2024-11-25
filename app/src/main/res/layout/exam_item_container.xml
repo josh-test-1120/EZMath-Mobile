@@ -22,7 +22,7 @@
 
         <TextView
             android:id="@+id/testTime"
-            android:layout_width="150dp"
+            android:layout_width="120dp"
             android:layout_height="35dp"
             android:text="- Test time"
             android:textColor="@color/white"
@@ -46,7 +46,6 @@
             android:id="@+id/testEdit"
             android:layout_width="35dp"
             android:layout_height="35dp"
-            android:layout_marginLeft="8dp"
             android:src="@drawable/edit_test" />
 
 
