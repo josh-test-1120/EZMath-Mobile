@@ -23,7 +23,9 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestManagerActivity extends AppCompatActivity {
@@ -136,7 +138,10 @@ public class TestManagerActivity extends AppCompatActivity {
         examDateView.setText(date);
 
         //Add some listeners for the delete and edit test buttons
-        testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
+        testView.findViewById(R.id.testDelete).setOnClickListener(v -> {
+            deleteTest(examID);
+            AddDeletionReminder(examID);
+        });
         testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
 
         return testView;
@@ -161,6 +166,28 @@ public class TestManagerActivity extends AppCompatActivity {
                                 });
                     }
                 });
+    }
+
+    /**
+     * A method that adds a test deletion confirmation reminder in the Firebase database.
+     */
+    private void AddDeletionReminder(String examID) {
+        // Declaring database and Hashmap
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        // Adding data to the Hashmap
+        // Datetime
+        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
+        // Adding text
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examID + " test has been successfully" +
+                "deleted");
+        // Adding type
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "red");
+
+        // Adding Reminder data into the database
+        database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                .add(hashMap);
     }
 
     /**
