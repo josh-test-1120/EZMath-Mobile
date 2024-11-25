@@ -61,17 +61,6 @@
         app:layout_constraintTop_toBottomOf="@+id/headerLayout"
         app:layout_constraintBottom_toTopOf="@id/navigationGrid"/>
 
-    <!-- Progress Bar -->
-    <ProgressBar
-        android:layout_width="25dp"
-        android:layout_height="25dp"
-        android:orientation="horizontal"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/contentView"
-        app:layout_constraintBottom_toBottomOf="@+id/contentView"
-        android:visibility="gone" />
-
     <!-- Navigation Footer Layout -->
     <GridLayout
         android:id="@+id/navigationGrid"

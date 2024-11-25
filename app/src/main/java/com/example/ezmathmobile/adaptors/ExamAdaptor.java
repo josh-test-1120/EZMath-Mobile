@@ -163,6 +163,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                         binding.testContainer.addView(testView);
                                         loading(false);
                                         Log.d("Test Manager","view added");
+                                        loading(false);
                                     })
                                     .addOnFailureListener(exception ->{
                                         loading(false);
