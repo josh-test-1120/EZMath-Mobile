@@ -6,6 +6,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -137,6 +138,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Setup the listeners and calendar
             onListeners();
             setupCalendar(binding);
+            //Setup a listener for clicking outside edit texts
+            setupOutsideClickListener();
             // Populate the view
             binding.inputTestExam.setText(examName);
             if (examDate != null) {
@@ -291,6 +294,25 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     //binding.date_view.setText(Date);
                 }
             });
+        }
+
+        private void setupOutsideClickListener(){
+            layoutAddExam.setOnTouchListener((v, event) -> {
+                hideKeyboard();
+                v.performClick();
+                return false;
+            });
+        }
+
+        /**
+         * Using InputMethodManager we can hide the keyboard when clicked outside of the edit text fields
+         */
+        private void hideKeyboard() {
+            InputMethodManager imm = (InputMethodManager) mainPageLayout.getSystemService(Context.INPUT_METHOD_SERVICE);
+            View currentFocus = itemView.findFocus();
+            if (imm != null && currentFocus != null) {
+                imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
+            }
         }
     }
 }

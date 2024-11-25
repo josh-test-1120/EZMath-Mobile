@@ -84,9 +84,9 @@
         android:includeFontPadding="false"
         android:text="Schedule a Test"
         android:textSize="25sp"
-        android:textAlignment="center"
-        android:layout_marginRight="5dp"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/scrollView"/>
+        android:textAlignment="center" />
+
+
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
