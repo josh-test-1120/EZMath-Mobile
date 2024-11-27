@@ -12,11 +12,15 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
+import java.util.Set;
 
 public class TimeConverter {
 
@@ -122,53 +126,93 @@ public class TimeConverter {
         }
     }
 
-    public static HashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {
+    public static LinkedHashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {
         // Variables
         HashMap<String,List<Notification>> monthlyNotifications = new HashMap<>();
+        LinkedHashMap<String,List<Notification>> sortedNotifications = new LinkedHashMap<>();
         List<Notification> groupedNotifications;
 
         for (int x = 0; x < notifications.size(); x++) {
             // Convert timestamp into date
             Date date = notifications.get(x).examDate.toDate();
-            // Convert Date to LocalDate
-            LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
-            // Get the integer month
-            String month = localDate.getMonth().toString();
+            // Check for date after current date
+            if (date.after(new Date())) {
+                // Convert Date to LocalDate
+                LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+                // Get the integer month
+                String month = localDate.getMonth().toString();
+                // Get the List from the Map
+                groupedNotifications = monthlyNotifications.get(month);
+                // Ensure the list exists
+                if (groupedNotifications == null || groupedNotifications.size() == 0)
+                    groupedNotifications = new ArrayList<>();
+                // Add the notification to the month list
+                groupedNotifications.add(notifications.get(x));
+                // Put the list back into the hash map
+                monthlyNotifications.put(month,groupedNotifications);
+            }
+        }
+        // Get the months and sort them
+        Set<String> months = monthlyNotifications.keySet();
+        List<String> monthsSorted = new ArrayList<>(months);
+        Collections.sort(monthsSorted, Collections.reverseOrder());
+
+        // Sort the collections and put them in a LinkedHashMap
+        // to preserve order
+        for (String month : monthsSorted) {
             // Get the List from the Map
             groupedNotifications = monthlyNotifications.get(month);
-            // Ensure the list exists
-            if (groupedNotifications == null || groupedNotifications.size() == 0)
-                groupedNotifications = new ArrayList<>();
-            // Add the notification to the month list
-            groupedNotifications.add(notifications.get(x));
+            // Convert timestamp into date
+            if (groupedNotifications != null) Collections.sort(groupedNotifications, Collections.reverseOrder());
             // Put the list back into the hash map
-            monthlyNotifications.put(month,groupedNotifications);
+            sortedNotifications.put(month,groupedNotifications);
         }
-        return monthlyNotifications;
+        // return the sorted HashMap
+        return sortedNotifications;
     }
 
-    public static <T> HashMap<String,List<Scheduled>> sortByMonthExams(final List<Scheduled> exams) {
+    public static <T> LinkedHashMap<String,List<Scheduled>> sortByMonthExams(final List<Scheduled> exams) {
         // Variables
-        HashMap<String,List<Scheduled>> monthlyObjects = new HashMap<>();
-        List<Scheduled> groupedObjects;
+        HashMap<String,List<Scheduled>> monthlyScheduled = new HashMap<>();
+        LinkedHashMap<String,List<Scheduled>> sortedScheduled = new LinkedHashMap<>();
+        List<Scheduled> groupedScheduled;
 
         for (int x = 0; x < exams.size(); x++) {
             // Convert timestamp into date
             Date date = exams.get(x).getDate().toDate();
-            // Convert Date to LocalDate
-            LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
-            // Get the integer month
-            String month = localDate.getMonth().toString();
-            // Get the List from the Map
-            groupedObjects = monthlyObjects.get(month);
-            // Ensure the list exists
-            if (groupedObjects == null || groupedObjects.size() == 0)
-                groupedObjects = new ArrayList<>();
-            // Add the notification to the month list
-            groupedObjects.add(exams.get(x));
-            // Put the list back into the hash map
-            monthlyObjects.put(month,groupedObjects);
+            // Check for date after current date
+            if (date.after(new Date())) {
+                // Convert Date to LocalDate
+                LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+                // Get the integer month
+                String month = localDate.getMonth().toString();
+                // Get the List from the Map
+                groupedScheduled = monthlyScheduled.get(month);
+                // Ensure the list exists
+                if (groupedScheduled == null || groupedScheduled.size() == 0)
+                    groupedScheduled = new ArrayList<>();
+                // Add the notification to the month list
+                groupedScheduled.add(exams.get(x));
+                // Put the list back into the hash map
+                monthlyScheduled.put(month,groupedScheduled);
+            }
         }
-        return monthlyObjects;
+        // Get the months and sort them
+        Set<String> months = monthlyScheduled.keySet();
+        List<String> monthsSorted = new ArrayList<>(months);
+        Collections.sort(monthsSorted, Collections.reverseOrder());
+
+        // Sort the collections and put them in a LinkedHashMap
+        // to preserve order
+        for (String month : monthsSorted) {
+            // Get the List from the Map
+            groupedScheduled = monthlyScheduled.get(month);
+            // Convert timestamp into date
+            if (groupedScheduled != null) Collections.sort(groupedScheduled, Collections.reverseOrder());
+            // Put the list back into the hash map
+            sortedScheduled.put(month,groupedScheduled);
+        }
+        // return the sorted HashMap
+        return sortedScheduled;
     }
 }
