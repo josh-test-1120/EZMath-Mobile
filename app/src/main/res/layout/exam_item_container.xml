@@ -10,23 +10,45 @@
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/testName"
-            android:layout_width="75dp"
-            android:layout_height="35dp"
-            android:text="Test name"
-            android:textSize="20sp"
-            android:textColor="@color/white"/>
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
 
-        <TextView
-            android:id="@+id/testTime"
-            android:layout_width="120dp"
-            android:layout_height="35dp"
-            android:text="- Test time"
-            android:textColor="@color/white"
-            android:textSize="20sp" />
+            <TextView
+                android:id="@+id/testName"
+                android:layout_width="75dp"
+                android:layout_height="35dp"
+                android:text="Test name"
+                android:textSize="20sp"
+                android:textColor="@color/white"/>
+
+            <TextView
+                android:id="@+id/testTime"
+                android:layout_width="120dp"
+                android:layout_height="35dp"
+                android:text="- Test time"
+                android:layout_toEndOf="@id/testName"
+                android:textColor="@color/white"
+                android:textSize="20sp" />
+
+            <ImageView
+                android:id="@+id/testDelete"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_toStartOf="@id/testEdit"
+                android:src="@drawable/delete_test"/>
+
+            <ImageView
+                android:id="@+id/testEdit"
+                android:layout_width="35dp"
+                android:layout_height="35dp"
+                android:layout_alignParentEnd="true"
+                android:src="@drawable/edit_test" />
+
+        </RelativeLayout>
 
         <TextView
             android:id="@+id/testDate"
@@ -35,18 +57,6 @@
             android:text="Test date"
             android:textSize="20sp"
             android:textColor="@color/white" />
-
-        <ImageView
-            android:id="@+id/testDelete"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/delete_test"/>
-
-        <ImageView
-            android:id="@+id/testEdit"
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:src="@drawable/edit_test" />
 
 
     </LinearLayout>
