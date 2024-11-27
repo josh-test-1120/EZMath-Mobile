@@ -4,7 +4,7 @@
  */
 package com.example.ezmathmobile.models;
 
-import java.time.LocalDateTime;
+import com.google.firebase.Timestamp;
 
 public class Reminder {
     /**
@@ -20,7 +20,7 @@ public class Reminder {
     public String type;
 
     // Date
-    public LocalDateTime date;
+    public Timestamp date;
 
     /**
      * Constructor for the Reminder object
@@ -28,7 +28,7 @@ public class Reminder {
      * @param type String type of reminder
      * @param date Google Date type date of the reminder's creation.
      */
-    public Reminder(String text, String type, LocalDateTime date) {
+    public Reminder(String text, String type, Timestamp date) {
         this.text = text;
         this.type = type;
         this.date = date;

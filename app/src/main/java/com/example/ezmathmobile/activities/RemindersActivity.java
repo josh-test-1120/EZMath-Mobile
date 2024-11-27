@@ -19,16 +19,22 @@ import com.example.ezmathmobile.databinding.ActivityRemindersBinding;
 import com.example.ezmathmobile.models.Reminder;
 import com.example.ezmathmobile.models.ReminderDateBlock;
 import com.example.ezmathmobile.utilities.Constants;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
+import java.util.TimeZone;
 
 public class RemindersActivity extends AppCompatActivity {
 
@@ -57,7 +63,7 @@ public class RemindersActivity extends AppCompatActivity {
         List<ReminderDateBlock> remindersWithDateList = new ArrayList<>();
 
         //Creating Hashmap
-        Map<String, List<Reminder>> remindersByDays = new HashMap<>();
+        Map<String, List<Reminder>> remindersByDays = new LinkedHashMap<>();
 
         // Populating with data from the database
         FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -71,19 +77,30 @@ public class RemindersActivity extends AppCompatActivity {
                             && task.getResult().getDocuments().size() > 0) {
                         // Iterating over reminder query results
                         for (QueryDocumentSnapshot document : task.getResult()) {
+                            System.out.println("What the fuck is this? "
+                                    + formatTimestampToFullDate(document.getTimestamp(Constants.Reminders.KEY_REMINDER_DATETIME))
+                                    + document.getString(Constants.Reminders.KEY_REMINDER_TEXT)
+                            );
                             // Creating individual reminder object
                             Reminder reminder = null;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                 reminder = new Reminder(document.getString(Constants.Reminders.KEY_REMINDER_TEXT),
-                                        document.getString(Constants.Reminders.KEY_REMINDER_TYPE), LocalDateTime.parse(document.getString(Constants.Reminders.KEY_REMINDER_DATETIME)));
-                                remindersByDays.computeIfAbsent(reminder.date.format(DateTimeFormatter
-                                        .ofPattern("MMMM d, yyyy")), k -> new ArrayList<>()).add(reminder);
+                                        document.getString(Constants.Reminders.KEY_REMINDER_TYPE),
+                                        document.getTimestamp(Constants.Reminders.KEY_REMINDER_DATETIME));
+                                remindersByDays.computeIfAbsent(
+                                        new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(reminder.date.toDate()),
+                                        k -> new ArrayList<>()).add(reminder);
                             }
                         }
                         // Traversing HashMap to compute the remindersWithDateList
                         for (Map.Entry<String, List<Reminder>> entry : remindersByDays.entrySet()) {
                             ReminderDateBlock reminderDateBlock = new ReminderDateBlock(entry.getValue(), entry.getKey());
                             remindersWithDateList.add(reminderDateBlock);
+                        }
+                    }
+                    for (ReminderDateBlock rmd : remindersWithDateList) {
+                        for (Reminder rm : rmd.reminderList) {
+                            System.out.println(rmd.date + " MYDATEEEEE: " + formatTimestampToFullDate(rm.date));
                         }
                     }
                     //Declaring the Reminder adapter
@@ -105,5 +122,11 @@ public class RemindersActivity extends AppCompatActivity {
         } else {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
+    }
+    public static String formatTimestampToFullDate(Timestamp timestamp) {
+        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy HH:mm:ss", Locale.getDefault());
+        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure UTC is used for formatting
+        Date date = timestamp.toDate(); // Convert Timestamp to Date
+        return sdf.format(date); // Format the Date to full date format
     }
 }
