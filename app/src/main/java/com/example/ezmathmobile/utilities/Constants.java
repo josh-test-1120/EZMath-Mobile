@@ -18,8 +18,13 @@ public class Constants {
         public static final String KEY_IMAGE = "image";
     }
 
-    public class Reminder {
-
+    public class Reminders {
+        public static final String KEY_COLLECTION_REMINDERS = "Reminders";
+        public static final String KEY_REMINDER_ID = "reminder_id";
+        public static final String KEY_REMINDER_TEXT = "reminder_text";
+        public static final String KEY_REMINDER_DATETIME = "reminder_datetime";
+        public static final String KEY_REMINDER_TYPE = "reminder_type";
+        public static final String KEY_REMINDER_EXAM_ID = "reminder_exam_id";
     }
 
     public class Exam {
