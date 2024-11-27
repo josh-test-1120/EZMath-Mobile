@@ -77,10 +77,6 @@ public class RemindersActivity extends AppCompatActivity {
                             && task.getResult().getDocuments().size() > 0) {
                         // Iterating over reminder query results
                         for (QueryDocumentSnapshot document : task.getResult()) {
-                            System.out.println("What the fuck is this? "
-                                    + formatTimestampToFullDate(document.getTimestamp(Constants.Reminders.KEY_REMINDER_DATETIME))
-                                    + document.getString(Constants.Reminders.KEY_REMINDER_TEXT)
-                            );
                             // Creating individual reminder object
                             Reminder reminder = null;
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
@@ -96,11 +92,6 @@ public class RemindersActivity extends AppCompatActivity {
                         for (Map.Entry<String, List<Reminder>> entry : remindersByDays.entrySet()) {
                             ReminderDateBlock reminderDateBlock = new ReminderDateBlock(entry.getValue(), entry.getKey());
                             remindersWithDateList.add(reminderDateBlock);
-                        }
-                    }
-                    for (ReminderDateBlock rmd : remindersWithDateList) {
-                        for (Reminder rm : rmd.reminderList) {
-                            System.out.println(rmd.date + " MYDATEEEEE: " + formatTimestampToFullDate(rm.date));
                         }
                     }
                     //Declaring the Reminder adapter
@@ -122,11 +113,5 @@ public class RemindersActivity extends AppCompatActivity {
         } else {
             binding.progressBar.setVisibility(View.INVISIBLE);
         }
-    }
-    public static String formatTimestampToFullDate(Timestamp timestamp) {
-        SimpleDateFormat sdf = new SimpleDateFormat("EEEE, MMMM d, yyyy HH:mm:ss", Locale.getDefault());
-        sdf.setTimeZone(TimeZone.getTimeZone("UTC")); // Ensure UTC is used for formatting
-        Date date = timestamp.toDate(); // Convert Timestamp to Date
-        return sdf.format(date); // Format the Date to full date format
     }
 }
