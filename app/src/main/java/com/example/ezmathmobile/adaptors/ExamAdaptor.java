@@ -7,6 +7,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -216,12 +217,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          * @param examID this is the examID to delete
          */
         private void deleteTest(String examID) {
-            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                     .whereEqualTo(FieldPath.documentId(), examID)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
-                        for (QueryDocumentSnapshot document : queryDocumentSnapshots){
-                            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                        for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                                     .document(document.getId())
                                     .delete()
                                     .addOnSuccessListener(unused -> {
@@ -233,6 +234,9 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                         showToast(e.getMessage());
                                     });
                         }
+                    })
+                    .addOnFailureListener(e -> {
+                        showToast(e.getMessage());
                     });
         }
 
