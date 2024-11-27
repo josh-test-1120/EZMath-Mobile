@@ -34,7 +34,6 @@ public class TestManagerActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private ActivityTestManagerBinding binding;
     private PreferenceManager preferenceManager;
-    private final int ADDEXAM_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,20 +47,6 @@ public class TestManagerActivity extends AppCompatActivity {
 
         loadTestDetails();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == ADDEXAM_ACTIVITY) {
-//            if(resultCode == Activity.RESULT_OK){
-//                String result=data.getStringExtra("result");
-//            }
-//            if (resultCode == Activity.RESULT_CANCELED) {
-//                // Write your code if there's no result
-//            }
-//        }
-//    } //onActivityResult
 
     /**
      * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
@@ -149,6 +134,11 @@ public class TestManagerActivity extends AppCompatActivity {
         return testView;
     }
 
+    /**
+     * This will delete a test from the firestore database
+     * based on the examID given
+     * @param examID this examID that represents the test to delete
+     */
     private void deleteTest(String examID) {
         database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                 .whereEqualTo(FieldPath.documentId(), examID)

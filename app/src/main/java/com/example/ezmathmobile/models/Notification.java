@@ -6,11 +6,12 @@ import com.google.firebase.Timestamp;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * This is the Notification model for notification objects
  */
-public class Notification {
+public class Notification implements Comparable{
     public String description;
     public String message;
     public String examName;
@@ -130,6 +131,21 @@ public class Notification {
                 ", id=" + id +
                 ", examDate=" + examDate +
                 '}';
+    }
+
+    /**
+     * CompareTo override to implement comparable for sorting
+     * @param o this is the other object to compare to
+     * @return integer representing the comparison
+     */
+    @Override
+    public int compareTo(Object o) {
+        Date currentDate = this.getExamDate().toDate();
+        Notification other = (Notification) o;
+        Date otherDate = other.getExamDate().toDate();
+        if (currentDate.equals(otherDate)) return 0;
+        else if (currentDate.before(otherDate)) return 1;
+        else return -1;
     }
 
     //    @ServerTimestamp

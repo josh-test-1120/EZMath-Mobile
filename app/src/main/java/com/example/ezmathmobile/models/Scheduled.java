@@ -2,7 +2,9 @@ package com.example.ezmathmobile.models;
 
 import com.google.firebase.Timestamp;
 
-public class Scheduled {
+import java.util.Date;
+
+public class Scheduled implements Comparable {
     public String name, examid, userid;
     public Timestamp date;
 
@@ -45,5 +47,20 @@ public class Scheduled {
 
     public void setUserid(String userid) {
         this.userid = userid;
+    }
+
+    /**
+     * CompareTo override to implement comparable for sorting
+     * @param o this is the other object to compare to
+     * @return integer representing the comparison
+     */
+    @Override
+    public int compareTo(Object o) {
+        Date currentDate = this.getDate().toDate();
+        Scheduled other = (Scheduled) o;
+        Date otherDate = other.getDate().toDate();
+        if (currentDate.equals(otherDate)) return 0;
+        else if (currentDate.before(otherDate)) return 1;
+        else return -1;
     }
 }
