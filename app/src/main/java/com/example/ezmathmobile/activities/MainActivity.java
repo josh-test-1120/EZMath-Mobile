@@ -1,9 +1,11 @@
 package com.example.ezmathmobile.activities;
 
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
@@ -19,6 +21,7 @@ import android.widget.Toast;
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.view.ContextThemeWrapper;
+import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -48,7 +51,7 @@ public class MainActivity extends AppCompatActivity {
 
     // These are the objects in the view
     private GridView navigationGrid;
-    private ImageView homeButton, testManagerButton, remindersButton;
+    //private ImageView homeButton, testManagerButton, remindersButton;
     private RecyclerView contentView;
     private RoundedImageView imageProfile;
 
@@ -163,9 +166,20 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                ImageView homeButton = view.findViewById(R.id.home_button);
                 // Handle the position in the grid
                 switch (position) {
                     case 0:
+                        // change the color of the current image view button
+                        homeButton.setImageResource(R.drawable.home2);
+                        // delay the color change to half a second before reverting back to original color
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                // Use the correct context here
+                                homeButton.setImageDrawable(ContextCompat.getDrawable(homeButton.getContext(), R.drawable.home));
+                            }
+                        }, 500);
                         // Set the adaptor with the current main page
                         final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
                         contentView.setAdapter(mainPageAdaptor);
