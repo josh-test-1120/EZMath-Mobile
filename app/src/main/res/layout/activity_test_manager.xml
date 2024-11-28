@@ -11,10 +11,10 @@
     <TextView
         android:id="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="50dp"
         android:gravity="center"
         android:text="Test Menu"
-        android:textSize="42sp"
+        android:textSize="35sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -27,7 +27,7 @@
         android:layout_height="3dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/topText"
-        android:background="@color/blue_seperator"/>
+        android:background="@color/redBackground"/>
     
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/testContainer"
@@ -55,7 +55,7 @@
         android:id="@+id/buttonAddTest"
         android:layout_width="250dp"
         android:layout_height="50dp"
-        android:backgroundTint="@color/blue_seperator"
+        android:backgroundTint="@color/redBackground"
         android:includeFontPadding="false"
         android:text="Schedule a Test"
         android:textSize="25sp"

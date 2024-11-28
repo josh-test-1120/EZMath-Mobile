@@ -26,6 +26,7 @@ public class TimeConverter {
 
     // Constants
     public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss";
+
     /**
      * This will convert a Firebase Timestamp into a localized date
      * @param timestamp this is the timestamp to convert to local date
@@ -37,6 +38,21 @@ public class TimeConverter {
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
         // Convert LocalDate to date String and format it
         String dateString = localDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy").withLocale(Locale.US));
+        Log.d("TimeConverter: Timestamp->Date",dateString);
+        return dateString;
+    }
+
+    /**
+     * This will convert a Firebase Timestamp into a localized date
+     * @param timestamp this is the timestamp to convert to local date
+     */
+    public static String localizeDayOnly(final Timestamp timestamp) {
+        // Convert timestamp into date
+        Date date = timestamp.toDate();
+        // Convert Date to LocalDate
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        // Convert LocalDate to date String and format it
+        String dateString = localDate.format(DateTimeFormatter.ofPattern("EEE dd").withLocale(Locale.US));
         Log.d("TimeConverter: Timestamp->Date",dateString);
         return dateString;
     }

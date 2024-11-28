@@ -128,7 +128,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
 
             // Get localized string from the timestamp
             String time = TimeConverter.localizeTime(exam.getDate());
-            String date = TimeConverter.localizeDate(exam.getDate());
+            String date = TimeConverter.localizeDayOnly(exam.getDate());
 
             //Setting the view texts to whatever was given
             binding.testName.setText(exam.getName());
