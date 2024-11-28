@@ -1,13 +1,21 @@
 package com.example.ezmathmobile.activities;
 
 import android.content.Intent;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.os.Bundle;
+import android.util.Base64;
+import android.util.Log;
+import android.view.MenuItem;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
+import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.appcompat.view.ContextThemeWrapper;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,6 +28,7 @@ import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.makeramen.roundedimageview.RoundedImageView;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -34,6 +43,8 @@ public class MainActivity extends AppCompatActivity {
     private GridLayout navigationGrid;
     private ImageView homeButton, testManagerButton, remindersButton;
     private RecyclerView contentView;
+    private RoundedImageView imageProfile;
+    PreferenceManager preferenceManager;
 
     /**
      * This is an override of the onCreate method
@@ -45,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_main);
         // Attach the preferences
-        PreferenceManager preferenceManager = new PreferenceManager(getApplicationContext());
+        preferenceManager = new PreferenceManager(getApplicationContext());
         // Default listener Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -67,7 +78,10 @@ public class MainActivity extends AppCompatActivity {
         //messageButton = findViewById(R.id.chatBtn);
         remindersButton = findViewById(R.id.remindersBtn);
 
+        imageProfile = findViewById(R.id.imageProfile);
+
         setListeners();
+        loadUserDetails();
         // If logged in, we have enough information to load the main page
         if (loggedIn) {
             // Set the adaptor with the current main page
@@ -119,5 +133,42 @@ public class MainActivity extends AppCompatActivity {
         chatButton.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(),MainActivity.class)));
          */
+        // This sets the listener for the profile menu
+        imageProfile.setOnClickListener(v -> {
+            // Initializing the popup menu and give it the style and reference anchor
+            //PopupMenu popupMenu = new PopupMenu(MainActivity.this, imageProfile);
+            PopupMenu popupMenu = new PopupMenu(new ContextThemeWrapper(MainActivity.this, R.style.Theme_ProfileMenuPopup), imageProfile);
+
+            // Inflating popup menu from popup_menu.xml file
+            popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
+            // Set the item click listeners
+            popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
+                /**
+                 * This is the override for the handling of menu clicks
+                 * @param menuItem this is the menu item clicked
+                 * @return a boolean that reflects the state of the item loader
+                 */
+                @Override
+                public boolean onMenuItemClick(MenuItem menuItem) {
+                    // Toast message on menu item clicked
+                    Toast.makeText(MainActivity.this, "You Clicked " + menuItem.getTitle(), Toast.LENGTH_SHORT).show();
+                    preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,false);
+                    // Change activity to SignInActivity
+                    Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                    intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                    startActivity(intent);
+                    return true;
+                }
+            });
+            // Showing the popup menu
+            popupMenu.show();
+        });
+    }
+
+    private void loadUserDetails() {
+        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.User.KEY_IMAGE),Base64.DEFAULT);
+        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+        Log.d("Image Info:",preferenceManager.getString(Constants.User.KEY_IMAGE));
+        imageProfile.setImageBitmap(bitmap);
     }
 }
