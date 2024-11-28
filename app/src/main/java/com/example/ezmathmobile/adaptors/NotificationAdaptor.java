@@ -32,6 +32,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
      */
     public NotificationAdaptor(List<Notification> notifications) {
         this.notifications = notifications;
+        Log.d("NotificationsMonth Size",Integer.toString(notifications.size()));
     }
 
     /**
@@ -55,6 +56,7 @@ public class NotificationAdaptor extends RecyclerView.Adapter<NotificationAdapto
      */
     @Override
     public void onBindViewHolder(@NonNull NotificationViewHolder holder, int position) {
+        Log.d("NotificationsMonth Index",Integer.toString(position));
         if (position < notifications.size()) holder.bindNotification(notifications.get(position));
     }
 

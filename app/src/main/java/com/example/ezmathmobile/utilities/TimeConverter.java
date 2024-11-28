@@ -61,10 +61,35 @@ public class TimeConverter {
      * @param notifications This is a List of notifications
      * @return an integer that specifies the list index of the notification
      */
+    public static int findClosestDate(final List<Notification> notifications) {
+        // Variables
+        int index = -1;
+        Date currentLatest = null, latest = null;
+
+        for (int x = 0; x < notifications.size(); x++) {
+            // Convert timestamp into date
+            Date date = notifications.get(x).examDate.toDate();
+            if (currentLatest == null) {
+                currentLatest = date;
+                index = x;
+            }
+            else if (date.before(currentLatest) && date.after(new Date())) {
+                currentLatest = date;
+                index = x;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * This will find the most recent notification by date
+     * @param notifications This is a List of notifications
+     * @return an integer that specifies the list index of the notification
+     */
     public static int findLatestDate(final List<Notification> notifications) {
         // Variables
         int index = -1;
-        LocalDate currentLatest = null;
+        LocalDate currentLatest = null, latest = null;
 
         for (int x = 0; x < notifications.size(); x++) {
             // Convert timestamp into date
@@ -155,7 +180,7 @@ public class TimeConverter {
         // Get the months and sort them
         Set<String> months = monthlyNotifications.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
-        Collections.sort(monthsSorted, Collections.reverseOrder());
+        Collections.sort(monthsSorted);
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order
@@ -200,7 +225,7 @@ public class TimeConverter {
         // Get the months and sort them
         Set<String> months = monthlyScheduled.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
-        Collections.sort(monthsSorted, Collections.reverseOrder());
+        Collections.sort(monthsSorted);
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order
