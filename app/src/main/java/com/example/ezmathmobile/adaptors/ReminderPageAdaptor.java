@@ -2,7 +2,6 @@ package com.example.ezmathmobile.adaptors;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -22,10 +21,8 @@ import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.text.SimpleDateFormat;
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Map;
@@ -116,7 +113,7 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
             List<ReminderDateBlock> remindersWithDateList = new ArrayList<>();
 
             //Creating Hashmap
-            Map<String, List<Reminder>> remindersByDays = new HashMap<>();
+            Map<String, List<Reminder>> remindersByDays = new LinkedHashMap<>();
 
             // Populating with data from the database
             FirebaseFirestore database = FirebaseFirestore.getInstance();
