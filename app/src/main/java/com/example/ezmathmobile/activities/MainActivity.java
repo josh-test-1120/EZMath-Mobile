@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.util.Base64;
 import android.util.Log;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.GridLayout;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.Toast;
@@ -23,12 +26,16 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
 import com.example.ezmathmobile.adaptors.MainPageAdaptor;
+import com.example.ezmathmobile.adaptors.NavigationAdaptor;
 import com.example.ezmathmobile.adaptors.ReminderPageAdaptor;
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.models.NavigationCard;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
+
+import java.util.ArrayList;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -40,11 +47,12 @@ public class MainActivity extends AppCompatActivity {
     private FirebaseFirestore database;
 
     // These are the objects in the view
-    private GridLayout navigationGrid;
+    private GridView navigationGrid;
     private ImageView homeButton, testManagerButton, remindersButton;
     private RecyclerView contentView;
     private RoundedImageView imageProfile;
-    PreferenceManager preferenceManager;
+
+    private PreferenceManager preferenceManager;
 
     /**
      * This is an override of the onCreate method
@@ -72,16 +80,14 @@ public class MainActivity extends AppCompatActivity {
         contentView = findViewById(R.id.contentView);
         // Bind the objects to the Navigation view IDs
         navigationGrid = findViewById(R.id.navigationGrid);
-        //menuButton = itemView.findViewById(R.id.homeBtn);
-        homeButton = findViewById(R.id.homeButton);
-        testManagerButton = findViewById(R.id.testManagerButton);
-        //messageButton = findViewById(R.id.chatBtn);
-        remindersButton = findViewById(R.id.remindersBtn);
-
+        // Bind the image profile to the header
         imageProfile = findViewById(R.id.imageProfile);
 
+        // Setup the Activity
         setListeners();
+        buildNavigation();
         loadUserDetails();
+
         // If logged in, we have enough information to load the main page
         if (loggedIn) {
             // Set the adaptor with the current main page
@@ -101,44 +107,10 @@ public class MainActivity extends AppCompatActivity {
      * This is the setListeners method for the different buttons in the navigation bar
      **/
     private void setListeners() {
-        // Change to MainActivity (home screen) if homeButton clicked
-        homeButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(getApplicationContext(), MainActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-            // Set the adaptor with the current main page
-            final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
-            contentView.setAdapter(mainPageAdaptor);
-        });
-        // Change to TestManagerActivity if testManagerButton clicked
-        testManagerButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(getApplicationContext(), TestManagerActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-            // Set the adaptor with the current main page
-            final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-            contentView.setAdapter(examPageAdaptor);
-        });
-        // Change to RemindersActivity if remindersButton clicked
-        remindersButton.setOnClickListener(v -> {
-//            Intent intent = new Intent(getApplicationContext(), RemindersActivity.class);
-//            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-//            startActivity(intent);
-
-            final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
-            contentView.setAdapter(reminderPageAdaptor);
-        });
-        /* This is for the chat feature if we have time:
-        // Change to chat screen activity if chatButton clicked
-        chatButton.setOnClickListener(v ->
-                startActivity(new Intent(getApplicationContext(),MainActivity.class)));
-         */
         // This sets the listener for the profile menu
         imageProfile.setOnClickListener(v -> {
             // Initializing the popup menu and give it the style and reference anchor
-            //PopupMenu popupMenu = new PopupMenu(MainActivity.this, imageProfile);
             PopupMenu popupMenu = new PopupMenu(new ContextThemeWrapper(MainActivity.this, R.style.Theme_ProfileMenuPopup), imageProfile);
-
             // Inflating popup menu from popup_menu.xml file
             popupMenu.getMenuInflater().inflate(R.menu.popup_menu, popupMenu.getMenu());
             // Set the item click listeners
@@ -162,6 +134,54 @@ public class MainActivity extends AppCompatActivity {
             });
             // Showing the popup menu
             popupMenu.show();
+        });
+    }
+
+    /**
+     * Build the navigation bar dynamically based on GridView design
+     */
+    private void buildNavigation() {
+        // Create the array for the adaptor
+        ArrayList<NavigationCard> navigationCardArrayList = new ArrayList<NavigationCard>();
+        // Create the navigation elements
+        navigationCardArrayList.add(new NavigationCard("Home",R.drawable.home));
+        navigationCardArrayList.add(new NavigationCard("Exams",R.drawable.calendar));
+        navigationCardArrayList.add(new NavigationCard("Reminders",R.drawable.reminder_bell));
+
+        // Setup the adaptor
+        final NavigationAdaptor navigationAdaptor = new NavigationAdaptor(this,navigationCardArrayList);
+        navigationGrid.setAdapter(navigationAdaptor);
+
+        // Setup the onclick listeners
+        navigationGrid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            /**
+             * This is the override method for onItemClick
+             * @param parent this is the parent adapter
+             * @param view this is the view
+             * @param position this is the position
+             * @param id this is the id
+             */
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                // Handle the position in the grid
+                switch (position) {
+                    case 0:
+                        // Set the adaptor with the current main page
+                        final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
+                        contentView.setAdapter(mainPageAdaptor);
+                        break;
+                    case 1:
+                        // Set the adaptor with the current main page
+                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+                        contentView.setAdapter(examPageAdaptor);
+                        break;
+                    case 2:
+                        // Change to RemindersActivity if remindersButton clicked
+                        final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
+                        contentView.setAdapter(reminderPageAdaptor);
+                        break;
+                }
+            }
         });
     }
 
