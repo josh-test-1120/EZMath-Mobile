@@ -2,46 +2,24 @@ package com.example.ezmathmobile.activities;
 
 import android.content.Intent;
 import android.os.Bundle;
-import android.util.Log;
 import android.widget.Button;
 import android.widget.GridLayout;
 import android.widget.ImageView;
-import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ezmathmobile.adaptors.ExamAdaptor;
-import com.example.ezmathmobile.adaptors.FooterAdaptor;
-import com.example.ezmathmobile.adaptors.HeaderAdaptor;
+import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
 import com.example.ezmathmobile.adaptors.MainPageAdaptor;
 import com.example.ezmathmobile.adaptors.ReminderPageAdaptor;
-import com.example.ezmathmobile.firebase.DatabaseService;
-import com.example.ezmathmobile.models.Exam;
-import com.example.ezmathmobile.models.Notification;
-import com.example.ezmathmobile.adaptors.NotificationAdaptor;
 import com.example.ezmathmobile.R;
-import com.example.ezmathmobile.models.Scheduled;
-import com.example.ezmathmobile.models.User;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
-import com.example.ezmathmobile.utilities.TimeConverter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.Query;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -124,8 +102,8 @@ public class MainActivity extends AppCompatActivity {
 //            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
 //            startActivity(intent);
             // Set the adaptor with the current main page
-            final ExamAdaptor examAdaptor = new ExamAdaptor();
-            contentView.setAdapter(examAdaptor);
+            final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+            contentView.setAdapter(examPageAdaptor);
         });
         // Change to RemindersActivity if remindersButton clicked
         remindersButton.setOnClickListener(v -> {

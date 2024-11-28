@@ -6,7 +6,7 @@ import java.util.List;
 
 public class Exam {
     private String name, professor, classID;
-    List<Timestamp> times;
+    private List<Timestamp> times;
 
     public Exam() {}
 
@@ -29,5 +29,21 @@ public class Exam {
 
     public void setProfessor(String professor) {
         this.professor = professor;
+    }
+
+    public String getClassID() {
+        return classID;
+    }
+
+    public void setClassID(String classID) {
+        this.classID = classID;
+    }
+
+    public List<Timestamp> getTimes() {
+        return times;
+    }
+
+    public void setTimes(List<Timestamp> times) {
+        this.times = times;
     }
 }
