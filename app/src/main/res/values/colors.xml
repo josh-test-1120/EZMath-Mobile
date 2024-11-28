@@ -15,6 +15,7 @@
     <color name="input_background">#171717</color>
     <color name="input_text">#3E3E3E</color>
     <color name="cancel_background">#8F2217</color>
+    <color name="shadowColor">#FF818589</color>
 
     <color name="inputBackground">#FFECECEC</color>
 </resources>
