@@ -2,14 +2,12 @@ package com.example.ezmathmobile.adaptors;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.CalendarView;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,11 +15,8 @@ import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
-import com.example.ezmathmobile.activities.TestManagerActivity;
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
-import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.models.Exam;
-import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
@@ -29,7 +24,6 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.HashMap;
-import java.util.List;
 
 
 /**
@@ -164,8 +158,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             });
             binding.buttonCancel.setOnClickListener(v -> {
                 // Set the adaptor with the current main page
-                final ExamAdaptor examAdaptor = new ExamAdaptor();
-                contentView.setAdapter(examAdaptor);
+                final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+                contentView.setAdapter(examPageAdaptor);
             });
         }
 
@@ -219,8 +213,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                     preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
                                     // Set the adaptor with the current main page
-                                    final ExamAdaptor examAdaptor = new ExamAdaptor();
-                                    contentView.setAdapter(examAdaptor);
+                                    final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+                                    contentView.setAdapter(examPageAdaptor);
 
                                     loading(false);
                                 }).addOnFailureListener(exception -> {

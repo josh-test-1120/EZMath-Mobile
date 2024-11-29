@@ -18,6 +18,7 @@ import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.type.DateTime;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -62,6 +63,7 @@ public class TestAddActivity extends AppCompatActivity {
         binding.buttonSubmit.setOnClickListener(v -> {
             if (isValidExamDetails()) {
                 AddTest();
+                AddReminder();
             }
         });
         binding.buttonCancel.setOnClickListener(v -> {
@@ -110,6 +112,29 @@ public class TestAddActivity extends AppCompatActivity {
                     loading(false);
                     showToast(exception.getMessage());
                 });
+    }
+
+    /**
+     * A method that add reminder data into the database.
+     */
+    private void AddReminder() {
+        // Declaring database and Hashmap
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        // Adding data to the Hashmap
+        // Datetime
+        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
+        // Adding text
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, binding.inputTestExam.getText().toString()
+                 + " has been successfully scheduled at " + binding.inputTestTime.getText().toString()
+                );
+        // Adding type
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "green");
+
+        // Adding Reminder data into the database
+        database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                .add(hashMap);
     }
 
     /**

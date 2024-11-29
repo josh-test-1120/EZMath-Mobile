@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
@@ -218,7 +219,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
         public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
                                    RecyclerView notificationsView) {
             // Find the latest date
-            int index = TimeConverter.findLatestDate(notifications);
+            int index = TimeConverter.findClosestDate(notifications);
             Notification latest = notifications.get(index);
             // Get localized string from the timestamp
             String time = TimeConverter.localizeTime(latest.examDate);
@@ -231,7 +232,8 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             numberView.setText(sizeNotifications);
 
             // Convert the notifications into month groups
-            HashMap<String, List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
+            LinkedHashMap<String, List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
+
 
             // Set the adaptor with the current notifications
             final NotificationMonthAdaptor notificationMonthAdaptor = new NotificationMonthAdaptor(groupedByMonth);

@@ -25,14 +25,15 @@ import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 
 public class TestManagerActivity extends AppCompatActivity {
     private FirebaseFirestore database;
     private ActivityTestManagerBinding binding;
     private PreferenceManager preferenceManager;
-    private final int ADDEXAM_ACTIVITY = 1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -46,20 +47,6 @@ public class TestManagerActivity extends AppCompatActivity {
 
         loadTestDetails();
     }
-
-//    @Override
-//    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
-//        super.onActivityResult(requestCode, resultCode, data);
-//
-//        if (requestCode == ADDEXAM_ACTIVITY) {
-//            if(resultCode == Activity.RESULT_OK){
-//                String result=data.getStringExtra("result");
-//            }
-//            if (resultCode == Activity.RESULT_CANCELED) {
-//                // Write your code if there's no result
-//            }
-//        }
-//    } //onActivityResult
 
     /**
      * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
@@ -138,12 +125,20 @@ public class TestManagerActivity extends AppCompatActivity {
         examDateView.setText(date);
 
         //Add some listeners for the delete and edit test buttons
-        testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
+        testView.findViewById(R.id.testDelete).setOnClickListener(v -> {
+            deleteTest(examID);
+            AddDeletionReminder(examID);
+        });
         testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
 
         return testView;
     }
 
+    /**
+     * This will delete a test from the firestore database
+     * based on the examID given
+     * @param examID this examID that represents the test to delete
+     */
     private void deleteTest(String examID) {
         database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                 .whereEqualTo(FieldPath.documentId(), examID)
@@ -163,6 +158,28 @@ public class TestManagerActivity extends AppCompatActivity {
                                 });
                     }
                 });
+    }
+
+    /**
+     * A method that adds a test deletion confirmation reminder in the Firebase database.
+     */
+    private void AddDeletionReminder(String examID) {
+        // Declaring database and Hashmap
+        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        HashMap<String, String> hashMap = new HashMap<>();
+
+        // Adding data to the Hashmap
+        // Datetime
+        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
+        // Adding text
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examID + " test has been successfully" +
+                "deleted");
+        // Adding type
+        hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "red");
+
+        // Adding Reminder data into the database
+        database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                .add(hashMap);
     }
 
     /**
