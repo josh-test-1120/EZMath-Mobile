@@ -213,13 +213,22 @@ public class MainActivity extends AppCompatActivity {
                         break;
                         // Test case for logout in Navigation bar
                     case 3:
-                        // Logout the user out
-                        Toast.makeText(MainActivity.this, "Logging you out", Toast.LENGTH_LONG).show();
-                        preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,false);
-                        // Change activity to SignInActivity
-                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
-                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
-                        startActivity(intent);
+                        // change the color of the current image view button
+                        button.setImageResource(R.drawable.logout2);
+                        // delay the color change to half a second before reverting back to original color
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.logout));
+                                // Logout the user out
+                                Toast.makeText(MainActivity.this, "Logging you out", Toast.LENGTH_LONG).show();
+                                preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,false);
+                                // Change activity to SignInActivity
+                                Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                                startActivity(intent);
+                            }
+                        }, 500);
                 }
             }
         });
