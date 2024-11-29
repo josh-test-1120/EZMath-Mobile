@@ -10,7 +10,6 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.Button;
-import android.widget.GridLayout;
 import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.PopupMenu;
@@ -147,6 +146,7 @@ public class MainActivity extends AppCompatActivity {
         navigationCardArrayList.add(new NavigationCard("Home",R.drawable.home));
         navigationCardArrayList.add(new NavigationCard("Exams",R.drawable.calendar));
         navigationCardArrayList.add(new NavigationCard("Reminders",R.drawable.reminder_bell));
+        navigationCardArrayList.add(new NavigationCard("Logout",R.drawable.logout));
 
         // Setup the adaptor
         final NavigationAdaptor navigationAdaptor = new NavigationAdaptor(this,navigationCardArrayList);
@@ -180,6 +180,15 @@ public class MainActivity extends AppCompatActivity {
                         final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
                         contentView.setAdapter(reminderPageAdaptor);
                         break;
+                        // Test case for logout in Navigation bar
+                    case 3:
+                        // Logout the user out
+                        Toast.makeText(MainActivity.this, "Logging you out", Toast.LENGTH_LONG).show();
+                        preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN,false);
+                        // Change activity to SignInActivity
+                        Intent intent = new Intent(getApplicationContext(), SignInActivity.class);
+                        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+                        startActivity(intent);
                 }
             }
         });
