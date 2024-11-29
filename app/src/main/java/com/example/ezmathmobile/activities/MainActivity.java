@@ -166,18 +166,17 @@ public class MainActivity extends AppCompatActivity {
              */
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                ImageView homeButton = view.findViewById(R.id.home_button);
+                ImageView button = view.findViewById(R.id.cardImage);
                 // Handle the position in the grid
                 switch (position) {
                     case 0:
                         // change the color of the current image view button
-                        homeButton.setImageResource(R.drawable.home2);
+                        button.setImageResource(R.drawable.home2);
                         // delay the color change to half a second before reverting back to original color
                         new Handler().postDelayed(new Runnable() {
                             @Override
                             public void run() {
-                                // Use the correct context here
-                                homeButton.setImageDrawable(ContextCompat.getDrawable(homeButton.getContext(), R.drawable.home));
+                                button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.home));
                             }
                         }, 500);
                         // Set the adaptor with the current main page
@@ -185,11 +184,29 @@ public class MainActivity extends AppCompatActivity {
                         contentView.setAdapter(mainPageAdaptor);
                         break;
                     case 1:
+                        // change the color of the current image view button
+                        button.setImageResource(R.drawable.calendar2);
+                        // delay the color change to half a second before reverting back to original color
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.calendar));
+                            }
+                        }, 500);
                         // Set the adaptor with the current main page
                         final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
                         contentView.setAdapter(examPageAdaptor);
                         break;
                     case 2:
+                        // change the color of the current image view button
+                        button.setImageResource(R.drawable.reminder_bell2);
+                        // delay the color change to half a second before reverting back to original color
+                        new Handler().postDelayed(new Runnable() {
+                            @Override
+                            public void run() {
+                                button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.reminder_bell));
+                            }
+                        }, 500);
                         // Change to RemindersActivity if remindersButton clicked
                         final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
                         contentView.setAdapter(reminderPageAdaptor);
