@@ -83,7 +83,7 @@ public class MainActivity extends AppCompatActivity {
         imageProfile = findViewById(R.id.imageProfile);
 
         // Setup the Activity
-        setListeners();
+        //setListeners();
         buildNavigation();
         loadUserDetails();
 
