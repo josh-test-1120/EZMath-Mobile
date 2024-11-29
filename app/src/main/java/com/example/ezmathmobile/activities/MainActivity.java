@@ -1,5 +1,8 @@
 package com.example.ezmathmobile.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -30,6 +33,7 @@ import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.models.User;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+import com.example.ezmathmobile.utilities.TimeCheckReceiver;
 import com.example.ezmathmobile.utilities.TimeConverter;
 import com.firebase.ui.firestore.FirestoreRecyclerOptions;
 import com.google.firebase.Timestamp;
@@ -40,6 +44,7 @@ import com.google.firebase.firestore.Query;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Objects;
 
@@ -103,6 +108,9 @@ public class MainActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
+
+        // Create AlarmReminder
+        //setAlarmedReminder();
     }
 
     /**
@@ -141,5 +149,21 @@ public class MainActivity extends AppCompatActivity {
         chatButton.setOnClickListener(v ->
                 startActivity(new Intent(getApplicationContext(),MainActivity.class)));
          */
+    }
+
+    private void setAlarmedReminder() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, TimeCheckReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+
+// Set the alarm to trigger at 2:00 PM
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 12); // 2:00 PM
+        calendar.set(Calendar.MINUTE, 43);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
     }
 }
