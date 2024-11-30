@@ -28,6 +28,7 @@ public class TestAddActivity extends AppCompatActivity {
     private PreferenceManager preferenceManager;
     private String examID;
     private Timestamp timestamp;
+    private String examName;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -39,14 +40,15 @@ public class TestAddActivity extends AppCompatActivity {
         if(getIntent().getExtras() != null) {
 //            binding.inputTestClass.setText(getIntent().getStringExtra("classID"));
             examID = getIntent().getStringExtra("examID");
-            binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
+            //binding.inputTestExam.setText(getIntent().getStringExtra("examName"));
+            examName = getIntent().getStringExtra("examID");
             timestamp = TimeConverter.stringToTimestamp(getIntent().getStringExtra("examDate"));
             if (timestamp != null) Log.d("Test Add",timestamp.toString());
             // Get localized string from the timestamp
             String time = TimeConverter.localizeTime(timestamp);
             String date = TimeConverter.localizeDate(timestamp);
             // Update the time field
-            binding.inputTestTime.setText(time);
+//            binding.inputTestTime.setText(time);
         }
 
         preferenceManager = new PreferenceManager(getApplicationContext());
@@ -90,7 +92,7 @@ public class TestAddActivity extends AppCompatActivity {
 
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         HashMap<String, String> exam = new HashMap<>();
-        exam.put(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+//        exam.put(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
 //        exam.put(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
 //        exam.put(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
         exam.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
@@ -100,7 +102,7 @@ public class TestAddActivity extends AppCompatActivity {
                 .addOnSuccessListener(documentReference -> {
                     //Save exam details to preference manager
                     preferenceManager.putBoolean(Constants.User.KEY_IS_SIGNED_IN, true);
-                    preferenceManager.putString(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
+//                    preferenceManager.putString(Constants.Exam.KEY_TEST_TIME, binding.inputTestTime.getText().toString());
 //                    preferenceManager.putString(Constants.Exam.KEY_TEST_DATE, binding.inputTestDate.getText().toString());
 //                    preferenceManager.putString(Constants.Exam.KEY_EXAM_ID, binding.inputTestExam.getText().toString());
                     preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
@@ -126,9 +128,9 @@ public class TestAddActivity extends AppCompatActivity {
         // Datetime
         hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
         // Adding text
-        hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, binding.inputTestExam.getText().toString()
-                 + " has been successfully scheduled at " + binding.inputTestTime.getText().toString()
-                );
+//        hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examName
+//                 + " has been successfully scheduled at " + binding.inputTestTime.getText().toString()
+//                );
         // Adding type
         hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "green");
 
@@ -143,13 +145,13 @@ public class TestAddActivity extends AppCompatActivity {
      * @return Whether or not the details are valid
      */
     private Boolean isValidExamDetails() {
-        if (binding.inputTestTime.getText().toString().trim().isEmpty()) {
-            showToast("Please Enter test time");
-            return false;
+//        if (binding.inputTestTime.getText().toString().trim().isEmpty()) {
+//            showToast("Please Enter test time");
+//            return false;
 //        } else if (binding.calendarView.getText().toString().trim().isEmpty()) {
 //            showToast("Please Enter test date");
 //            return false;
-        } else if (binding.inputTestExam.getText().toString().trim().isEmpty()) {
+        if (examName.isEmpty()) {
             showToast("Please Enter exam ID");
             return false;
         } else if (binding.inputTestClass.getText().toString().trim().isEmpty()) {
@@ -193,10 +195,10 @@ public class TestAddActivity extends AppCompatActivity {
                     // format in String type Variable
                     // Add 1 in month because month
                     // index is start with 0
-                    String Date
+                    String day
                             = dayOfMonth + "-"
                             + (month + 1) + "-" + year;
-
+                    Log.d("CalendarSetup:",day);
                     // set this date in TextView for Display
                     //binding.date_view.setText(Date);
                 }
