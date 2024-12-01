@@ -19,15 +19,18 @@ import com.example.ezmathmobile.databinding.ActivityMainBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.databinding.ExamItemContainerBinding;
 import com.example.ezmathmobile.databinding.ExamMonthContainerBinding;
+import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Notification;
 import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -116,6 +119,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             contentView = mainParent.findViewById(R.id.contentView);
             // Bind the progress bar
             progressBar = mainParent.findViewById(R.id.progressBar);;
+            // Bind the database object
+            database = FirebaseFirestore.getInstance();
         }
 
         /**
@@ -137,7 +142,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
 
             //Add some listeners for the delete and edit test buttons
             binding.testDelete.setOnClickListener(v -> deleteTest(exam.getExamid()));
-            binding.testEdit.setOnClickListener(v -> editTest(exam.getExamid(),exam));
+            binding.testEdit.setOnClickListener(v -> getExamTimes(exam.getExamid(),exam));
         }
 
         /**
@@ -186,12 +191,27 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          * populate the edit text areas with that information.
          * @param examID ID of specified exam needing to be changed
          */
-        private void editTest(String examID, Scheduled exam) {
+        private void editTest(String examID, Scheduled test, Exam exam) {
             Log.d("ExamMonth Edit",examID);
             // Set the adaptor with the current main page
-            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(exam, examID, exam.getName(), exam.getDate());
+            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
             contentView.setAdapter(examAddAdaptor);
 
+        }
+
+        private void getExamTimes(String examID, Scheduled test) {
+            // Get the exam details
+            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                    .whereEqualTo(Constants.Exam.KEY_TEST_NAME,test.getName())
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // Serialize the document to the class
+                        Exam exam = queryDocumentSnapshots.getDocuments().get(0).toObject(Exam.class);
+                        editTest(examID, test, exam);
+                    })
+                    .addOnFailureListener(exception -> {
+                        showToast("Exception getting exam times: " + exception.getMessage());
+                    });
         }
 
         /**

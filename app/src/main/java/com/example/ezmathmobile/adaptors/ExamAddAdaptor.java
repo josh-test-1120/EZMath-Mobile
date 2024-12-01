@@ -1,6 +1,7 @@
 package com.example.ezmathmobile.adaptors;
 
 import android.content.Context;
+import android.graphics.Color;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,11 +27,13 @@ import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
 import com.google.firebase.Timestamp;
+import com.google.firebase.database.collection.LLRBNode;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -44,6 +47,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
     // These are the private variables
     private String examID, examName, e;
     private Timestamp examDate;
+    private Scheduled test;
+    private List<Timestamp> examTimes;
 
     /**
      * This is the constructor for the Adaptor
@@ -51,10 +56,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
      * @param examName This is a string of the examName
      * @param examDate This is a firebase timestamp of the examDate
      */
-    public ExamAddAdaptor(Scheduled test, String examID, String examName, Timestamp examDate) {
+    public ExamAddAdaptor(Scheduled test, String examID, String examName, Timestamp examDate, List<Timestamp> examTimes) {
         this.examID = examID;
         this.examName = examName;
         this.examDate = examDate;
+        this.test = test;
+        this.examTimes = examTimes;
     }
 
     /**
@@ -77,7 +84,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
     @Override
     public ExamAddViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
         return new ExamAddViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.activity_test_add,
-                parent, false),parent,examID,examName,examDate);
+                parent, false),parent,test,examID,examName,examDate,examTimes);
     }
 
     /**
@@ -123,7 +130,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * @param examName this is the exam name
          * @param examDate this is a Timestamp object of the time and date
          */
-        public ExamAddViewHolder(@NonNull View itemView, ViewGroup parent, String examID, String examName, Timestamp examDate) {
+        public ExamAddViewHolder(@NonNull View itemView, ViewGroup parent, Scheduled test, String examID,
+                                 String examName, Timestamp examDate, List<Timestamp> examTimes) {
             // Run the parent class constructor
             super(itemView);
             // Get the page context
@@ -145,7 +153,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             this.binding = ActivityTestAddBinding.bind(itemView);
             // Setup the listeners and calendar
             onListeners();
-            setupCalendar(binding);
+            setupCalendar(binding, test.getDate(), examTimes);
             //Setup a listener for clicking outside edit texts
             setupOutsideClickListener();
             if (examName != null) {
@@ -194,8 +202,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     //Toast.makeText(parent.getContext(), "Exam Name " + name, Toast.LENGTH_SHORT).show();
                     // Build the exam times
                     buildExamTimeList(binding);
-                    // Update the classID
-
                 }
 
                 /**
@@ -317,7 +323,18 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * the day result
          * @param binding this is the view bindings
          */
-        private void setupCalendar(ActivityTestAddBinding binding) {
+        private void setupCalendar(ActivityTestAddBinding binding, Timestamp date, List<Timestamp> examTimes) {
+            // Loop through the acceptable days
+            binding.calendarDesc.setText("Valid Dates:\n");
+            for (Timestamp examTime : examTimes) {
+                binding.calendarDesc.append(TimeConverter.localizeDate(examTime) + "\t");
+            }
+
+            // Initialize the existing date to today
+            if (date != null) {
+                long milliseconds = date.toDate().getTime();
+                binding.calendarView.setDate(milliseconds);
+            }
             // Add Listener in calendar
             binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                 @Override

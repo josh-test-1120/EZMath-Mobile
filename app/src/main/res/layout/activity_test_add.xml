@@ -11,10 +11,10 @@
     <TextView
         android:id="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text="@string/schedule_update_test"
-        android:textSize="40sp"
+        android:textSize="38sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,10 +43,21 @@
         android:id="@+id/calendarView"
         android:theme="@style/Theme.CalendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:dateTextAppearance="@style/Theme.CalendarView"
         android:weekDayTextAppearance="@style/Theme.CalendarView"
         app:layout_constraintTop_toBottomOf="@+id/dateText" />
+
+    <TextView
+        android:id="@+id/calendar_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/redText"
+        android:textSize="15sp"
+        android:minLines="5"
+        android:gravity="top"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"/>
 
     <LinearLayout
         android:id="@+id/testTimeInput"
@@ -54,7 +65,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarView">
+        app:layout_constraintTop_toBottomOf="@id/calendar_desc">
 
         <TextView
             android:id="@+id/testTimeTxt"
@@ -141,14 +152,15 @@
             android:id="@+id/inputTestClass"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/round_text_input"
             android:importantForAutofill="no"
             android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textAlignment="gravity"
-            android:textSize="20sp"
-            android:textColor="@color/redText"/>
+            android:textColor="@color/redText"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
