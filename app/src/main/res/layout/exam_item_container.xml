@@ -6,12 +6,6 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="vertical">
-
         <RelativeLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -24,6 +18,22 @@
                 android:text="Test name"
                 android:textSize="20sp"
                 android:textColor="@color/white"/>
+          
+            <TextView
+                android:id="@+id/testDate"
+                android:layout_width="75dp"
+                android:layout_height="35dp"
+                android:text="Test date"
+                android:textSize="20sp"
+                android:textColor="@color/white" />
+          
+            <TextView
+              android:id="@+id/testOn"
+              android:layout_width="35dp"
+              android:layout_height="35dp"
+              android:text="at"
+              android:textSize="20sp"
+              android:textColor="@color/white" />
 
             <TextView
                 android:id="@+id/testTime"
@@ -50,15 +60,6 @@
 
         </RelativeLayout>
 
-        <TextView
-            android:id="@+id/testDate"
-            android:layout_width="150dp"
-            android:layout_height="35dp"
-            android:text="Test date"
-            android:textSize="20sp"
-            android:textColor="@color/white" />
-
-
     </LinearLayout>
 
-</LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>

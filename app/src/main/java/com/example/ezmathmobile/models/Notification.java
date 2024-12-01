@@ -6,21 +6,20 @@ import com.google.firebase.Timestamp;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Date;
 
 /**
  * This is the Notification model for notification objects
  */
-public class Notification {
+public class Notification implements Comparable {
     public String description;
     public String message;
     public String examName;
     public String userid;
     public String type;
     public String typeid;
-    public int id ;
+    public String id ;
     public Timestamp examDate;
-//    public LocalTime examTime;
-//    public LocalDate examDate;
 
     /**
      * This is the Notification constructor
@@ -32,7 +31,7 @@ public class Notification {
 //     * @param examTime The message of the notification
      * @param examDate The message of the notification
      */
-    public Notification(int id, String userid, String description, String message,
+    public Notification(String id, String userid, String description, String message,
                         String examName, String type, Timestamp examDate) {
         this.id = id;
         this.userid = userid;
@@ -78,11 +77,11 @@ public class Notification {
         this.examName = examName;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 
@@ -101,14 +100,6 @@ public class Notification {
     public void setTypeid(String typeid) {
         this.typeid = typeid;
     }
-
-//    public LocalTime getExamTime() {
-//        return examTime;
-//    }
-//
-//    public void setExamTime(LocalTime examTime) {
-//        this.examTime = examTime;
-//    }
 
     public Timestamp getExamDate() {
         return examDate;
@@ -130,6 +121,21 @@ public class Notification {
                 ", id=" + id +
                 ", examDate=" + examDate +
                 '}';
+    }
+
+    /**
+     * CompareTo override to implement comparable for sorting
+     * @param o this is the other object to compare to
+     * @return integer representing the comparison
+     */
+    @Override
+    public int compareTo(Object o) {
+        Date currentDate = this.getExamDate().toDate();
+        Notification other = (Notification) o;
+        Date otherDate = other.getExamDate().toDate();
+        if (currentDate.equals(otherDate)) return 0;
+        else if (currentDate.before(otherDate)) return 1;
+        else return -1;
     }
 
     //    @ServerTimestamp

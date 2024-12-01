@@ -2,7 +2,6 @@ package com.example.ezmathmobile.adaptors;
 
 import android.content.Context;
 import android.os.Build;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -21,11 +20,11 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.Query;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.time.LocalDateTime;
-import java.time.format.DateTimeFormatter;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
+import java.util.Locale;
 import java.util.Map;
 
 /**
@@ -114,7 +113,7 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
             List<ReminderDateBlock> remindersWithDateList = new ArrayList<>();
 
             //Creating Hashmap
-            Map<String, List<Reminder>> remindersByDays = new HashMap<>();
+            Map<String, List<Reminder>> remindersByDays = new LinkedHashMap<>();
 
             // Populating with data from the database
             FirebaseFirestore database = FirebaseFirestore.getInstance();
@@ -132,9 +131,10 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
                                 Reminder reminder = null;
                                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
                                     reminder = new Reminder(document.getString(Constants.Reminders.KEY_REMINDER_TEXT),
-                                            document.getString(Constants.Reminders.KEY_REMINDER_TYPE), LocalDateTime.parse(document.getString(Constants.Reminders.KEY_REMINDER_DATETIME)));
-                                    remindersByDays.computeIfAbsent(reminder.date.format(DateTimeFormatter
-                                            .ofPattern("MMMM d, yyyy")), k -> new ArrayList<>()).add(reminder);
+                                            document.getString(Constants.Reminders.KEY_REMINDER_TYPE), document.getTimestamp(Constants.Reminders.KEY_REMINDER_DATETIME));
+                                    remindersByDays.computeIfAbsent(
+                                            new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault()).format(reminder.date.toDate()),
+                                            k -> new ArrayList<>()).add(reminder);
                                 }
                             }
                             // Traversing HashMap to compute the remindersWithDateList

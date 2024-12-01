@@ -16,6 +16,7 @@ import com.example.ezmathmobile.utilities.TimeConverter;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Set;
 
@@ -25,14 +26,14 @@ import java.util.Set;
  */
 public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationMonthAdaptor.NotificationMonthViewHolder> {
     // These are the private variables
-    private HashMap<String,List<Notification>> notifications;
+    private LinkedHashMap<String,List<Notification>> notifications;
 
 
     /**
      * This is the constructor for the Adaptor
      * @param notifications This is a List of Notifications
      */
-    public NotificationMonthAdaptor(HashMap<String,List<Notification>> notifications) {
+    public NotificationMonthAdaptor(LinkedHashMap<String,List<Notification>> notifications) {
         Log.d("Month Notif",notifications.toString());
         this.notifications = notifications;
     }
@@ -47,7 +48,7 @@ public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationM
     @NonNull
     @Override
     public NotificationMonthViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        return new NotificationMonthViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_month, parent, false),notifications);
+        return new NotificationMonthViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.notification_month, parent, false));
     }
 
     /**
@@ -86,7 +87,7 @@ public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationM
          * This is the NotificationViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public NotificationMonthViewHolder(@NonNull View itemView, HashMap<String,List<Notification>> notifications) {
+        public NotificationMonthViewHolder(@NonNull View itemView) {
             // Run the parent class constructor
             super(itemView);
             // Bind the objects to the view IDs
@@ -99,7 +100,7 @@ public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationM
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
-         * @param List<notification> this is a List of notifications to bind actions to
+         * @param List<Notification> this is a List of notifications to bind actions to
          */
         void bindNotification(final List<Notification> notifications, String month) {
             Log.d("Month Notif",String.valueOf(month));
