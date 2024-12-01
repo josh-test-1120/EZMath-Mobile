@@ -33,6 +33,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -121,6 +122,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         private Timestamp examDate;
         private ExamNameAdaptor examNameAdaptor;
         private ExamTimeAdaptor examTimeAdaptor;
+        private Boolean dateValid;
 
         /**
          * This is the ExamAddViewHolder constructor
@@ -289,11 +291,11 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * @return Whether or not the details are valid
          */
         private Boolean isValidExamDetails() {
-//        } else if (binding.calendarView.getText().toString().trim().isEmpty()) {
-//            showToast("Please Enter test date");
-//            return false;
-             if (binding.inputTestExam.getAdapter().getCount() == 0) {
-                showToast("Please Select exam ID");
+            if (!dateValid) {
+                showToast("Please select a valid date");
+                return false;
+            } else if (binding.inputTestExam.getAdapter().getCount() == 0) {
+                showToast("Please select exam ID");
                 return false;
             } else if (binding.inputTestClass.getText().toString().trim().isEmpty()) {
                 showToast("Please enter class ID");
@@ -324,18 +326,23 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * @param binding this is the view bindings
          */
         private void setupCalendar(ActivityTestAddBinding binding, Timestamp date, List<Timestamp> examTimes) {
+            // Private variables
+            long milliseconds;
+            int counter = 0;
+
             // Loop through the acceptable days
             binding.calendarDesc.setText("Valid Dates:\n");
             for (Timestamp examTime : examTimes) {
-                binding.calendarDesc.append(TimeConverter.localizeDate(examTime) + "\t");
+                counter++;
+                binding.calendarDesc.append(TimeConverter.localizeDate(examTime) + "\t\t");
             }
 
             // Initialize the existing date to today
-            if (date != null) {
-                long milliseconds = date.toDate().getTime();
-                binding.calendarView.setDate(milliseconds);
-            }
-            // Add Listener in calendar
+            if (date != null) { milliseconds = date.toDate().getTime(); }
+            else { milliseconds = new Date().getTime(); }
+            // Attach the date as the current date
+            binding.calendarView.setDate(milliseconds);
+            // Add Listener for calendar change event
             binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
                 @Override
                 // In this Listener have one method
@@ -347,7 +354,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                         int month,
                         int dayOfMonth)
                 {
-
                     // Store the value of date with
                     // format in String type Variable
                     // Add 1 in month because month
@@ -355,9 +361,30 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     String day
                             = dayOfMonth + "-"
                             + (month + 1) + "-" + year;
-                    Log.d("CalendarSetup:",day);
-                    // set this date in TextView for Display
-                    //binding.date_view.setText(Date);
+                    Log.d("CalendarSetup: ",month + " " + dayOfMonth);
+                    Timestamp timestamp = TimeConverter.calendarInfoToTimestamp(dayOfMonth,
+                            month, year);
+                    // Iterate through the valid dates and see if it matches
+                    Boolean valid = false;
+                    for (Timestamp validTime : examTimes) {
+                        String date = TimeConverter.localizeDate(timestamp);
+                        String validDate = TimeConverter.localizeDate(validTime);
+                        Log.d("ExamAdaptor new Add:",date);
+                        Log.d("ExamAdaptor valid Add:",validDate);
+                        if (date.equals(validDate)) valid = true;
+                    }
+
+                    if (valid) {
+                        // Update the preference manager
+                        preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
+                                TimeConverter.timestampToString(timestamp));
+                        dateValid = true;
+                    }
+                    else {
+                        showToast("Not a valid date!");
+                        dateValid = false;
+                    }
+
                 }
             });
         }
