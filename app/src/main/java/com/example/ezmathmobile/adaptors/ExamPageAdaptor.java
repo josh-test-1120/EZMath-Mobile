@@ -175,6 +175,8 @@ public class ExamPageAdaptor extends RecyclerView.Adapter<ExamPageAdaptor.ExamPa
                                         showToast(exception.getMessage());
                                     });
                         }
+                        // Empty data set
+                        loading(false);
                     })
                     .addOnFailureListener(exception ->{
                         loading(false);
