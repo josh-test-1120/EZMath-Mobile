@@ -40,5 +40,14 @@ public class Constants {
         public static final String KEY_SCHEDULED_TIME = "time";
         public static final String KEY_SCHEDULED_EXAMID = "examid";
         public static final String KEY_SCHEDULED_USERID = "userid";
+        public static final String KEY_SCHEDULED_SCHEDULEID = "id";
+    }
+
+    public class Notifications {
+        public static final String KEY_COLLECTION_NOTIFICATION = "Notifications";
+        public static final String KEY_SCHEDULED_TYPE = "type";
+        public static final String KEY_SCHEDULED_TYPEID = "typeid";
+        public static final String KEY_SCHEDULED_USERID = "userid";
+        public static final String KEY_SCHEDULED_NOTIFICATIONID = "id";
     }
 }

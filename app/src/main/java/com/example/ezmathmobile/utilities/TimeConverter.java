@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -165,6 +166,19 @@ public class TimeConverter {
             // Handle parsing errors appropriately
             return null;
         }
+    }
+
+    public static Timestamp calendarInfoToTimestamp(int day, int month, int year) {
+        // Initialize the calendar object
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        // Add the month and the day
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, day);
+        calendar.set(Calendar.YEAR, year);
+        Date date = calendar.getTime();
+        Log.d("TimeConverter: Calendar->Timestamp ",date.toString());
+        return new Timestamp(date);
     }
 
     public static LinkedHashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {

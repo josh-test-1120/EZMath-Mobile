@@ -11,10 +11,10 @@
     <TextView
         android:id="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="75dp"
+        android:layout_height="60dp"
         android:gravity="center"
         android:text="@string/schedule_update_test"
-        android:textSize="40sp"
+        android:textSize="38sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"
@@ -43,10 +43,22 @@
         android:id="@+id/calendarView"
         android:theme="@style/Theme.CalendarView"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="300dp"
         android:dateTextAppearance="@style/Theme.CalendarView"
         android:weekDayTextAppearance="@style/Theme.CalendarView"
         app:layout_constraintTop_toBottomOf="@+id/dateText" />
+
+    <TextView
+        android:id="@+id/calendar_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/redText"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:minLines="4"
+        android:gravity="top"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"/>
 
     <LinearLayout
         android:id="@+id/testTimeInput"
@@ -54,7 +66,7 @@
         android:layout_height="wrap_content"
         android:orientation="horizontal"
         android:layout_marginTop="10dp"
-        app:layout_constraintTop_toBottomOf="@id/calendarView">
+        app:layout_constraintTop_toBottomOf="@id/calendar_desc">
 
         <TextView
             android:id="@+id/testTimeTxt"
@@ -141,14 +153,15 @@
             android:id="@+id/inputTestClass"
             android:layout_width="250dp"
             android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
             android:background="@drawable/round_text_input"
             android:importantForAutofill="no"
             android:inputType="text"
             android:paddingStart="16dp"
             android:paddingEnd="16dp"
             android:textAlignment="gravity"
-            android:textSize="20sp"
-            android:textColor="@color/redText"/>
+            android:textColor="@color/redText"
+            android:textSize="20sp" />
 
     </LinearLayout>
 
@@ -157,20 +170,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:gravity="end"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/testClassInput">
 
         <Button
             android:id="@+id/buttonSubmit"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:backgroundTint="@color/blue_seperator"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/redText"
             android:text="Submit"
             android:includeFontPadding="false"
             android:textAlignment="center"
-            android:textSize="45dp"
+            android:textSize="30dp"
             tools:layout_editor_absoluteX="211dp" />
 
         <ProgressBar
@@ -184,7 +196,7 @@
             android:id="@+id/buttonCancel"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:backgroundTint="@color/cancel_background"
+            android:backgroundTint="@color/redBackground"
             android:includeFontPadding="false"
             android:text="Cancel"
             android:textAlignment="center"
