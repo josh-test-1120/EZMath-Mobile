@@ -120,11 +120,11 @@ public class TestAddActivity extends AppCompatActivity {
     private void AddReminder() {
         // Declaring database and Hashmap
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
         // Adding data to the Hashmap
         // Datetime
-        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
+        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, com.google.firebase.Timestamp.now());
         // Adding text
         hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, binding.inputTestExam.getText().toString()
                  + " has been successfully scheduled at " + binding.inputTestTime.getText().toString()

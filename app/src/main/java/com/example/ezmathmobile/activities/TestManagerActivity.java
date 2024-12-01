@@ -166,11 +166,11 @@ public class TestManagerActivity extends AppCompatActivity {
     private void AddDeletionReminder(String examID) {
         // Declaring database and Hashmap
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        HashMap<String, String> hashMap = new HashMap<>();
+        HashMap<String, Object> hashMap = new HashMap<>();
 
         // Adding data to the Hashmap
         // Datetime
-        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, LocalDateTime.now().toString());
+        hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, com.google.firebase.Timestamp.now());
         // Adding text
         hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examID + " test has been successfully" +
                 "deleted");

@@ -110,7 +110,7 @@ public class MainActivity extends AppCompatActivity {
         }
 
         // Create AlarmReminder
-        //setAlarmedReminder();
+        setAlarmedReminder();
     }
 
     /**
@@ -155,12 +155,13 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this, TimeCheckReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-// Set the alarm to trigger at 2:00 PM
+        // Set the alarm to trigger at 2:00 PM
         Calendar calendar = Calendar.getInstance();
-        calendar.set(Calendar.HOUR_OF_DAY, 12); // 2:00 PM
-        calendar.set(Calendar.MINUTE, 43);
+        calendar.set(Calendar.HOUR_OF_DAY, 11); // 2:00 PM
+        calendar.set(Calendar.MINUTE, 12);
         calendar.set(Calendar.SECOND, 0);
 
         alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
