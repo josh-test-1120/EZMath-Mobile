@@ -26,7 +26,8 @@ import java.util.Set;
 public class TimeConverter {
 
     // Constants
-    public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss";
+    public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss"; // direct export
+    public static final String AdjustedTimestampPattern = "MMM dd, yyyy hh:mm:ss a"; // custom export
 
     /**
      * This will convert a Firebase Timestamp into a localized date
@@ -146,6 +147,7 @@ public class TimeConverter {
     /**
      * This will convert a string representation of firestore timestamp
      * to a timestamp object
+     * Must adhere to the following string pattern: "yyyy-MM-dd HH:mm:ss"
      * @param timestampString the string representation of the timestamp
      * @return Timestamp object from the string
      */
@@ -161,6 +163,27 @@ public class TimeConverter {
             // return a Timestamp object from the Date object
             return new Timestamp(date);
         // Handle the exceptions
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle parsing errors appropriately
+            return null;
+        }
+    }
+
+    public static Timestamp customStringToTimestamp(String date, String time) {
+        // Combine the strings
+        String combinedString = date + " " + time;
+        // Try catch to handle exceptions from conversion
+        try {
+            // Setup the formatter for the conversion
+            SimpleDateFormat formatter = new SimpleDateFormat(AdjustedTimestampPattern);
+            // Create the new date object from the string
+            Date dateObject = formatter.parse(combinedString);
+            // Log the output
+            Log.d("TimeConverter: String->Timestamp",new Timestamp(dateObject).toString());
+            // return a Timestamp object from the Date object
+            return new Timestamp(dateObject);
+            // Handle the exceptions
         } catch (Exception e) {
             e.printStackTrace();
             // Handle parsing errors appropriately

@@ -253,14 +253,23 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Get the date from the date spinner
             long milliseconds = binding.calendarView.getDate();
             Date dateObject = new Date(milliseconds);
-            Timestamp dateTimestamp = new Timestamp(dateObject);
-            Timestamp timestampObject = TimeConverter.stringToTimestamp(dateString);
-            test.put(Constants.Scheduled.KEY_SCHEDULED_DATE,timestampObject);
+            // Convert into strings for multiplexing of time and date into timestamp
+            Timestamp dateStamp = TimeConverter.stringToTimestamp(dateString);
+            String dateFormatted = TimeConverter.localizeDate(dateStamp);
+            int index = binding.inputTestTime.getSelectedItemPosition();
+            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(index);
+            String timeFormatted = TimeConverter.localizeTime(timeObject.getTime());
+            // Combine the Strings into a multiplexed timestamp
+            Timestamp finalDateTime = TimeConverter.customStringToTimestamp(dateFormatted,timeFormatted);
 
-            // Get the time from the time spinner
-            int timeIndex = binding.inputTestTime.getSelectedItemPosition();
-            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(timeIndex);
-            test.put(Constants.Scheduled.KEY_SCHEDULED_TIME, TimeConverter.localizeTime(timestampObject));
+//            Timestamp dateTimestamp = new Timestamp(dateObject);
+//            Timestamp timestampObject = TimeConverter.stringToTimestamp(dateString);
+            test.put(Constants.Scheduled.KEY_SCHEDULED_DATE,finalDateTime);
+
+//            // Get the time from the time spinner
+//            int timeIndex = binding.inputTestTime.getSelectedItemPosition();
+//            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(timeIndex);
+//            test.put(Constants.Scheduled.KEY_SCHEDULED_TIME, TimeConverter.localizeTime(finalDateTime));
             test.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examID);
             test.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
             test.put(Constants.User.KEY_USERID, userID);
@@ -268,8 +277,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Check if testID exists
             loading(true);
             if (testID != null) Log.d("Exam Add Test ID", testID);
-            Log.d("Exam Add Test Date", dateTimestamp.toString());
-            Log.d("Exam Add Test Date String", TimeConverter.localizeDate(timestampObject));
+            Log.d("Exam Add Test Date", finalDateTime.toString());
+            Log.d("Exam Add Test Date String", TimeConverter.localizeDate(finalDateTime));
             if (testID != null) {
                 database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                         .document(testID)
@@ -329,8 +338,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Save exam details to preference manager
             preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
                     TimeConverter.timestampToString(dateTimestamp));
-            preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME,
-                    TimeConverter.localizeTime(timeObject.getTime()));
+//            preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME,
+//                    TimeConverter.localizeTime(timeObject.getTime()));
             preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examName);
             preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
         }
@@ -385,9 +394,16 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             if (examTimes != null) Log.d("Exam Add Test Calendar Times:", examTimes.toString());
             else Log.d("Exam Add Test Calendar Times:", "failed");
             updateValidDates();
-            // Initialize the existing date to today
-            if (date != null) { milliseconds = date.toDate().getTime(); }
-            else { milliseconds = new Date().getTime(); }
+            // Initialize the existing date
+            if (date != null) {
+                milliseconds = date.toDate().getTime();
+                examDate = date;
+            }
+            // Or set the date for today
+            else {
+                milliseconds = new Date().getTime();
+                examDate = new Timestamp(new Date());
+            }
             // Attach the date as the current date
             binding.calendarView.setDate(milliseconds);
             // Add Listener for calendar change event
