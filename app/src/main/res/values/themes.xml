@@ -3,6 +3,7 @@
     <style name="Base.Theme.EZMathMobile" parent="Theme.Material3.DayNight.NoActionBar">
         <!-- Customize your light theme here. -->
         <item name="colorPrimary">@color/redBackground</item>
+        <item name="android:textColorPrimary">@color/redText</item>
         <item name="android:statusBarColor">@color/redBackground</item>
         <!--This sets the color of the progress bars -->
         <item name="android:indeterminateTint">@color/white</item>
@@ -15,6 +16,7 @@
         <item name="android:textColor">@color/redText</item>
         <item name="android:textColorPrimary">@color/redText</item>
         <item name="android:statusBarColor">@color/redBackground</item>
+        <item name="android:weekSeparatorLineColor">@color/white</item>
         <!-- <item name="colorPrimary">@color/my_light_primary</item> -->
     </style>
     <style name="Base.Theme.ProfileMenuPopup" parent="Theme.Material3.DayNight.NoActionBar">

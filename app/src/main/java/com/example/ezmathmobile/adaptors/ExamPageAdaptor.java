@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -151,7 +152,8 @@ public class ExamPageAdaptor extends RecyclerView.Adapter<ExamPageAdaptor.ExamPa
                         for (DocumentSnapshot schedule : queryDocumentSnapshots) {
                             // Serialize the document to the class
                             Scheduled scheduleDB = schedule.toObject(Scheduled.class);
-                            String scheduledID = schedule.getId();
+                            scheduleDB.setId(schedule.getId());
+                            //String scheduledID = schedule.getId();
 
                             database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
                                     .document(scheduleDB.getExamid())
