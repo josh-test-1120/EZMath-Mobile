@@ -80,7 +80,7 @@ public class Scheduled implements Comparable {
 
         // Update the notifications table
         database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
-                .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_TYPEID,examid)
+                .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_TYPEID,id)
                 .get()
                 .addOnSuccessListener(queryDocuments -> {
                     // New record
@@ -89,7 +89,7 @@ public class Scheduled implements Comparable {
                         // Create the hash map for entry into databases
                         notification.put(Constants.Notifications.KEY_SCHEDULED_TYPE, "exam");
                         notification.put(Constants.Notifications.KEY_SCHEDULED_USERID, userid);
-                        notification.put(Constants.Notifications.KEY_SCHEDULED_TYPEID, examid);
+                        notification.put(Constants.Notifications.KEY_SCHEDULED_TYPEID, id);
                         // Create new record
                         database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
                                 .add(notification)

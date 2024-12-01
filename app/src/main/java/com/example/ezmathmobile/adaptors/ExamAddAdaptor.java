@@ -243,13 +243,13 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          */
         private void AddTest() {
             loading(true);
-
+            // Initialize the database
             FirebaseFirestore database = FirebaseFirestore.getInstance();
+            // Get the details from the preference manager
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
             String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
-
+            // Format for firebase object storage
             HashMap<String, Object> test = new HashMap<>();
-
             // Get the date from the date spinner
             long milliseconds = binding.calendarView.getDate();
             Date dateObject = new Date(milliseconds);
@@ -262,14 +262,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Combine the Strings into a multiplexed timestamp
             Timestamp finalDateTime = TimeConverter.customStringToTimestamp(dateFormatted,timeFormatted);
 
-//            Timestamp dateTimestamp = new Timestamp(dateObject);
-//            Timestamp timestampObject = TimeConverter.stringToTimestamp(dateString);
+            // Update the HashMap record
             test.put(Constants.Scheduled.KEY_SCHEDULED_DATE,finalDateTime);
-
-//            // Get the time from the time spinner
-//            int timeIndex = binding.inputTestTime.getSelectedItemPosition();
-//            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(timeIndex);
-//            test.put(Constants.Scheduled.KEY_SCHEDULED_TIME, TimeConverter.localizeTime(finalDateTime));
             test.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examID);
             test.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
             test.put(Constants.User.KEY_USERID, userID);
@@ -289,11 +283,15 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                             loading(false);
                             updatePreferences(binding);
 
-//                            // Update the dependent collections
-//                            database.document(testID).get().addOnSuccessListener(documentSnapshot -> {
-//                                Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
-//                                if (scheduled != null) scheduled.syncCollections();
-//                            });
+                            // Update the dependent collections
+                            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                                    .document(testID)
+                                    .get()
+                                    .addOnSuccessListener(documentSnapshot -> {
+                                        Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                                        scheduled.setId(testID);
+                                        if (scheduled != null) scheduled.syncCollections();
+                                    });
                             // Redirect to the Main test page
                             redirect();
                         })
@@ -310,11 +308,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                             loading(false);
                             // Update the preferences
                             updatePreferences(binding);
-//                            // Update the dependent collections
-//                            queryDocument.get().addOnSuccessListener(documentSnapshot -> {
-//                                Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
-//                                if (scheduled != null) scheduled.syncCollections();
-//                            });
+                            // Update the dependent collections
+                            queryDocument.get().addOnSuccessListener(documentSnapshot -> {
+                                Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                                scheduled.setId(documentSnapshot.getId());
+                                if (scheduled != null) scheduled.syncCollections();
+                            });
                             // Redirect to the Main test page
                             redirect();
                         })
