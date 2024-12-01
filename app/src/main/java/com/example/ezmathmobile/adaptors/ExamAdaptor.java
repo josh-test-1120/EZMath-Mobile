@@ -1,14 +1,12 @@
 package com.example.ezmathmobile.adaptors;
 
-import android.app.Activity;
 import android.content.Context;
-import android.content.Intent;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -16,17 +14,18 @@ import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.ezmathmobile.activities.TestAddActivity;
-import com.example.ezmathmobile.activities.TestManagerActivity;
-import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
-import com.example.ezmathmobile.models.Exam;
-import com.example.ezmathmobile.models.Scheduled;
-
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.databinding.ActivityMainBinding;
+import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
+import com.example.ezmathmobile.databinding.ExamItemContainerBinding;
+import com.example.ezmathmobile.databinding.ExamMonthContainerBinding;
+import com.example.ezmathmobile.models.Exam;
+import com.example.ezmathmobile.models.Notification;
+import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
-import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -34,32 +33,36 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import java.util.ArrayList;
 import java.util.List;
 
-
 /**
- * This is the ExamAdaptor that is used in the RecycleView Adaptor
+ * This is the NotificationAdaptor that is used in the RecycleView Adaptor
  * This extends the RecycleView.Adaptor class
  */
 public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder> {
+    // These are the private variables
+    private List<Scheduled> exams;
+    private ViewGroup mainParent;
 
-    private String examID;
+
     /**
      * This is the constructor for the Adaptor
+     * @param exams This is a List of Notifications
      */
-    public ExamAdaptor() { }
+    public ExamAdaptor(List<Scheduled> exams, ViewGroup mainParent) {
+        this.exams = exams;
+        this.mainParent = mainParent;
+    }
 
     /**
      * This is an override of the onCreateViewHolder method
      * @param parent   The ViewGroup into which the new View will be added after it is bound to
      *                 an adapter position.
      * @param viewType The view type of the new View.
-     * @return A new ExamViewHolder class that has its layout inflated
+     * @return A new NotificationViewHolder class that has its layout inflated
      */
     @NonNull
     @Override
     public ExamViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // Return the view inflated
-        return new ExamViewHolder(LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.activity_test_manager, parent, false), parent);
+        return new ExamViewHolder(LayoutInflater.from(parent.getContext()).inflate(R.layout.exam_item_container, parent, false), parent, mainParent);
     }
 
     /**
@@ -69,57 +72,77 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      * @param position The position of the item within the adapter's data set.
      */
     @Override
-    public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {}
-
-    /**
-     * This is an override of the getItemCount method
-     * @return the size of the exams list
-     */
-    @Override
-    public int getItemCount() {
-        return 1;
+    public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
+        if (position < exams.size()) holder.bindExam(exams.get(position));
     }
 
     /**
-     * This is the ExamViewHolder class that extends the RecycleView.ViewHolder
+     * This is an override of the getItemCount method
+     * @return the size of the notifications list
+     */
+    @Override
+    public int getItemCount() {
+        return exams.size();
+    }
+
+    /**
+     * This is the NotificationViewHolder class that extends the RecycleView.ViewHolder
      */
     public static class ExamViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
-        private ConstraintLayout layoutExam;
+        private LinearLayout layoutExam;
         // Dependency Objects
         private PreferenceManager preferenceManager;
         private FirebaseFirestore database;
-        private ActivityTestManagerBinding binding;
         private Context mainPageLayout;
+        // View Objects
+        private ExamItemContainerBinding binding;
+        private ActivityMainBinding mainBinding;
+        private ActivityTestManagerBinding testBinding;
         private RecyclerView contentView;
+        private ProgressBar progressBar;
 
         /**
-         * This is the ExamViewHolder constructor
+         * This is the NotificationViewHolder constructor
          * @param itemView the view that is to be inflated
          */
-        public ExamViewHolder(@NonNull View itemView, ViewGroup parent) {
+        public ExamViewHolder(@NonNull View itemView, ViewGroup parent, ViewGroup mainParent) {
             // Run the parent class constructor
             super(itemView);
             // Get the page context
             mainPageLayout = itemView.getContext();
             // Bind the objects to the view ID
-            layoutExam = itemView.findViewById(R.id.main);
-            // Bind the content view ID
-            contentView = parent.findViewById(R.id.contentView);
-            // Attach the preferences
-            preferenceManager = new PreferenceManager(layoutExam.getContext().getApplicationContext());
-            // Attach the database
-            database = FirebaseFirestore.getInstance();
+            layoutExam = itemView.findViewById(R.id.testContainer);
             // Attach the binding
-            this.binding = ActivityTestManagerBinding.bind(itemView);
-            // Set the binding for the add new schedule button
-            binding.buttonAddTest.setOnClickListener(v -> {
-                // Set the adaptor with the current main page
-                final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor();
-                contentView.setAdapter(examAddAdaptor);
-            });
-            // Populate the view
-            loadTestDetails();
+            this.binding = ExamItemContainerBinding.bind(itemView);
+            // Bind the content view ID
+            contentView = mainParent.findViewById(R.id.contentView);
+            // Bind the progress bar
+            progressBar = mainParent.findViewById(R.id.progressBar);;
+            // Bind the database object
+            database = FirebaseFirestore.getInstance();
+        }
+
+        /**
+         * This is the bind exam method that will bind actions
+         * and listeners to the exam
+         * @param exam this is the exam to bind actions to
+         */
+        void bindExam(final Scheduled exam) {
+            Log.d("Notif Data",exam.toString());
+
+            // Get localized string from the timestamp
+            String time = TimeConverter.localizeTime(exam.getDate());
+            String date = TimeConverter.localizeDayOnly(exam.getDate());
+
+            //Setting the view texts to whatever was given
+            binding.testName.setText(exam.getName());
+            binding.testTime.setText(time);
+            binding.testDate.setText(date);
+
+            //Add some listeners for the delete and edit test buttons
+            binding.testDelete.setOnClickListener(v -> deleteTest(exam.getId()));
+            binding.testEdit.setOnClickListener(v -> getExamTimes(exam.getExamid(),exam));
         }
 
         /**
@@ -131,92 +154,11 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         }
 
         /**
-         * Method to paste test details into test manager view from firestore
-         */
-        private void loadTestDetails() {
-            // Get the userID
-            String userID = preferenceManager.getString(Constants.User.KEY_USERID);
-            List<Scheduled> scheduled = new ArrayList<>();
-
-            loading(true);
-            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                    .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_USERID,userID)
-                    .get()
-                    .addOnSuccessListener(queryDocumentSnapshots -> {
-                        //Clearing up views before loading everything in
-                        binding.testContainer.removeAllViews();
-                        //Getting details from firestore
-                        for (DocumentSnapshot schedule : queryDocumentSnapshots) {
-                            // Serialize the document to the class
-                            Scheduled scheduleDB = schedule.toObject(Scheduled.class);
-                            String scheduledID = schedule.getId();
-
-                            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
-                                    .document(scheduleDB.getExamid())
-                                    .get()
-                                    .addOnSuccessListener(exam -> {
-                                        // Serialize the document to the class
-                                        Exam examDB = exam.toObject(Exam.class);
-                                        if (examDB != null) scheduleDB.setName(examDB.getName());
-                                        // Add scheduled to list
-                                        scheduled.add(scheduleDB);
-                                        View testView = createTestView(scheduleDB, scheduledID);
-                                        binding.testContainer.addView(testView);
-                                        loading(false);
-                                        Log.d("Test Manager","view added");
-                                        loading(false);
-                                    })
-                                    .addOnFailureListener(exception ->{
-                                        loading(false);
-                                        showToast(exception.getMessage());
-                                    });
-                        }
-                    })
-                    .addOnFailureListener(exception ->{
-                        loading(false);
-                        showToast(exception.getMessage());
-                    });
-        }
-
-        /**
-         * Creating a view and putting all my test details into it from previous method. This is putting
-         * the details specifically into my exam item container view
-         * @param exam from previous method (firestore)
-         * @return testView which is the container with all the test details
-         */
-        private View createTestView(Scheduled exam, String examID) {
-            Log.d("Test Manager","Starting Test Item Create");
-            // Initialize a Layout Inflator with content for the Layout
-            LayoutInflater li = LayoutInflater.from(layoutExam.getContext());
-            // Create inflated view
-            View testView = li.inflate(R.layout.exam_item_container, binding.testContainer, false);
-
-            //Pull text views from item container and put them into variables in java
-            TextView examIDView = testView.findViewById(R.id.testName);
-            TextView examTimeView = testView.findViewById(R.id.testTime);
-            TextView examDateView = testView.findViewById(R.id.testDate);
-
-            // Get localized string from the timestamp
-            String time = TimeConverter.localizeTime(exam.getDate());
-            String date = TimeConverter.localizeDate(exam.getDate());
-
-            //Setting the view texts to whatever was given
-            examIDView.setText(exam.getName());
-            examTimeView.setText(time);
-            examDateView.setText(date);
-
-            //Add some listeners for the delete and edit test buttons
-            testView.findViewById(R.id.testDelete).setOnClickListener(v -> deleteTest(examID));
-            testView.findViewById(R.id.testEdit).setOnClickListener(v -> editTest(examID,exam));
-
-            return testView;
-        }
-
-        /**
          * Delete the test
          * @param examID this is the examID to delete
          */
         private void deleteTest(String examID) {
+            loading(true);
             database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                     .whereEqualTo(FieldPath.documentId(), examID)
                     .get()
@@ -227,15 +169,18 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                     .delete()
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(mainPageLayout, "Test successfully deleted", Toast.LENGTH_SHORT).show();
-                                        //Refresh test list
-                                        loadTestDetails();
+                                        // Set the adaptor with the current Test Manager page
+                                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+                                        contentView.setAdapter(examPageAdaptor);
                                     })
                                     .addOnFailureListener(e -> {
+                                        loading(false);
                                         showToast(e.getMessage());
                                     });
                         }
                     })
                     .addOnFailureListener(e -> {
+                        loading(false);
                         showToast(e.getMessage());
                     });
         }
@@ -246,11 +191,27 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          * populate the edit text areas with that information.
          * @param examID ID of specified exam needing to be changed
          */
-        private void editTest(String examID, Scheduled exam) {
+        private void editTest(String examID, Scheduled test, Exam exam) {
+            Log.d("ExamMonth Edit",examID);
             // Set the adaptor with the current main page
-            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(examID, exam.getName(),exam.getDate());
+            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
             contentView.setAdapter(examAddAdaptor);
 
+        }
+
+        private void getExamTimes(String examID, Scheduled test) {
+            // Get the exam details
+            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                    .whereEqualTo(Constants.Exam.KEY_TEST_NAME,test.getName())
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // Serialize the document to the class
+                        Exam exam = queryDocumentSnapshots.getDocuments().get(0).toObject(Exam.class);
+                        editTest(examID, test, exam);
+                    })
+                    .addOnFailureListener(exception -> {
+                        showToast("Exception getting exam times: " + exception.getMessage());
+                    });
         }
 
         /**
@@ -259,11 +220,9 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          */
         private void loading(Boolean isLoading){
             if(isLoading){
-                binding.testContainer.setVisibility(View.INVISIBLE);
-                binding.progressBar.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.VISIBLE);
             } else {
-                binding.progressBar.setVisibility(View.INVISIBLE);
-                binding.testContainer.setVisibility(View.VISIBLE);
+                progressBar.setVisibility(View.INVISIBLE);
             }
         }
     }

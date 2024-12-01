@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class TimeConverter {
 
     // Constants
     public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss";
+
     /**
      * This will convert a Firebase Timestamp into a localized date
      * @param timestamp this is the timestamp to convert to local date
@@ -37,6 +39,21 @@ public class TimeConverter {
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
         // Convert LocalDate to date String and format it
         String dateString = localDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy").withLocale(Locale.US));
+        Log.d("TimeConverter: Timestamp->Date",dateString);
+        return dateString;
+    }
+
+    /**
+     * This will convert a Firebase Timestamp into a localized date
+     * @param timestamp this is the timestamp to convert to local date
+     */
+    public static String localizeDayOnly(final Timestamp timestamp) {
+        // Convert timestamp into date
+        Date date = timestamp.toDate();
+        // Convert Date to LocalDate
+        LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
+        // Convert LocalDate to date String and format it
+        String dateString = localDate.format(DateTimeFormatter.ofPattern("EEE dd").withLocale(Locale.US));
         Log.d("TimeConverter: Timestamp->Date",dateString);
         return dateString;
     }
@@ -61,10 +78,35 @@ public class TimeConverter {
      * @param notifications This is a List of notifications
      * @return an integer that specifies the list index of the notification
      */
+    public static int findClosestDate(final List<Notification> notifications) {
+        // Variables
+        int index = -1;
+        Date currentLatest = null, latest = null;
+
+        for (int x = 0; x < notifications.size(); x++) {
+            // Convert timestamp into date
+            Date date = notifications.get(x).examDate.toDate();
+            if (currentLatest == null) {
+                currentLatest = date;
+                index = x;
+            }
+            else if (date.before(currentLatest) && date.after(new Date())) {
+                currentLatest = date;
+                index = x;
+            }
+        }
+        return index;
+    }
+
+    /**
+     * This will find the most recent notification by date
+     * @param notifications This is a List of notifications
+     * @return an integer that specifies the list index of the notification
+     */
     public static int findLatestDate(final List<Notification> notifications) {
         // Variables
         int index = -1;
-        LocalDate currentLatest = null;
+        LocalDate currentLatest = null, latest = null;
 
         for (int x = 0; x < notifications.size(); x++) {
             // Convert timestamp into date
@@ -126,6 +168,19 @@ public class TimeConverter {
         }
     }
 
+    public static Timestamp calendarInfoToTimestamp(int day, int month, int year) {
+        // Initialize the calendar object
+        Calendar calendar = Calendar.getInstance();
+        calendar.clear();
+        // Add the month and the day
+        calendar.set(Calendar.MONTH, month);
+        calendar.set(Calendar.DATE, day);
+        calendar.set(Calendar.YEAR, year);
+        Date date = calendar.getTime();
+        Log.d("TimeConverter: Calendar->Timestamp ",date.toString());
+        return new Timestamp(date);
+    }
+
     public static LinkedHashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {
         // Variables
         HashMap<String,List<Notification>> monthlyNotifications = new HashMap<>();
@@ -155,7 +210,7 @@ public class TimeConverter {
         // Get the months and sort them
         Set<String> months = monthlyNotifications.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
-        Collections.sort(monthsSorted, Collections.reverseOrder());
+        Collections.sort(monthsSorted);
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order
@@ -200,7 +255,7 @@ public class TimeConverter {
         // Get the months and sort them
         Set<String> months = monthlyScheduled.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
-        Collections.sort(monthsSorted, Collections.reverseOrder());
+        Collections.sort(monthsSorted);
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order

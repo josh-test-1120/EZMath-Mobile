@@ -172,7 +172,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                                 Notification notification = document.toObject(Notification.class);
                                 if (notification != null && Objects.equals(notification.type, "exam")) {
                                     // Get the scheduled exam
-                                    database.collection("Scheduled")
+                                    database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                                             .document(notification.typeid)
                                             .get()
                                             // If no errors fetching data
@@ -219,7 +219,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
         public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
                                    RecyclerView notificationsView) {
             // Find the latest date
-            int index = TimeConverter.findLatestDate(notifications);
+            int index = TimeConverter.findClosestDate(notifications);
             Notification latest = notifications.get(index);
             // Get localized string from the timestamp
             String time = TimeConverter.localizeTime(latest.examDate);
@@ -233,6 +233,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
 
             // Convert the notifications into month groups
             LinkedHashMap<String, List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
+
 
             // Set the adaptor with the current notifications
             final NotificationMonthAdaptor notificationMonthAdaptor = new NotificationMonthAdaptor(groupedByMonth);

@@ -31,14 +31,25 @@
 
         <TextView
             android:id="@+id/titleName"
-            android:layout_width="match_parent"
+            android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:gravity="center"
+            android:gravity="start"
             android:text="@string/app_name_formatted"
-            android:textSize="42sp"
+            android:textSize="40sp"
             android:textColor="@color/redText"
-            android:textAlignment="center"
             app:layout_constraintStart_toEndOf="@id/logoImage" />
+
+        <com.makeramen.roundedimageview.RoundedImageView
+            android:id="@+id/imageProfile"
+            android:layout_width="45dp"
+            android:layout_height="45dp"
+            android:scaleType="centerCrop"
+            android:layout_marginStart="10dp"
+            android:layout_marginTop="10dp"
+            android:background="@drawable/image_background"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintStart_toStartOf="@+id/titleName"
+            app:riv_corner_radius="30dp" />
 
     </LinearLayout>
     <!-- Header separator -->
@@ -62,47 +73,48 @@
         app:layout_constraintBottom_toTopOf="@id/navigationGrid"/>
 
     <!-- Navigation Footer Layout -->
-    <GridLayout
+    <GridView
         android:id="@+id/navigationGrid"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="55dp"
         android:background="@color/redBackground"
-        android:columnCount="4"
+        android:numColumns="4"
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
+<!--        &lt;!&ndash; Main Page &ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/homeButton"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_rowWeight="1"-->
+<!--            android:layout_columnWeight="1"-->
+<!--            android:padding="5dp"-->
+<!--            app:srcCompat="@drawable/home"-->
+<!--            grid:layout_gravity="center" />-->
 
-        <ImageView
-            android:id="@+id/homeButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:padding="5dp"
-            app:srcCompat="@drawable/home"
-            grid:layout_gravity="center" />
+<!--        &lt;!&ndash; Exam Test Scheduler &ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/testManagerButton"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_rowWeight="1"-->
+<!--            android:layout_columnWeight="1"-->
+<!--            android:padding="5dp"-->
+<!--            app:srcCompat="@drawable/calendar"-->
+<!--            grid:layout_gravity="center" />-->
 
-        <ImageView
-            android:id="@+id/testManagerButton"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:padding="5dp"
-            app:srcCompat="@drawable/calendar"
-            grid:layout_gravity="center" />
-
-        <!-- Reminders button -->
-        <ImageView
-            android:id="@+id/remindersBtn"
-            android:layout_width="0dp"
-            android:layout_height="0dp"
-            android:layout_rowWeight="1"
-            android:layout_columnWeight="1"
-            android:padding="5dp"
-            android:src="@drawable/reminder_bell"
-            grid:layout_gravity="center" />
+<!--        &lt;!&ndash; Reminders button &ndash;&gt;-->
+<!--        <ImageView-->
+<!--            android:id="@+id/remindersBtn"-->
+<!--            android:layout_width="0dp"-->
+<!--            android:layout_height="0dp"-->
+<!--            android:layout_rowWeight="1"-->
+<!--            android:layout_columnWeight="1"-->
+<!--            android:padding="5dp"-->
+<!--            android:src="@drawable/reminder_bell"-->
+<!--            grid:layout_gravity="center" />-->
 
         <!--        <ImageView-->
         <!--            android:id="@+id/messageButton"-->
@@ -114,6 +126,6 @@
         <!--            android:layout_rowWeight="1"-->
         <!--            grid:layout_gravity="center"/>-->
 
-    </GridLayout>
+    </GridView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

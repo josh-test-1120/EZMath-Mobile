@@ -2,11 +2,12 @@ package com.example.ezmathmobile.models;
 
 import com.google.firebase.Timestamp;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class Exam {
-    private String name, professor, classID;
-    List<Timestamp> times;
+    private String name, professor, classid;
+    private ArrayList<Timestamp> times;
 
     public Exam() {}
 
@@ -29,5 +30,21 @@ public class Exam {
 
     public void setProfessor(String professor) {
         this.professor = professor;
+    }
+
+    public String getClassID() {
+        return classid;
+    }
+
+    public void setClassID(String classid) {
+        this.classid = classid;
+    }
+
+    public ArrayList<Timestamp> getTimes() {
+        return times;
+    }
+
+    public void setTimes(ArrayList<Timestamp> times) {
+        this.times = times;
     }
 }

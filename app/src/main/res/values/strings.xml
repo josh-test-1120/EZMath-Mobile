@@ -17,4 +17,10 @@
     <string name="sign_up">Sign Up</string>
     <string name="first_name">First Name</string>
     <string name="last_name">Last Name</string>
+    <string name="scheduled_tests">Scheduled Tests</string>
+    <string name="schedule_update_test">Schedule/Update Test</string>
+    <string name="test_date">Date:</string>
+    <string name="exam_id">Exam ID:</string>
+    <string name="class_id">Class ID:</string>
+    <string name="time">Time:</string>
 </resources>
