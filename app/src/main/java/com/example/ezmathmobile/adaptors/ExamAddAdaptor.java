@@ -1,13 +1,16 @@
 package com.example.ezmathmobile.adaptors;
 
-import android.annotation.SuppressLint;
 import android.content.Context;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CalendarView;
+import android.widget.ListView;
+import android.widget.Spinner;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -17,13 +20,19 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
 import com.example.ezmathmobile.models.Exam;
+import com.example.ezmathmobile.models.Time;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 /**
@@ -98,10 +107,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         private ActivityTestAddBinding binding;
         private Context mainPageLayout;
         private RecyclerView contentView;
-
-        //View viewBackground;
+        private Spinner examNames, examTimes;
+        // These are the variables and adaptors
         private String examID, examName;
         private Timestamp examDate;
+        private ExamNameAdaptor examNameAdaptor;
+        private ExamTimeAdaptor examTimeAdaptor;
 
         /**
          * This is the ExamAddViewHolder constructor
@@ -135,15 +146,16 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             setupCalendar(binding);
             //Setup a listener for clicking outside edit texts
             setupOutsideClickListener();
-            // Populate the view
-            binding.inputTestExam.setText(examName);
-            if (examDate != null) {
-                // Get localized string from the timestamp
-                String time = TimeConverter.localizeTime(examDate);
-                String date = TimeConverter.localizeDate(examDate);
-                // Update the time field
-                binding.inputTestTime.setText(time);
+            if (examName != null) {
+                // Set the exam name spinner
+                List<String> names = new ArrayList<>();
+                names.add(examName);
+                // Set the exam name adaptor for the exam name
+                ExamNameAdaptor examNameAdaptor = new ExamNameAdaptor(mainPageLayout.getApplicationContext(), names);
+                binding.inputTestExam.setAdapter(examNameAdaptor);
+                buildExamTimeList(binding);
             }
+            else buildExamNameList(binding);
         }
 
         /**
@@ -151,15 +163,46 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * be taken back to test manager
          */
         private void onListeners() {
+            // Setup the submit button listener
             binding.buttonSubmit.setOnClickListener(v -> {
                 if (isValidExamDetails()) {
                     AddTest();
                 }
             });
+            // Setup the cancel button listener
             binding.buttonCancel.setOnClickListener(v -> {
                 // Set the adaptor with the current main page
                 final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
                 contentView.setAdapter(examPageAdaptor);
+            });
+            // Set the listener for the exam name spinner
+            binding.inputTestExam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+                /**
+                 * Override for the OnItemSelected method
+                 * @param parent this is the adapter object
+                 * @param view this is the adapter view
+                 * @param position this is the position in the array
+                 * @param id this is the row id of the item
+                 */
+                @Override
+                public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                    // Get the item clicked
+                    //int index = parent.getSelectedItemPosition();
+                    examName = (String) parent.getItemAtPosition(position);
+                    //Toast.makeText(parent.getContext(), "Exam Name " + name, Toast.LENGTH_SHORT).show();
+                    // Build the exam times
+                    buildExamTimeList(binding);
+                    // Update the classID
+                    
+                }
+
+                /**
+                 * This is the override for nothing being selected
+                 * This is an empty method as we do nothing here
+                 * @param parent this is the adapter object
+                 */
+                @Override
+                public void onNothingSelected(AdapterView<?> parent) {}
             });
         }
 
@@ -183,15 +226,17 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
 
             HashMap<String, String> exam = new HashMap<>();
-            exam.put(Constants.Scheduled.KEY_SCHEDULED_TIME, binding.inputTestTime.getText().toString());
+            // Get the time from the time spinner
+            int timeIndex = examTimes.getSelectedItemPosition();
+            exam.put(Constants.Scheduled.KEY_SCHEDULED_TIME, (String) examTimes.getItemAtPosition(timeIndex));
 //            exam.put(Constants.Scheduled.KEY_SCHEDULED_DATE, Timestamp.now());
-//            exam.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examID);
+            exam.put(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examID);
             exam.put(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
             exam.put(Constants.User.KEY_USERID, userID);
 
             // Get the exam ID from the exam name
             database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
-                    .whereEqualTo(Constants.Exam.KEY_TEST_NAME,binding.inputTestExam.getText().toString())
+                    .whereEqualTo(Constants.Exam.KEY_TEST_NAME,examName)
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         // Serialize the document to the class
@@ -206,10 +251,10 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                 .addOnSuccessListener(documentReference -> {
 
                                     documentReference.update(Constants.Scheduled.KEY_SCHEDULED_DATE,Timestamp.now());
-                                    //Save exam details to preference manager
-                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME, binding.inputTestTime.getText().toString());
+                                    // Save exam details to preference manager
+                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME, (String) examTimes.getItemAtPosition(timeIndex));
     //                        preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE, binding.inputTestDate.getText().toString());
-                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_EXAMID, binding.inputTestExam.getText().toString());
+                                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examName);
                                     preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
 
                                     // Set the adaptor with the current main page
@@ -227,18 +272,14 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
 
         /**
          * Validating user details for each of the edit texts
-         *
          * @return Whether or not the details are valid
          */
         private Boolean isValidExamDetails() {
-            if (binding.inputTestTime.getText().toString().trim().isEmpty()) {
-                showToast("Please Enter test time");
-                return false;
 //        } else if (binding.calendarView.getText().toString().trim().isEmpty()) {
 //            showToast("Please Enter test date");
 //            return false;
-            } else if (binding.inputTestExam.getText().toString().trim().isEmpty()) {
-                showToast("Please Enter exam ID");
+             if (binding.inputTestExam.getAdapter().getCount() == 0) {
+                showToast("Please Select exam ID");
                 return false;
             } else if (binding.inputTestClass.getText().toString().trim().isEmpty()) {
                 showToast("Please enter class ID");
@@ -263,6 +304,11 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             }
         }
 
+        /**
+         * This is to setup the calendar for viewing the days and getting
+         * the day result
+         * @param binding this is the view bindings
+         */
         private void setupCalendar(ActivityTestAddBinding binding) {
             // Add Listener in calendar
             binding.calendarView.setOnDateChangeListener(new CalendarView.OnDateChangeListener() {
@@ -281,17 +327,82 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     // format in String type Variable
                     // Add 1 in month because month
                     // index is start with 0
-                    String Date
+                    String day
                             = dayOfMonth + "-"
                             + (month + 1) + "-" + year;
-
+                    Log.d("CalendarSetup:",day);
                     // set this date in TextView for Display
                     //binding.date_view.setText(Date);
                 }
             });
         }
 
-        @SuppressLint("ClickableViewAccessibility")
+        /**
+         * Build the ExamTime List based on information from the database
+         * @param binding this is the view bindings
+         */
+        private void buildExamTimeList(ActivityTestAddBinding binding) {
+            // Get the list of exams available
+            if (examName != null) {
+                database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                        .whereEqualTo(Constants.Exam.KEY_TEST_NAME,examName)
+                        .get()
+                        .addOnSuccessListener(queryDocumentSnapshots -> {
+                            // Serialize the document to the class
+                            Exam examDB = queryDocumentSnapshots.getDocuments().get(0).toObject(Exam.class);
+                            // Bind the class ID to the view
+                            binding.inputTestClass.setText(examDB.getClassID());
+                            // Ensure a document exists and times are valid
+                            if (examDB != null) {
+                                Log.d("Test Add ExamID", examDB.getName());
+                                if (examDB.getTimes() != null) {
+                                    // Wrapped time object for toString handling
+                                    List<Time> times = new ArrayList<>();
+                                    for (Timestamp timestamp : examDB.getTimes()) {
+                                        times.add(new Time(timestamp));
+                                    }
+                                    // Set the exam time adaptor for the time elements
+                                    ExamTimeAdaptor examTimeAdaptor = new ExamTimeAdaptor(mainPageLayout.getApplicationContext(), times);
+                                    binding.inputTestTime.setAdapter(examTimeAdaptor);
+                                }
+                            }
+                        });
+            }
+        }
+
+        /**
+         * Build the ExamTime List based on information from the database
+         * @param binding this is the view bindings
+         */
+        private void buildExamNameList(ActivityTestAddBinding binding) {
+            // Private variables
+            final List<String> names = new ArrayList<>();
+            // Get the list of exams available
+            database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
+                    .get()
+                    .addOnSuccessListener(queryDocumentSnapshots -> {
+                        // Iterate through the exams
+                        for (DocumentSnapshot exam : queryDocumentSnapshots) {
+                            // Serialize the document to the class
+                            Exam examDB = exam.toObject(Exam.class);
+                            // Add the exam name to the list
+                            names.add(examDB.getName());
+                            Log.d("Test Build Name Exam Object", examDB.toString());
+                            //Log.d("Test Build Name Exam Name", examDB.getName());
+                        }
+                        // Ensure that names exist
+                        if (!names.isEmpty()) {
+                            Log.d("Test Build Name Exam List", names.toString());
+                            // Set the exam time adaptor for the time elements
+                            ExamNameAdaptor examNameAdaptor = new ExamNameAdaptor(mainPageLayout.getApplicationContext(), names);
+                            binding.inputTestExam.setAdapter(examNameAdaptor);
+                        }
+                    });
+        }
+
+        /**
+         *
+         */
         private void setupOutsideClickListener(){
             layoutAddExam.setOnTouchListener((v, event) -> {
                 hideKeyboard();
