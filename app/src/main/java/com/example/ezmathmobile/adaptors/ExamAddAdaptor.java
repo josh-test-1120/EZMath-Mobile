@@ -252,7 +252,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                 .add(exam)
                                 .addOnSuccessListener(documentReference -> {
 
-                                    documentReference.update(Constants.Scheduled.KEY_SCHEDULED_DATE,Timestamp.now());
+                                    //documentReference.update(Constants.Scheduled.KEY_SCHEDULED_DATE,Timestamp.now());
                                     // Save exam details to preference manager
                                     preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME, (String) examTimes.getItemAtPosition(timeIndex));
     //                        preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE, binding.inputTestDate.getText().toString());
@@ -262,6 +262,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                     // Set the adaptor with the current main page
                                     final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
                                     contentView.setAdapter(examPageAdaptor);
+                                    // Serialize the document to the class
+                                    documentReference.get().addOnSuccessListener(documentSnapshot -> {
+                                        Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                                        if (scheduled != null) scheduled.syncCollections();
+                                    });
+                                    // Update other collections
 
                                     loading(false);
                                 }).addOnFailureListener(exception -> {

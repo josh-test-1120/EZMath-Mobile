@@ -172,7 +172,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                                 Notification notification = document.toObject(Notification.class);
                                 if (notification != null && Objects.equals(notification.type, "exam")) {
                                     // Get the scheduled exam
-                                    database.collection("Scheduled")
+                                    database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                                             .document(notification.typeid)
                                             .get()
                                             // If no errors fetching data

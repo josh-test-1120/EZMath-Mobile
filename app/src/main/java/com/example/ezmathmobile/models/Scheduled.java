@@ -89,7 +89,7 @@ public class Scheduled implements Comparable {
                         // Create the hash map for entry into databases
                         notification.put(Constants.Notifications.KEY_SCHEDULED_TYPE, "exam");
                         notification.put(Constants.Notifications.KEY_SCHEDULED_USERID, userid);
-                        notification.put(Constants.Notifications.KEY_SCHEDULED_TYPEID, id);
+                        notification.put(Constants.Notifications.KEY_SCHEDULED_TYPEID, examid);
                         // Create new record
                         database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
                                 .add(notification)
@@ -115,7 +115,7 @@ public class Scheduled implements Comparable {
 
     }
 
-    public void finalize() {
+    public void syncCollections() {
         // Update the notifications collection
         updateNotifications();
         // Update the reminders table

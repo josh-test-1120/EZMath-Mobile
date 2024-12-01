@@ -101,14 +101,6 @@ public class Notification implements Comparable {
         this.typeid = typeid;
     }
 
-//    public LocalTime getExamTime() {
-//        return examTime;
-//    }
-//
-//    public void setExamTime(LocalTime examTime) {
-//        this.examTime = examTime;
-//    }
-
     public Timestamp getExamDate() {
         return examDate;
     }
