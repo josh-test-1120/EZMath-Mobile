@@ -141,7 +141,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             binding.testDate.setText(date);
 
             //Add some listeners for the delete and edit test buttons
-            binding.testDelete.setOnClickListener(v -> deleteTest(exam.getExamid()));
+            binding.testDelete.setOnClickListener(v -> deleteTest(exam.getId()));
             binding.testEdit.setOnClickListener(v -> getExamTimes(exam.getExamid(),exam));
         }
 
