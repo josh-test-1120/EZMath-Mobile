@@ -1,5 +1,6 @@
 package com.example.ezmathmobile.adaptors;
 
+import android.annotation.SuppressLint;
 import android.content.Context;
 import android.graphics.Color;
 import android.util.Log;
@@ -525,6 +526,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         /**
          *
          */
+        @SuppressLint("ClickableViewAccessibility")
         private void setupOutsideClickListener(){
             layoutAddExam.setOnTouchListener((v, event) -> {
                 hideKeyboard();
