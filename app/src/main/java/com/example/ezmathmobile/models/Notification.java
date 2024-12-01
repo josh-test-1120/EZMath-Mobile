@@ -11,17 +11,15 @@ import java.util.Date;
 /**
  * This is the Notification model for notification objects
  */
-public class Notification implements Comparable{
+public class Notification implements Comparable {
     public String description;
     public String message;
     public String examName;
     public String userid;
     public String type;
     public String typeid;
-    public int id ;
+    public String id ;
     public Timestamp examDate;
-//    public LocalTime examTime;
-//    public LocalDate examDate;
 
     /**
      * This is the Notification constructor
@@ -33,7 +31,7 @@ public class Notification implements Comparable{
 //     * @param examTime The message of the notification
      * @param examDate The message of the notification
      */
-    public Notification(int id, String userid, String description, String message,
+    public Notification(String id, String userid, String description, String message,
                         String examName, String type, Timestamp examDate) {
         this.id = id;
         this.userid = userid;
@@ -79,11 +77,11 @@ public class Notification implements Comparable{
         this.examName = examName;
     }
 
-    public int getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(int id) {
+    public void setId(String id) {
         this.id = id;
     }
 

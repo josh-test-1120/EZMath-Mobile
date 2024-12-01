@@ -157,20 +157,19 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:layout_marginTop="10dp"
-        android:layout_marginRight="5dp"
-        android:gravity="end"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
         app:layout_constraintTop_toBottomOf="@id/testClassInput">
 
         <Button
             android:id="@+id/buttonSubmit"
-            android:layout_width="200dp"
-            android:layout_height="70dp"
-            android:backgroundTint="@color/blue_seperator"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/redText"
             android:text="Submit"
             android:includeFontPadding="false"
             android:textAlignment="center"
-            android:textSize="45dp"
+            android:textSize="30dp"
             tools:layout_editor_absoluteX="211dp" />
 
         <ProgressBar
@@ -184,7 +183,7 @@
             android:id="@+id/buttonCancel"
             android:layout_width="150dp"
             android:layout_height="50dp"
-            android:backgroundTint="@color/cancel_background"
+            android:backgroundTint="@color/redBackground"
             android:includeFontPadding="false"
             android:text="Cancel"
             android:textAlignment="center"

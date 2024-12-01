@@ -189,7 +189,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         private void editTest(String examID, Scheduled exam) {
             Log.d("ExamMonth Edit",examID);
             // Set the adaptor with the current main page
-            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(examID, exam.getName(),exam.getDate());
+            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(exam, examID, exam.getName(), exam.getDate());
             contentView.setAdapter(examAddAdaptor);
 
         }

@@ -20,6 +20,7 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityTestAddBinding;
 import com.example.ezmathmobile.models.Exam;
+import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.models.Time;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
@@ -50,7 +51,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
      * @param examName This is a string of the examName
      * @param examDate This is a firebase timestamp of the examDate
      */
-    public ExamAddAdaptor(String examID, String examName, Timestamp examDate) {
+    public ExamAddAdaptor(Scheduled test, String examID, String examName, Timestamp examDate) {
         this.examID = examID;
         this.examName = examName;
         this.examDate = examDate;
@@ -109,7 +110,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         private RecyclerView contentView;
         private Spinner examNames, examTimes;
         // These are the variables and adaptors
-        private String examID, examName;
+        private String testID, examID, examName;
         private Timestamp examDate;
         private ExamNameAdaptor examNameAdaptor;
         private ExamTimeAdaptor examTimeAdaptor;
@@ -129,6 +130,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             mainPageLayout = itemView.getContext();
             // Initialize the variables
             this.examID = examID;
+            this.testID = examID;
             this.examName = examName;
             this.examDate = examDate;
             // Bind the content view ID
@@ -193,7 +195,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     // Build the exam times
                     buildExamTimeList(binding);
                     // Update the classID
-                    
+
                 }
 
                 /**
