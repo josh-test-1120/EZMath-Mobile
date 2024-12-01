@@ -90,7 +90,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      */
     public static class ExamViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
-        private ConstraintLayout layoutExam;
+        private LinearLayout layoutExam;
         // Dependency Objects
         private PreferenceManager preferenceManager;
         private FirebaseFirestore database;
