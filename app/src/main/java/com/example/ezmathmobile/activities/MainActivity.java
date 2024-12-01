@@ -1,5 +1,8 @@
 package com.example.ezmathmobile.activities;
 
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
@@ -34,10 +37,20 @@ import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.NavigationCard;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
+
+import com.example.ezmathmobile.utilities.TimeCheckReceiver;
+import com.example.ezmathmobile.utilities.TimeConverter;
+import com.firebase.ui.firestore.FirestoreRecyclerOptions;
+import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.DocumentSnapshot;
+
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.List;
+import java.util.Objects;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -103,6 +116,9 @@ public class MainActivity extends AppCompatActivity {
             intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
             startActivity(intent);
         }
+
+        // Create AlarmReminder
+        setAlarmedReminder();
     }
 
     /**
@@ -239,5 +255,26 @@ public class MainActivity extends AppCompatActivity {
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
         Log.d("Image Info:",preferenceManager.getString(Constants.User.KEY_IMAGE));
         imageProfile.setImageBitmap(bitmap);
+    }
+
+    /**
+     * A app wide scheduled task executor method that sends a reminder data the database
+     * at a certain time every day.
+     */
+    private void setAlarmedReminder() {
+        AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
+
+        Intent intent = new Intent(this, TimeCheckReceiver.class);
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
+                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
+
+        // Set the alarm to trigger
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(Calendar.HOUR_OF_DAY, 7);
+        calendar.set(Calendar.MINUTE, 0);
+        calendar.set(Calendar.SECOND, 0);
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+
     }
 }
