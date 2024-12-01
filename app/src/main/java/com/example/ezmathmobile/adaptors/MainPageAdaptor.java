@@ -162,12 +162,16 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                     .get()
                     // If no error fetching data
                     .addOnCompleteListener(task -> {
+                        Log.d("MainPageAdaptor success",Boolean.toString(task.isSuccessful()));
+                        Log.d("MainPageAdaptor result",Boolean.toString(task.getResult() != null));
                         if (task.isSuccessful() && task.getResult() != null) {
                             // Finalize the notifications for use in lambda's
                             final List<Notification> notifications = new ArrayList<>();
                             // Get the database document data
                             final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                            Log.d("MainPageAdaptor documents",Integer.toString(documents.size()));
                             for (DocumentSnapshot document : documents) {
+                                Log.d("MainPageAdaptor for loop","inside");
                                 // Serialize the document to the class
                                 Notification notification = document.toObject(Notification.class);
                                 if (notification != null && Objects.equals(notification.type, "exam")) {
@@ -204,6 +208,14 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                                             });
                                 }
                             }
+                            // Empty data set
+                            loading(false);
+                            // String formatters
+                            String latestNotification = "No notifications available for user";
+                            String sizeNotifications = String.format("Unread Notifications: %d", 0);
+                            // Update the UI
+                            latestView.setText(latestNotification);
+                            numberView.setText(sizeNotifications);
                         }
                     });
         }
