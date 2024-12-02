@@ -474,10 +474,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                 TimeConverter.timestampToString(timestamp));
                         dateValid = true;
                     }
-                    else {
-                        showToast("Not a valid date!");
-                        dateValid = false;
-                    }
+                    // Otherwise set valid to false so validation can catch
+                    else { dateValid = false; }
                 }
             });
         }
