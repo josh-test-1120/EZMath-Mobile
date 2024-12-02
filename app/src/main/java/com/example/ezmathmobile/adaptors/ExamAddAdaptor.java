@@ -113,7 +113,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         private RecyclerView contentView;
         // These are the variables and adaptors
         private String testID, examID, examName;
-        private Timestamp examDate;
+        private Timestamp examDate, examDateOrignal;
         private ExamNameAdaptor examNameAdaptor;
         private ExamTimeAdaptor examTimeAdaptor;
         private Boolean dateValid = false;
@@ -123,7 +123,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * This is the ExamAddViewHolder constructor
          * @param itemView the view that is to be inflated
          * @param parent this is the parent view for reference
-         * @param examID this is the string reprenstation of the examID
+         * @param examID this is the string representation of the examID
          * @param examName this is the exam name
          * @param examDate this is a Timestamp object of the time and date
          */
@@ -135,7 +135,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             mainPageLayout = itemView.getContext();
             // Initialize the variables
             this.examID = examID;
-
             if (test != null) {
                 Log.d("Exam Add Test Object",test.toString());
                 this.testID = test.getId();
@@ -143,6 +142,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             else this.testID = null;
             this.examName = examName;
             this.examDate = examDate;
+            this.examDateOrignal = examDate;
+            if (this.examDate != null) Log.d("Exam Add Constructor Exam Date",this.examDate.toString());
             this.examTimes = examTimes;
             // Bind the content view ID
             contentView = parent.findViewById(R.id.contentView);
@@ -165,7 +166,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                 // Set the exam name adaptor for the exam name
                 ExamNameAdaptor examNameAdaptor = new ExamNameAdaptor(mainPageLayout.getApplicationContext(), names);
                 binding.inputTestExam.setAdapter(examNameAdaptor);
-                buildExamTimeList(binding);
+                buildExamTimeList(binding, examDate);
             }
             else {
                 buildExamNameList(binding);
@@ -208,8 +209,12 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
                                 examID = queryDocumentSnapshots.getDocuments().get(0).getId();
+                                Timestamp inspectedDate;
+                                // Clear the Exam Date if not original match
+                                if (examDate != examDateOrignal) inspectedDate = null;
+                                else inspectedDate = examDate;
                                 // Build the exam times
-                                buildExamTimeList(binding);
+                                buildExamTimeList(binding,inspectedDate);
                             })
                             .addOnFailureListener(exception -> {
                                 showToast("Exception getting Exam record: " + exception.getMessage());
@@ -428,6 +433,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                 milliseconds = date.toDate().getTime();
                 examDate = date;
                 dateValid = true;
+                Log.d("Exam Add Test initial Exam Date:", examDate.toString());
             }
             // Or set the date for today
             else {
@@ -484,7 +490,9 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          * Build the ExamTime List based on information from the database
          * @param binding this is the view bindings
          */
-        private void buildExamTimeList(ActivityTestAddBinding binding) {
+        private void buildExamTimeList(ActivityTestAddBinding binding, Timestamp testDate) {
+            if (examDate != null) Log.d("Test Add Build Exam Date: ", examDate.toString());
+            if (testDate != null) Log.d("Test Add Build Test Date: ",testDate.toString());
             // Get the list of exams available
             if (examName != null) {
                 database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
@@ -509,7 +517,10 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                     // Set the exam time adaptor for the time elements
                                     ExamTimeAdaptor examTimeAdaptor = new ExamTimeAdaptor(mainPageLayout.getApplicationContext(), times);
                                     binding.inputTestTime.setAdapter(examTimeAdaptor);
-                                    if (examDate != null) {
+                                    if (testDate != null) Log.d("Test Add ExamDate before change",examDate.toString());
+                                    else Log.d("Test Add ExamDate","empty");
+                                    if (testDate == null) {
+                                        Log.d("Test Add ExamDate state","was empty");
                                         // Get the first valid date
                                         int index = binding.inputTestTime.getSelectedItemPosition();
                                         Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(index);
@@ -521,7 +532,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                     // Setup the calendar
                                     setupCalendar(binding, examDate);
                                     updateValidDates();
-
                                 }
                             }
                         });
@@ -554,8 +564,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                             // Set the exam time adaptor for the time elements
                             ExamNameAdaptor examNameAdaptor = new ExamNameAdaptor(mainPageLayout.getApplicationContext(), names);
                             binding.inputTestExam.setAdapter(examNameAdaptor);
-                            // Setup the calendar
-                            setupCalendar(binding, examDate);
+                            // Build the exam times list
+                            buildExamTimeList(binding, examDate);
                         }
                     });
         }
