@@ -1,216 +1,208 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:background="@color/background">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/main"
+    <TextView
+        android:id="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:context=".activities.TestAddActivity"
-        android:background="@color/background">
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        android:text="@string/schedule_update_test"
+        android:textSize="35sp"
+        android:textColor="@color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"/>
+
+    <LinearLayout
+        android:id="@+id/blueSeperator"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/topText"
+        android:background="@color/blue_seperator"/>
+
+    <TextView
+        android:id="@+id/dateText"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:gravity="center_horizontal"
+        android:text="@string/test_date"
+        android:textColor="@color/white"
+        android:textSize="30sp"
+        app:layout_constraintTop_toBottomOf="@+id/blueSeperator"/>
+
+    <CalendarView
+        android:id="@+id/calendarView"
+        android:theme="@style/Theme.CalendarView"
+        android:layout_width="match_parent"
+        android:layout_height="300dp"
+        android:dateTextAppearance="@style/Theme.CalendarView"
+        android:weekDayTextAppearance="@style/Theme.CalendarView"
+        app:layout_constraintTop_toBottomOf="@+id/dateText" />
+
+    <TextView
+        android:id="@+id/calendar_desc"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/redText"
+        android:textStyle="italic"
+        android:textSize="18sp"
+        android:minLines="4"
+        android:gravity="top"
+        android:padding="10dp"
+        app:layout_constraintTop_toBottomOf="@+id/calendarView"/>
+
+    <LinearLayout
+        android:id="@+id/testTimeInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/calendar_desc">
 
         <TextView
-            android:id="@+id/topText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/schedule_update_test"
-            android:textSize="35sp"
-            android:textColor="@color/white"
-            android:textStyle="bold"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
-
-        <LinearLayout
-            android:id="@+id/blueSeperator"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:orientation="horizontal"
-            app:layout_constraintTop_toBottomOf="@id/topText"
-            android:background="@color/blue_seperator"/>
-
-        <TextView
-            android:id="@+id/dateText"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center_horizontal"
-            android:text="@string/test_date"
-            android:textColor="@color/white"
+            android:id="@+id/testTimeTxt"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="left"
+            android:text="@string/time"
             android:textSize="30sp"
-            app:layout_constraintTop_toBottomOf="@+id/blueSeperator"/>
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@id/blueSeperator"/>
+        <!-- Selection spinner -->
+        <Spinner
+            android:id="@+id/inputTestTime"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/round_text_input_list"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/black"/>
 
-        <CalendarView
-            android:id="@+id/calendarView"
-            android:theme="@style/Theme.CalendarView"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:dateTextAppearance="@style/Theme.CalendarView"
-            android:weekDayTextAppearance="@style/Theme.CalendarView"
-            app:layout_constraintTop_toBottomOf="@+id/dateText" />
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/blueSeperatorTwo"
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:orientation="horizontal"
+        android:layout_marginTop="5dp"
+        app:layout_constraintTop_toBottomOf="@+id/testTimeInput"
+        android:background="@color/blue_seperator"/>
+
+    <!--Exam ID-->
+    <LinearLayout
+        android:id="@+id/textExamInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/blueSeperatorTwo">
 
         <TextView
-            android:id="@+id/calendar_desc"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:id="@+id/textExam"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="left"
+            android:text="@string/exam_id"
+            android:textSize="30sp"
+            android:textColor="@color/white"
+            app:layout_constraintTop_toTopOf="@id/blueSeperator"/>
+        <!-- Selection spinner -->
+        <Spinner
+            android:id="@+id/inputTestExam"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:background="@drawable/round_text_input_list"
+            android:spinnerMode="dropdown"
+            android:popupBackground="@color/black"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:id="@+id/testClassInput"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="10dp"
+        app:layout_constraintTop_toBottomOf="@id/textExamInput">
+
+        <TextView
+            android:id="@+id/testClass"
+            android:layout_width="150dp"
+            android:layout_height="40dp"
+            android:gravity="left"
+            android:text="@string/class_id"
+            android:textSize="30sp"
+            android:textColor="@color/white"/>
+
+        <TextView
+            android:id="@+id/inputTestClass"
+            android:layout_width="250dp"
+            android:layout_height="35dp"
+            android:layout_gravity="center_vertical"
+            android:background="@drawable/round_text_input"
+            android:importantForAutofill="no"
+            android:inputType="text"
+            android:paddingStart="16dp"
+            android:paddingEnd="16dp"
+            android:textAlignment="gravity"
             android:textColor="@color/redText"
-            android:textStyle="italic"
-            android:textSize="18sp"
-            android:minLines="4"
-            android:gravity="top"
-            android:padding="10dp"
-            app:layout_constraintTop_toBottomOf="@+id/calendarView"/>
+            android:textSize="20sp" />
 
-        <LinearLayout
-            android:id="@+id/testTimeInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/calendar_desc">
+    </LinearLayout>
 
-            <TextView
-                android:id="@+id/testTimeTxt"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:gravity="left"
-                android:text="@string/time"
-                android:textSize="30sp"
-                android:textColor="@color/white"
-                app:layout_constraintTop_toTopOf="@id/blueSeperator"/>
-            <!-- Selection spinner -->
-            <Spinner
-                android:id="@+id/inputTestTime"
-                android:layout_width="250dp"
-                android:layout_height="35dp"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/round_text_input_list"
-                android:spinnerMode="dropdown"
-                android:popupBackground="@color/black"/>
+    <LinearLayout
+        android:id="@+id/submitCancel"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_marginTop="15dp"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/testClassInput">
 
-        </LinearLayout>
+        <Button
+            android:id="@+id/buttonSubmit"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/redText"
+            android:text="Submit"
+            android:includeFontPadding="false"
+            android:textAlignment="center"
+            android:textSize="30dp"
+            tools:layout_editor_absoluteX="211dp" />
 
-        <LinearLayout
-            android:id="@+id/blueSeperatorTwo"
-            android:layout_width="match_parent"
-            android:layout_height="3dp"
-            android:orientation="horizontal"
-            android:layout_marginTop="5dp"
-            app:layout_constraintTop_toBottomOf="@+id/testTimeInput"
-            android:background="@color/blue_seperator"/>
+        <ProgressBar
+            android:id="@+id/progressBar"
+            android:layout_width="25dp"
+            android:layout_height="25dp"
+            android:layout_gravity="center"
+            android:visibility="invisible"/>
 
-        <!--Exam ID-->
-        <LinearLayout
-            android:id="@+id/textExamInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/blueSeperatorTwo">
+        <Button
+            android:id="@+id/buttonCancel"
+            android:layout_width="150dp"
+            android:layout_height="50dp"
+            android:backgroundTint="@color/redBackground"
+            android:includeFontPadding="false"
+            android:text="Cancel"
+            android:textAlignment="center"
+            android:textSize="30sp"
+            tools:layout_editor_absoluteX="211dp" />
 
-            <TextView
-                android:id="@+id/textExam"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:gravity="left"
-                android:text="@string/exam_id"
-                android:textSize="30sp"
-                android:textColor="@color/white"
-                app:layout_constraintTop_toTopOf="@id/blueSeperator"/>
-            <!-- Selection spinner -->
-            <Spinner
-                android:id="@+id/inputTestExam"
-                android:layout_width="250dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:background="@drawable/round_text_input_list"
-                android:spinnerMode="dropdown"
-                android:popupBackground="@color/black"/>
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/testClassInput"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="10dp"
-            app:layout_constraintTop_toBottomOf="@id/textExamInput">
-
-            <TextView
-                android:id="@+id/testClass"
-                android:layout_width="150dp"
-                android:layout_height="40dp"
-                android:gravity="left"
-                android:text="@string/class_id"
-                android:textSize="30sp"
-                android:textColor="@color/white"/>
-
-            <TextView
-                android:id="@+id/inputTestClass"
-                android:layout_width="250dp"
-                android:layout_height="35dp"
-                android:layout_gravity="center_vertical"
-                android:background="@drawable/round_text_input"
-                android:importantForAutofill="no"
-                android:inputType="text"
-                android:paddingStart="16dp"
-                android:paddingEnd="16dp"
-                android:textAlignment="gravity"
-                android:textColor="@color/redText"
-                android:textSize="20sp" />
-
-        </LinearLayout>
-
-        <LinearLayout
-            android:id="@+id/submitCancel"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:orientation="horizontal"
-            android:layout_marginTop="15dp"
-            android:gravity="center_horizontal"
-            app:layout_constraintTop_toBottomOf="@id/testClassInput">
-
-            <Button
-                android:id="@+id/buttonSubmit"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/redText"
-                android:text="Submit"
-                android:includeFontPadding="false"
-                android:textAlignment="center"
-                android:textSize="30dp"
-                tools:layout_editor_absoluteX="211dp" />
-
-            <ProgressBar
-                android:id="@+id/progressBar"
-                android:layout_width="25dp"
-                android:layout_height="25dp"
-                android:layout_gravity="center"
-                android:visibility="invisible"/>
-
-            <Button
-                android:id="@+id/buttonCancel"
-                android:layout_width="150dp"
-                android:layout_height="50dp"
-                android:backgroundTint="@color/redBackground"
-                android:includeFontPadding="false"
-                android:text="Cancel"
-                android:textAlignment="center"
-                android:textSize="30sp"
-                tools:layout_editor_absoluteX="211dp" />
-
-        </LinearLayout>
+    </LinearLayout>
 
 
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-</ScrollView>
+</androidx.constraintlayout.widget.ConstraintLayout>
