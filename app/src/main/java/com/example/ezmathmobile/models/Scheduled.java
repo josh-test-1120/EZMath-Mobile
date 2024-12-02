@@ -1,10 +1,14 @@
 package com.example.ezmathmobile.models;
 
 import android.util.Log;
+import android.widget.Toast;
 
+import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
 import com.example.ezmathmobile.utilities.Constants;
 import com.google.firebase.Timestamp;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.Date;
 import java.util.HashMap;
@@ -140,6 +144,7 @@ public class Scheduled implements Comparable {
 
         // Update the notifications table
         database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
+                .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_USERID,userid)
                 .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_TYPEID,id)
                 .get()
                 .addOnSuccessListener(queryDocuments -> {
@@ -175,12 +180,39 @@ public class Scheduled implements Comparable {
     }
 
     /**
-     * Update the Reminders collection
+     * Update the Notification collection
      * This allows the model to control updates from individual instances
-     * This allows reminders to be created or updated when exams are scheduled
+     * This allows notifications to be delete when scheduled exams are deleted
      */
-    public void updateReminders() {
+    private void deleteNotifications() {
+        // Initialize the database
+        FirebaseFirestore database;
+        database = FirebaseFirestore.getInstance();
 
+        // Update the notifications table
+        database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
+                .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_USERID,userid)
+                .whereEqualTo(Constants.Notifications.KEY_SCHEDULED_TYPEID,id)
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    Log.d("Scheduled -> Notification Delete","get notif ID");
+                    // Get the notification ID
+                    Notification notif = queryDocumentSnapshots.getDocuments().get(0).toObject(Notification.class);
+                    notif.setId(queryDocumentSnapshots.getDocuments().get(0).getId());
+                    // Now go delete it
+                    database.collection(Constants.Notifications.KEY_COLLECTION_NOTIFICATION)
+                            .document(notif.getId())
+                            .delete()
+                            .addOnSuccessListener(unused -> {
+                                Log.d("Scheduled -> Notification Delete","complete");
+                            })
+                            .addOnFailureListener(exception -> {
+                                Log.d("Scheduled -> Notification Delete","exception: " + exception.toString());
+                            });
+                })
+                .addOnFailureListener(exception -> {
+                    Log.d("Scheduled -> Notification Delete","exception: " + exception.toString());
+                });
     }
 
     /**
@@ -189,7 +221,13 @@ public class Scheduled implements Comparable {
     public void syncCollections() {
         // Update the notifications collection
         updateNotifications();
-        // Update the reminders table
-        updateReminders();
+    }
+
+    /**
+     * Unsynchronize the object into all dependent collections
+     */
+    public void unSyncCollections() {
+        // Update the notifications collection
+        deleteNotifications();
     }
 }

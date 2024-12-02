@@ -158,6 +158,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            // Serialize the document to the class
+                            Scheduled test = queryDocumentSnapshots.getDocuments().get(0).toObject(Scheduled.class);
+                            test.setId(document.getId());
+                            // Unsynchronize the dependent collections
+                            Log.d("Scheduled Delete","unsynchronize");
+                            test.unSyncCollections();
                             database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                                     .document(document.getId())
                                     .delete()
