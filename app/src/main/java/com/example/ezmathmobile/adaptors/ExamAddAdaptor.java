@@ -97,7 +97,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
      * @return the size of the exams list
      */
     @Override
-    public int getItemCount() { return 2; }
+    public int getItemCount() { return 1; }
 
     /**
      * This is the ExamAddViewHolder class that extends the RecycleView.ViewHolder
