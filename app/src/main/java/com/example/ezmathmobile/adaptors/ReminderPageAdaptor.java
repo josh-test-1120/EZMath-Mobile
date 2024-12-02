@@ -68,7 +68,7 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
      */
     @Override
     public int getItemCount() {
-        return 1;
+        return 2;
     }
 
     /**
