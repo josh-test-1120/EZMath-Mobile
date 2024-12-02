@@ -18,18 +18,34 @@ public class NavigationCard {
         this.drawableID = drawableID;
     }
 
+    /**
+     * Getter for the button name
+     * @return string of the button name
+     */
     public String getButtonName() {
         return buttonName;
     }
 
+    /**
+     * Setter for the button name
+     * @param buttonName string of the button name
+     */
     public void setButtonName(String buttonName) {
         this.buttonName = buttonName;
     }
 
+    /**
+     * Getter for the drawableID
+     * @return integer of the drawable layout
+     */
     public int getDrawableID() {
         return drawableID;
     }
 
+    /**
+     * Setter for the drawableID
+     * @param drawableID integer of the drawable layout
+     */
     public void setDrawableID(int drawableID) {
         this.drawableID = drawableID;
     }

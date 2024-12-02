@@ -33,7 +33,6 @@ import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
 
-
 /**
  * This is the ExamAddAdaptor that is used in the RecycleView Adaptor
  * This extends the RecycleView.Adaptor class
@@ -208,7 +207,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                             .whereEqualTo(Constants.Exam.KEY_TEST_NAME,examName)
                             .get()
                             .addOnSuccessListener(queryDocumentSnapshots -> {
-//                                Exam examDB = queryDocumentSnapshots.getDocuments().get(0).toObject(Exam.class);
                                 examID = queryDocumentSnapshots.getDocuments().get(0).getId();
                                 // Build the exam times
                                 buildExamTimeList(binding);
@@ -230,7 +228,6 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
 
         /**
          * Method to simplify Toast code, shows a toast of whatever message needs to be displayed
-         *
          * @param message Message to be displayed
          */
         private void showToast(String message) {
@@ -250,17 +247,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
             // Format for firebase object storage
             HashMap<String, Object> test = new HashMap<>();
-            // Get the date from the date spinner
-            long milliseconds = binding.calendarView.getDate();
-            Date dateObject = new Date(milliseconds);
-            // Convert into strings for multiplexing of time and date into timestamp
-            Timestamp dateStamp = TimeConverter.stringToTimestamp(dateString);
-            String dateFormatted = TimeConverter.localizeDate(dateStamp);
-            int index = binding.inputTestTime.getSelectedItemPosition();
-            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(index);
-            String timeFormatted = TimeConverter.localizeTime(timeObject.getTime());
-            // Combine the Strings into a multiplexed timestamp
-            Timestamp finalDateTime = TimeConverter.customStringToTimestamp(dateFormatted,timeFormatted);
+            // Get the combined date and time
+            Timestamp finalDateTime = multiplexDateAndTime();
 
             // Update the HashMap record
             test.put(Constants.Scheduled.KEY_SCHEDULED_DATE,finalDateTime);
@@ -273,76 +261,117 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             if (testID != null) Log.d("Exam Add Test ID", testID);
             Log.d("Exam Add Test Date", finalDateTime.toString());
             Log.d("Exam Add Test Date String", TimeConverter.localizeDate(finalDateTime));
-            if (testID != null) {
-                database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                        .document(testID)
-                        .set(test, SetOptions.merge())
-                        .addOnSuccessListener(queryDocument -> {
-                            Log.d("Exam Add Test Lookup", "Success");
-                            showToast("Test Updated");
-                            loading(false);
-                            updatePreferences(binding);
-
-                            // Update the dependent collections
-                            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                                    .document(testID)
-                                    .get()
-                                    .addOnSuccessListener(documentSnapshot -> {
-                                        Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
-                                        scheduled.setId(testID);
-                                        if (scheduled != null) scheduled.syncCollections();
-                                    });
-                            // Redirect to the Main test page
-                            redirect();
-                        })
-                        .addOnFailureListener(exception -> {
-                            loading(false);
-                            showToast(exception.getMessage());
-                        });
-            }
-            else {
-                database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                        .add(test)
-                        .addOnSuccessListener(queryDocument -> {
-                            showToast("Test Added");
-                            loading(false);
-                            // Update the preferences
-                            updatePreferences(binding);
-                            // Update the dependent collections
-                            queryDocument.get().addOnSuccessListener(documentSnapshot -> {
-                                Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
-                                scheduled.setId(documentSnapshot.getId());
-                                if (scheduled != null) scheduled.syncCollections();
-                            });
-                            // Redirect to the Main test page
-                            redirect();
-                        })
-                        .addOnFailureListener(exception -> {
-                            loading(false);
-                            showToast(exception.getMessage());
-                        });
-            }
+            // Update or add scheduled test accordingly
+            if (testID != null) { updateExistingTest(test); }
+            else { addNewTest(test); }
         }
 
-        private void updatePreferences(ActivityTestAddBinding binding) {
-            // Get the date from the date spinner
-            long milliseconds = binding.calendarView.getDate();
-            Date dateObject = new Date(milliseconds);
-            Timestamp dateTimestamp = new Timestamp(dateObject);
+        /**
+         * Add a new scheduled exam to the database
+         * @param test this is the HashMap that reflects the exam record
+         */
+        private void addNewTest(HashMap<String, Object> test) {
+            // Set the progress bar
+            loading(true);
+            // Initialize the database
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            // Add to the database the new HashMap
+            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                    .add(test)
+                    .addOnSuccessListener(queryDocument -> {
+                        showToast("Test Added");
+                        loading(false);
+                        // Update the preferences
+                        updatePreferences(binding);
+                        // Update the dependent collections
+                        queryDocument.get().addOnSuccessListener(documentSnapshot -> {
+                            Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                            scheduled.setId(documentSnapshot.getId());
+                            if (scheduled != null) scheduled.syncCollections();
+                        });
+                        // Redirect to the Main test page
+                        redirect();
+                    })
+                    .addOnFailureListener(exception -> {
+                        loading(false);
+                        showToast(exception.getMessage());
+                    });
+        }
 
-            // Get the time from the time spinner
-            int timeIndex = binding.inputTestTime.getSelectedItemPosition();
-            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(timeIndex);
+        /**
+         * Update an existing scheduled exam
+         * @param test this is the HashMap that reflects the exam record
+         */
+        private void updateExistingTest(HashMap<String, Object> test) {
+            // Set the progress bar
+            loading(true);
+            // Initialize the database
+            FirebaseFirestore database = FirebaseFirestore.getInstance();
+            // Update the database with the new HashMap
+            database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                    .document(testID)
+                    .set(test, SetOptions.merge())
+                    .addOnSuccessListener(queryDocument -> {
+                        Log.d("Exam Add Test Lookup", "Success");
+                        showToast("Test Updated");
+                        loading(false);
+                        updatePreferences(binding);
+
+                        // Update the dependent collections
+                        database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                                .document(testID)
+                                .get()
+                                .addOnSuccessListener(documentSnapshot -> {
+                                    Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                                    scheduled.setId(testID);
+                                    if (scheduled != null) scheduled.syncCollections();
+                                });
+                        // Redirect to the Main test page
+                        redirect();
+                    })
+                    .addOnFailureListener(exception -> {
+                        loading(false);
+                        showToast(exception.getMessage());
+                    });
+        }
+
+        /**
+         * This will multiplex the date and time into a single
+         * timestamp
+         * @return a timestamp object of the date and time
+         */
+        private Timestamp multiplexDateAndTime() {
+            // Get information from preferences
+            final String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
+            // Convert into strings for multiplexing of time and date into timestamp
+            Timestamp dateStamp = TimeConverter.stringToTimestamp(dateString);
+            String dateFormatted = TimeConverter.localizeDate(dateStamp);
+            // Get the time information from the view
+            int index = binding.inputTestTime.getSelectedItemPosition();
+            Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(index);
+            String timeFormatted = TimeConverter.localizeTime(timeObject.getTime());
+            // Combine the Strings into a multiplexed timestamp
+            return TimeConverter.customStringToTimestamp(dateFormatted,timeFormatted);
+        }
+
+        /**
+         * Update the preferences in the manager
+         * @param binding the binding for the view
+         */
+        private void updatePreferences(ActivityTestAddBinding binding) {
+            // Get the combined date and time
+            final Timestamp finalDateTime = multiplexDateAndTime();
 
             // Save exam details to preference manager
             preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
-                    TimeConverter.timestampToString(dateTimestamp));
-//            preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_TIME,
-//                    TimeConverter.localizeTime(timeObject.getTime()));
+                    TimeConverter.timestampToString(finalDateTime));
             preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_EXAMID, examName);
             preferenceManager.putString(Constants.Exam.KEY_CLASS_ID, binding.inputTestClass.getText().toString());
         }
 
+        /**
+         * Redirect back to the main Exam Page adaptor
+         */
         private void redirect() {
             // Set the adaptor with the current main page
             final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
@@ -521,6 +550,10 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                     });
         }
 
+        /**
+         * Handle updating the calendar description with valid
+         * dates that an exam can be scheduled
+         */
         private void updateValidDates() {
             // Loop through the acceptable days
             binding.calendarDesc.setText("Valid Dates:\n");
@@ -530,7 +563,7 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
         }
 
         /**
-         *
+         * Sets custom on touch listeners
          */
         @SuppressLint("ClickableViewAccessibility")
         private void setupOutsideClickListener(){
