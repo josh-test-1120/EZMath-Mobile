@@ -5,6 +5,9 @@ package com.example.ezmathmobile.utilities;
  */
 public class Constants {
 
+    /**
+     * These are the constants for the User Collections
+     */
     public class User {
         // Hash keys for database contracts
         public static final String KEY_COLLECTION_USERS = "Users";
@@ -18,6 +21,9 @@ public class Constants {
         public static final String KEY_IMAGE = "image";
     }
 
+    /**
+     * These are the constants for the User Collections
+     */
     public class Reminders {
         public static final String KEY_COLLECTION_REMINDERS = "Reminders";
         public static final String KEY_REMINDER_ID = "reminder_id";
@@ -27,6 +33,9 @@ public class Constants {
         public static final String KEY_REMINDER_EXAM_ID = "reminder_exam_id";
     }
 
+    /**
+     * These are the constants for the Exam Collections
+     */
     public class Exam {
         public static final String KEY_COLLECTION_EXAMS = "Exams";
         public static final String KEY_CLASS_ID = "classid";
@@ -34,6 +43,9 @@ public class Constants {
         public static final String KEY_TEST_NAME = "name";
     }
 
+    /**
+     * These are the constants for the Scheduled Collections
+     */
     public class Scheduled {
         public static final String KEY_COLLECTION_SCHEDULED = "Scheduled";
         public static final String KEY_SCHEDULED_DATE = "date";
@@ -43,6 +55,9 @@ public class Constants {
         public static final String KEY_SCHEDULED_SCHEDULEID = "id";
     }
 
+    /**
+     * These are the constants for the Notifications Collections
+     */
     public class Notifications {
         public static final String KEY_COLLECTION_NOTIFICATION = "Notifications";
         public static final String KEY_SCHEDULED_TYPE = "type";

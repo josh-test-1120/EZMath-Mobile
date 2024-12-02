@@ -7,30 +7,24 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityMainBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.databinding.ExamItemContainerBinding;
-import com.example.ezmathmobile.databinding.ExamMonthContainerBinding;
 import com.example.ezmathmobile.models.Exam;
-import com.example.ezmathmobile.models.Notification;
 import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -199,6 +193,11 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
 
         }
 
+        /**
+         * Get the examTimes from the database based on the scheduled exam name
+         * @param examID this is the examID
+         * @param test this is the scheduled test object
+         */
         private void getExamTimes(String examID, Scheduled test) {
             // Get the exam details
             database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)

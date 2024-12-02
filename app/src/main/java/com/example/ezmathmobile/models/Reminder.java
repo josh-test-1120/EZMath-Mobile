@@ -6,6 +6,9 @@ package com.example.ezmathmobile.models;
 
 import com.google.firebase.Timestamp;
 
+/**
+ * This is the reminder class
+ */
 public class Reminder {
     /**
      * Fields of the Reminder object class.
@@ -21,6 +24,11 @@ public class Reminder {
 
     // Date
     public Timestamp date;
+
+    /**
+     * Empty constructor for serialization
+     */
+    public Reminder() {}
 
     /**
      * Constructor for the Reminder object

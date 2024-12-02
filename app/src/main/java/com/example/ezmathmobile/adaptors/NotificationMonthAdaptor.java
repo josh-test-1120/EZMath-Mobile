@@ -12,13 +12,9 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Notification;
-import com.example.ezmathmobile.utilities.TimeConverter;
 
-import java.util.Arrays;
-import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
-import java.util.Set;
 
 /**
  * This is the NotificationAdaptor that is used in the RecycleView Adaptor
@@ -100,7 +96,8 @@ public class NotificationMonthAdaptor extends RecyclerView.Adapter<NotificationM
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
-         * @param List<Notification> this is a List of notifications to bind actions to
+         * @param notifications List<Notification> this is a List of notifications to bind actions to
+         * @param month string of the month to bind to
          */
         void bindNotification(final List<Notification> notifications, String month) {
             Log.d("Month Notif",String.valueOf(month));

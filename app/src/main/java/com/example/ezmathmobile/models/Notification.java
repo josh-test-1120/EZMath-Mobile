@@ -1,25 +1,20 @@
 package com.example.ezmathmobile.models;
 
-import androidx.annotation.NonNull;
-
 import com.google.firebase.Timestamp;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
 import java.util.Date;
 
 /**
  * This is the Notification model for notification objects
  */
 public class Notification implements Comparable {
-    public String description;
-    public String message;
-    public String examName;
-    public String userid;
-    public String type;
-    public String typeid;
-    public String id ;
+    // Private variables
+    public String id, description, message, examName, userid, type, typeid ;
     public Timestamp examDate;
+
+    /**
+     * Empty constructor for serialization
+     */
+    public Notification() {}
 
     /**
      * This is the Notification constructor
@@ -28,7 +23,6 @@ public class Notification implements Comparable {
      * @param description The description of the notification
      * @param message The message of the notification
      * @param examName The message of the notification
-//     * @param examTime The message of the notification
      * @param examDate The message of the notification
      */
     public Notification(String id, String userid, String description, String message,
@@ -39,76 +33,141 @@ public class Notification implements Comparable {
         this.message = message;
         this.type = type;
         this.examDate = examDate;
-//        this.examTime = examTime;
         this.examName = examName;
     }
 
+    /**
+     * Getter for the notification type
+     * @return string of the notification type
+     */
     public String getType() {
         return type;
     }
 
+    /**
+     * Setter for the notification type
+     * @param type string of the notification type
+     */
     public void setType(String type) {
         this.type = type;
     }
 
-    public Notification() {}
-
+    /**
+     * Getter for the notification description
+     * @return string of the description
+     */
     public String getDescription() {
         return description;
     }
 
+    /**
+     * Setter for the notification description
+     * @param description string of the description
+     */
     public void setDescription(String description) {
         this.description = description;
     }
 
+    /**
+     * Setter for the notification message
+     * @return string of the notification message
+     */
     public String getMessage() {
         return message;
     }
 
+    /**
+     * Setter for the notification message
+     * @param message string of the notification message
+     */
     public void setMessage(String message) {
         this.message = message;
     }
 
+    /**
+     * Getter for the notification exam name
+     * @return string of the exam name in the notification
+     */
     public String getExamName() {
         return examName;
     }
 
+    /**
+     * Setter for the notification exam name
+     * @param examName string of the exam name in the notification
+     */
     public void setExamName(String examName) {
         this.examName = examName;
     }
 
+    /**
+     * Getter for the notification ID
+     * @return string of the notification ID
+     */
     public String getId() {
         return id;
     }
 
+    /**
+     * Setter for the notification ID
+     * @param id string of the notification ID
+     */
     public void setId(String id) {
         this.id = id;
     }
 
+    /**
+     * Getter for the notification userID
+     * @return string of the notification userID
+     */
     public String getUserid() {
         return userid;
     }
 
+    /**
+     * Setter for the notification userID
+     * @param userid string of the notification userID
+     */
     public void setUserid(String userid) {
         this.userid = userid;
     }
 
+    /**
+     * Getter for the notification typeID (ExamID)
+     * @return string of the examID inside the notification
+     */
     public String getTypeid() {
         return typeid;
     }
 
+    /**
+     * Setter for the notification typeID (ExamID)
+     * @param typeid string of the examID inside the notification
+     */
     public void setTypeid(String typeid) {
         this.typeid = typeid;
     }
 
+    /**
+     * Getter for the notification Exam date and time
+     * @return timestamp of the notification exam date and time
+     */
     public Timestamp getExamDate() {
         return examDate;
     }
 
+    /**
+     * Setter for the notification Exam date and time
+     * @param examDate timestamp of the notification exam date and time
+     */
     public void setExamDate(Timestamp examDate) {
         this.examDate = examDate;
     }
 
+    /**
+     * Override of the toString method
+     * @return String of properties in the object
+     */
     @Override
     public String toString() {
         return "Notification{" +
@@ -137,9 +196,4 @@ public class Notification implements Comparable {
         else if (currentDate.before(otherDate)) return 1;
         else return -1;
     }
-
-    //    @ServerTimestamp
-//    public Date getTimestamp() { return mTimestamp; }
-//
-//    public void setTimestamp(Date timestamp) { mTimestamp = timestamp; }
 }

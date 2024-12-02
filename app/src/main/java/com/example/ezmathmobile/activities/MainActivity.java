@@ -250,6 +250,10 @@ public class MainActivity extends AppCompatActivity {
         });
     }
 
+    /**
+     * Load the user's profile image and other details
+     * into the home page
+     */
     private void loadUserDetails() {
         byte[] bytes = Base64.decode(preferenceManager.getString(Constants.User.KEY_IMAGE),Base64.DEFAULT);
         Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
