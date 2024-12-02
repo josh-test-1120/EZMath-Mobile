@@ -11,10 +11,10 @@
     <TextView
         android:id="@+id/topText"
         android:layout_width="match_parent"
-        android:layout_height="60dp"
+        android:layout_height="wrap_content"
         android:gravity="center"
         android:text="@string/schedule_update_test"
-        android:textSize="38sp"
+        android:textSize="35sp"
         android:textColor="@color/white"
         android:textStyle="bold"
         app:layout_constraintTop_toTopOf="parent"

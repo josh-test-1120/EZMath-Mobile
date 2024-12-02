@@ -21,11 +21,11 @@
     <LinearLayout
         android:id="@+id/whiteSeperator"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="3dp"
         android:orientation="horizontal"
         android:layout_marginTop="5dp"
         app:layout_constraintTop_toBottomOf="@id/monthText"
-        android:background="@color/white"/>
+        android:background="@drawable/whiteseparator"/>
 
 <!--    <ScrollView-->
 <!--        android:id="@+id/scrollView"-->
