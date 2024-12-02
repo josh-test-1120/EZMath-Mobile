@@ -509,9 +509,19 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
                                     // Set the exam time adaptor for the time elements
                                     ExamTimeAdaptor examTimeAdaptor = new ExamTimeAdaptor(mainPageLayout.getApplicationContext(), times);
                                     binding.inputTestTime.setAdapter(examTimeAdaptor);
+                                    if (examDate != null) {
+                                        // Get the first valid date
+                                        int index = binding.inputTestTime.getSelectedItemPosition();
+                                        Time timeObject = (Time) binding.inputTestTime.getItemAtPosition(index);
+                                        // Set information in preferences
+                                        preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
+                                                TimeConverter.timestampToString(timeObject.getTime()));
+                                        examDate = multiplexDateAndTime();
+                                    }
                                     // Setup the calendar
                                     setupCalendar(binding, examDate);
                                     updateValidDates();
+
                                 }
                             }
                         });
