@@ -5,10 +5,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.LinearLayout;
 import android.widget.ProgressBar;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.constraintlayout.widget.ConstraintLayout;
@@ -17,17 +15,10 @@ import androidx.recyclerview.widget.RecyclerView;
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.databinding.ExamMonthContainerBinding;
-import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Scheduled;
-import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
-import com.example.ezmathmobile.utilities.TimeConverter;
-import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
@@ -37,7 +28,7 @@ import java.util.List;
  * This extends the RecycleView.Adaptor class
  */
 public class ExamMonthAdaptor extends RecyclerView.Adapter<ExamMonthAdaptor.ExamMonthViewHolder> {
-
+    // These are the private variables
     private String examID;
     private LinkedHashMap<String,List<Scheduled>> exams;
     private ViewGroup mainParent;
@@ -104,7 +95,7 @@ public class ExamMonthAdaptor extends RecyclerView.Adapter<ExamMonthAdaptor.Exam
         private ProgressBar progressBar;
         private RecyclerView contentView;
         private ViewGroup mainParent;
-
+        // Common Layout objects
         private TextView monthName;
         private RecyclerView examMonthView;
 
@@ -138,7 +129,8 @@ public class ExamMonthAdaptor extends RecyclerView.Adapter<ExamMonthAdaptor.Exam
         /**
          * This is the bind Notification method that will bind actions
          * and listeners to the notification
-         * @param List<Scheduled> this is a List of notifications to bind actions to
+         * @param exams List<Scheduled> this is a List of notifications to bind actions to
+         * @param month string of the month to bind to
          */
         void bindMonth(final List<Scheduled> exams, String month) {
             Log.d("Month Notif",String.valueOf(month));

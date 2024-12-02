@@ -18,8 +18,10 @@ import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Reminder;
 
 import java.util.List;
-import java.util.Objects;
 
+/**
+ * This is the reminder adaptor for handling reminders
+ */
 public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.ReminderViewHolder> {
 
     /**
@@ -72,7 +74,9 @@ public class ReminderAdapter extends RecyclerView.Adapter<ReminderAdapter.Remind
         return reminderList.size();
     }
 
-
+    /**
+     * This is the ReminderViewHolder class that extends the RecycleView.ViewHolder
+     */
     class ReminderViewHolder extends RecyclerView.ViewHolder {
 
         /**

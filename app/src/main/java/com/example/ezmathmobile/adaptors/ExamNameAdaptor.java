@@ -6,16 +6,12 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
-import android.widget.ImageView;
-import android.widget.ListView;
 import android.widget.TextView;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 
 import com.example.ezmathmobile.R;
-import com.example.ezmathmobile.models.NavigationCard;
-import com.google.firebase.Timestamp;
 
 import java.util.List;
 
@@ -51,19 +47,11 @@ public class ExamNameAdaptor extends ArrayAdapter<String> {
             LayoutInflater inflater = LayoutInflater.from(getContext());
             examNamesView = inflater.inflate(R.layout.exam_name_list, parent, false);
         }
-
         String name = getItem(position);
-
-        //String timeString = "1234";
-        //if (time != null) timeString = TimeConverter.localizeTime(time);
         Log.d("ExamName Adaptor Time",name);
-
         TextView nameView = examNamesView.findViewById(R.id.examNameItem);
-
         nameView.setText(name);
-
         Log.d("ExamName Adaptor View",examNamesView.toString());
-
         // Return the modified view
         return examNamesView;
     }

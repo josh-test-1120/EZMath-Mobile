@@ -420,12 +420,14 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             // Private variables
             long milliseconds;
             if (examTimes != null) Log.d("Exam Add Test Calendar Times:", examTimes.toString());
-            else Log.d("Exam Add Test Calendar Times:", "failed");
+            else Log.d("Exam Add Test Calendar Times:", "empty");
+            // Update the description box with the valid dates
             updateValidDates();
             // Initialize the existing date
             if (date != null) {
                 milliseconds = date.toDate().getTime();
                 examDate = date;
+                dateValid = true;
             }
             // Or set the date for today
             else {

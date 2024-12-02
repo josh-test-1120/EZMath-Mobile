@@ -13,19 +13,30 @@ import java.util.List;
 import java.util.Map;
 import java.util.function.Function;
 
+/**
+ * Class for handling database interactions
+ */
 public class DatabaseService {
     // Instance variables
     private String dbName;
     private FirebaseFirestore database;
-
     public final List<DocumentSnapshot> documents = new LinkedList<>();
 
+    /**
+     * Default constructor
+     * @param dbName this is the name of the database
+     */
     public DatabaseService(String dbName) {
         this.dbName = dbName;
         // Initialize the database object
         database = FirebaseFirestore.getInstance();
     }
 
+    /**
+     * Get the document by ID
+     * @param id this is the string ID of the document
+     * @return
+     */
     public DocumentSnapshot getID(String id) {
         final DocumentSnapshot[] documentSnapshot = new DocumentSnapshot[1];
         //List<DocumentSnapshot> documents = new LinkedList<>();
