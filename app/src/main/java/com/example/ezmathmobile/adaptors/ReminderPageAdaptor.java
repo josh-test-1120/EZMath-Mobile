@@ -117,8 +117,12 @@ public class ReminderPageAdaptor extends RecyclerView.Adapter<ReminderPageAdapto
 
             // Populating with data from the database
             FirebaseFirestore database = FirebaseFirestore.getInstance();
+            // User ID
+            String userid = preferenceManager.getString(Constants.User.KEY_USERID).trim();
+            // Executing the query
             database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
                     .orderBy(Constants.Reminders.KEY_REMINDER_DATETIME, Query.Direction.DESCENDING)
+                    .whereEqualTo(Constants.User.KEY_USERID, userid)
                     // Getting the query results
                     .get()
                     // When the query is successful

@@ -269,16 +269,40 @@ public class MainActivity extends AppCompatActivity {
         AlarmManager alarmManager = (AlarmManager) getSystemService(Context.ALARM_SERVICE);
 
         Intent intent = new Intent(this, TimeCheckReceiver.class);
-        PendingIntent pendingIntent = PendingIntent.getBroadcast(this, 0, intent,
-                PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE);
 
-        // Set the alarm to trigger
+        // Use PendingIntent.FLAG_NO_CREATE to check if the alarm exists
+        PendingIntent existingIntent = PendingIntent.getBroadcast(
+                this, 0, intent, PendingIntent.FLAG_NO_CREATE | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // If the alarm is already set, skip setting it again
+        if (existingIntent != null) {
+            Log.d("AlarmManager", "Alarm already set. Skipping initialization.");
+            return;
+        }
+
+        // Otherwise, create a new PendingIntent
+        PendingIntent pendingIntent = PendingIntent.getBroadcast(
+                this, 0, intent, PendingIntent.FLAG_UPDATE_CURRENT | PendingIntent.FLAG_IMMUTABLE
+        );
+
+        // Get the current time
         Calendar calendar = Calendar.getInstance();
+
+        // Set the alarm to 7:00 AM
         calendar.set(Calendar.HOUR_OF_DAY, 7);
         calendar.set(Calendar.MINUTE, 0);
         calendar.set(Calendar.SECOND, 0);
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+        // If the alarm time is in the past, adjust it to the next day
+        if (calendar.getTimeInMillis() <= System.currentTimeMillis()) {
+            calendar.add(Calendar.DAY_OF_YEAR, 1);
+        }
 
+        // Set the alarm
+        if (alarmManager != null) {
+            alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), pendingIntent);
+            Log.d("AlarmManager", "Alarm set for: " + calendar.getTime());
+        }
     }
 }
