@@ -236,7 +236,7 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             String date = TimeConverter.localizeDate(latest.examDate);
             // String formatters
             String latestNotification = String.format("%s - %s on %s", latest.examName, time, date);
-            String sizeNotifications = String.format("Unread Notifications: %d", notifications.size());
+            String sizeNotifications = String.format("Exam Notifications: %d", notifications.size());
             // Update the UI
             latestView.setText(latestNotification);
             numberView.setText(sizeNotifications);
