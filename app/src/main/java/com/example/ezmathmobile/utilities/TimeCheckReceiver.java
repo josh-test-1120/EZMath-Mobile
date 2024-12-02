@@ -105,6 +105,9 @@ public class TimeCheckReceiver extends BroadcastReceiver {
         // Adding type
         hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "blue");
 
+        // Adding corresponding userID
+        hashMap.put(Constants.User.KEY_USERID, preferenceManager.getString(Constants.User.KEY_USERID));
+
         // Adding Reminder data into the database
         database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
                 .add(hashMap);
