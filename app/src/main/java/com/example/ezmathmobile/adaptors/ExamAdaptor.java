@@ -193,8 +193,9 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
 
         /**
          * A method that adds a test deletion confirmation reminder in the Firebase database.
+         * @param examName The name of the exam to be displayed in the Reminder database.
          */
-        private void AddDeletionReminder(String examID) {
+        private void AddDeletionReminder(String examName) {
             // Declaring Hashmap
             HashMap<String, Object> hashMap = new HashMap<>();
 
@@ -202,7 +203,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             // Datetime
             hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, com.google.firebase.Timestamp.now());
             // Adding text
-            hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examID + " test has been successfully" +
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examName + " test has been successfully" +
                     " deleted");
             // Adding type
             hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "red");
