@@ -87,8 +87,7 @@ public class TimeCheckReceiver extends BroadcastReceiver {
      *              particular day.
      */
     private void SendReminder(int count) {
-        // Declaring database and Hashmap
-        FirebaseFirestore database = FirebaseFirestore.getInstance();
+        // Declaring Hashmap
         HashMap<String, Object> hashMap = new HashMap<>();
 
         // Adding data to the Hashmap
