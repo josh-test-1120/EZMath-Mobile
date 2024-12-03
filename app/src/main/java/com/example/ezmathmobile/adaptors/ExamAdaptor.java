@@ -26,6 +26,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * This is the NotificationAdaptor that is used in the RecycleView Adaptor
@@ -107,6 +108,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             mainPageLayout = itemView.getContext();
             // Bind the objects to the view ID
             layoutExam = itemView.findViewById(R.id.testContainer);
+            // Attach the preferences
+            preferenceManager = new PreferenceManager(layoutExam.getContext().getApplicationContext());
             // Attach the binding
             this.binding = ExamItemContainerBinding.bind(itemView);
             // Bind the content view ID
@@ -135,7 +138,10 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             binding.testDate.setText(date);
 
             //Add some listeners for the delete and edit test buttons
-            binding.testDelete.setOnClickListener(v -> deleteTest(exam.getId()));
+            binding.testDelete.setOnClickListener(v -> {
+                deleteTest(exam.getId());
+                AddDeletionReminder(exam.name);
+            });
             binding.testEdit.setOnClickListener(v -> getExamTimes(exam.getExamid(),exam));
         }
 
@@ -183,6 +189,30 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                         loading(false);
                         showToast(e.getMessage());
                     });
+        }
+
+        /**
+         * A method that adds a test deletion confirmation reminder in the Firebase database.
+         */
+        private void AddDeletionReminder(String examID) {
+            // Declaring Hashmap
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            // Adding data to the Hashmap
+            // Datetime
+            hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, com.google.firebase.Timestamp.now());
+            // Adding text
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examID + " test has been successfully" +
+                    " deleted");
+            // Adding type
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "red");
+
+            // Adding userid
+            hashMap.put(Constants.User.KEY_USERID, preferenceManager.getString(Constants.User.KEY_USERID));
+
+            // Adding Reminder data into the database
+            database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                    .add(hashMap);
         }
 
         /**

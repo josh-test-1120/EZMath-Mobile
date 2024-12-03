@@ -28,10 +28,12 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.SetOptions;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 /**
  * This is the ExamAddAdaptor that is used in the RecycleView Adaptor
@@ -182,6 +184,8 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
             binding.buttonSubmit.setOnClickListener(v -> {
                 if (isValidExamDetails()) {
                     AddTest();
+                    // Adding Green reminder to database
+                    AddReminder();
                 }
             });
             // Setup the cancel button listener
@@ -237,6 +241,40 @@ public class ExamAddAdaptor extends RecyclerView.Adapter<ExamAddAdaptor.ExamAddV
          */
         private void showToast(String message) {
             Toast.makeText(mainPageLayout.getApplicationContext(), message, Toast.LENGTH_SHORT).show();
+        }
+
+        /**
+         * A method that add reminder data into the database.
+         */
+        private void AddReminder() {
+            // Declaring Hashmap
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            // Adding data to the Hashmap
+            // Datetime
+            hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME,
+                    Timestamp.now());
+
+            // Creating date text
+            long selectedDateMillis = binding.calendarView.getDate();
+            SimpleDateFormat dateFormat = new SimpleDateFormat("MMMM d, yyyy", Locale.getDefault());
+            String selectedDate = dateFormat.format(new Date(selectedDateMillis));
+
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT,
+                    binding.inputTestExam.getSelectedItem().toString()
+                    + " has been successfully scheduled on "
+                    + selectedDate + " at "
+                    + binding.inputTestTime.getSelectedItem().toString()
+            );
+            // Adding type
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "green");
+
+            // Adding corresponding userID
+            hashMap.put(Constants.User.KEY_USERID, preferenceManager.getString(Constants.User.KEY_USERID));
+
+            // Adding Reminder data into the database
+            database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                    .add(hashMap);
         }
 
         /**
