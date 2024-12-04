@@ -2,12 +2,13 @@ package com.example.ezmathmobile.models;
 
 import com.google.firebase.Timestamp;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * This is the Exam class
  */
-public class Exam {
+public class Exam implements Serializable {
     // Private variables
     private String name, professor, classid;
     private ArrayList<Timestamp> times;

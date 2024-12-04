@@ -1,6 +1,7 @@
 package com.example.ezmathmobile.adaptors;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,12 +11,17 @@ import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityMainBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.databinding.ExamItemContainerBinding;
+import com.example.ezmathmobile.fragments.TestAddFragment;
+import com.example.ezmathmobile.fragments.TestPageFragment;
 import com.example.ezmathmobile.models.Exam;
 import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
@@ -90,11 +96,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         private PreferenceManager preferenceManager;
         private FirebaseFirestore database;
         private Context mainPageLayout;
+        private FragmentManager fragmentManager;
         // View Objects
         private ExamItemContainerBinding binding;
         private ActivityMainBinding mainBinding;
         private ActivityTestManagerBinding testBinding;
-        private RecyclerView contentView;
+        private FragmentContainerView contentView;
         private ProgressBar progressBar;
 
         /**
@@ -118,6 +125,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             progressBar = mainParent.findViewById(R.id.progressBar);;
             // Bind the database object
             database = FirebaseFirestore.getInstance();
+            // Bind the fragment manager
+            fragmentManager = ((AppCompatActivity)mainPageLayout).getSupportFragmentManager();
         }
 
         /**
@@ -175,9 +184,10 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                                     .delete()
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(mainPageLayout, "Test successfully deleted", Toast.LENGTH_SHORT).show();
-                                        // Set the adaptor with the current Test Manager page
-                                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-                                        contentView.setAdapter(examPageAdaptor);
+//                                        // Set the adaptor with the current Test Manager page
+//                                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+//                                        contentView.setAdapter(examPageAdaptor);
+                                        redirect();
                                     })
                                     .addOnFailureListener(e -> {
                                         loading(false);
@@ -224,9 +234,23 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          */
         private void editTest(String examID, Scheduled test, Exam exam) {
             Log.d("ExamMonth Edit",examID);
-            // Set the adaptor with the current main page
-            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
-            contentView.setAdapter(examAddAdaptor);
+//            // Set the adaptor with the current main page
+//            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
+//            contentView.setAdapter(examAddAdaptor);
+//            // Load the fragment for the Exam Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            bundle.putString("examID", examID);
+            bundle.putSerializable("test", test);
+            bundle.putSerializable("exam", exam);
+//
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.contentView, TestAddFragment.class, bundle)
+//                    .setReorderingAllowed(true)
+//                    .addToBackStack("TestAddManager") // Name can be null
+//                    .commit();
+            // Load the fragment for the Exam Add Page
+            redirectAddTest(bundle);
 
         }
 
@@ -248,6 +272,34 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                     .addOnFailureListener(exception -> {
                         showToast("Exception getting exam times: " + exception.getMessage());
                     });
+        }
+
+        /**
+         * Redirect back to the main Exam Page adaptor
+         */
+        private void redirect() {
+            // Load the fragment for the Exam Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            //bundle.put("some_int", 0);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, TestPageFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("TestManager") // Name can be null
+                    .commit();
+        }
+
+        /**
+         * Redirect back to the main Exam Page adaptor
+         */
+        private void redirectAddTest(Bundle bundle) {
+            // Load the fragment for the Exam Page
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, TestAddFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("TestAddManager") // Name can be null
+                    .commit();
         }
 
         /**

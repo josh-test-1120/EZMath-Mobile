@@ -49,7 +49,6 @@ public class ReminderPageFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
-
         // Get the parent
         ViewGroup parent = (ViewGroup) view.getParent();
         // Get the page context
