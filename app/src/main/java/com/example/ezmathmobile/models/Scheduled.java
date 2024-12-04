@@ -1,14 +1,10 @@
 package com.example.ezmathmobile.models;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
 import com.example.ezmathmobile.utilities.Constants;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
 import java.io.Serializable;
 import java.util.Date;

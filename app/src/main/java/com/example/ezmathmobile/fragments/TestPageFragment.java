@@ -16,7 +16,6 @@ import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
-import com.example.ezmathmobile.adaptors.ExamAddAdaptor;
 import com.example.ezmathmobile.adaptors.ExamMonthAdaptor;
 import com.example.ezmathmobile.databinding.ActivityMainBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
