@@ -7,7 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".activities.MainActivity"
-    android:background="@color/background">
+    android:background="@color/background" >
 
     <!-- Header Layout -->
     <LinearLayout
@@ -17,7 +17,7 @@
         android:orientation="horizontal"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
+        app:layout_constraintStart_toStartOf="parent" >
 
         <ImageView
             android:id="@+id/logoImage"
@@ -59,18 +59,27 @@
         android:layout_height="2dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/headerLayout"
-        android:background="@drawable/redseparator"/>
+        android:background="@drawable/redseparator" />
 
-    <!-- Main Content Recycle View -->
-    <androidx.recyclerview.widget.RecyclerView
+<!--    &lt;!&ndash; Main Content Recycle View &ndash;&gt;-->
+<!--    <androidx.recyclerview.widget.RecyclerView-->
+<!--        android:id="@+id/contentView"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="0dp"-->
+<!--        android:clipToPadding="false"-->
+<!--        android:orientation="vertical"-->
+<!--        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"-->
+<!--        app:layout_constraintTop_toBottomOf="@+id/headerLayout"-->
+<!--        app:layout_constraintBottom_toTopOf="@id/navigationGrid"/>-->
+
+    <!-- Main Content Fragments -->
+    <androidx.fragment.app.FragmentContainerView
         android:id="@+id/contentView"
         android:layout_width="match_parent"
         android:layout_height="0dp"
-        android:clipToPadding="false"
         android:orientation="vertical"
-        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
         app:layout_constraintTop_toBottomOf="@+id/headerLayout"
-        app:layout_constraintBottom_toTopOf="@id/navigationGrid"/>
+        app:layout_constraintBottom_toTopOf="@id/navigationGrid" />
 
     <!-- Navigation Footer Layout -->
     <GridView
@@ -82,50 +91,6 @@
         android:orientation="horizontal"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent">
-<!--        &lt;!&ndash; Main Page &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:id="@+id/homeButton"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_rowWeight="1"-->
-<!--            android:layout_columnWeight="1"-->
-<!--            android:padding="5dp"-->
-<!--            app:srcCompat="@drawable/home"-->
-<!--            grid:layout_gravity="center" />-->
-
-<!--        &lt;!&ndash; Exam Test Scheduler &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:id="@+id/testManagerButton"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_rowWeight="1"-->
-<!--            android:layout_columnWeight="1"-->
-<!--            android:padding="5dp"-->
-<!--            app:srcCompat="@drawable/calendar"-->
-<!--            grid:layout_gravity="center" />-->
-
-<!--        &lt;!&ndash; Reminders button &ndash;&gt;-->
-<!--        <ImageView-->
-<!--            android:id="@+id/remindersBtn"-->
-<!--            android:layout_width="0dp"-->
-<!--            android:layout_height="0dp"-->
-<!--            android:layout_rowWeight="1"-->
-<!--            android:layout_columnWeight="1"-->
-<!--            android:padding="5dp"-->
-<!--            android:src="@drawable/reminder_bell"-->
-<!--            grid:layout_gravity="center" />-->
-
-        <!--        <ImageView-->
-        <!--            android:id="@+id/messageButton"-->
-        <!--            android:layout_width="0dp"-->
-        <!--            android:layout_height="0dp"-->
-        <!--            android:padding="5dp"-->
-        <!--            app:srcCompat="@drawable/notification"-->
-        <!--            android:layout_columnWeight="1"-->
-        <!--            android:layout_rowWeight="1"-->
-        <!--            grid:layout_gravity="center"/>-->
-
-    </GridView>
+        app:layout_constraintStart_toStartOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>
