@@ -21,11 +21,12 @@ import com.example.ezmathmobile.utilities.TimeConverter;
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.models.Notification;
 
+import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 import java.util.ArrayList;
-import java.util.HashMap;
+import java.util.Date;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
@@ -79,9 +80,9 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
     public static class MainPageViewHolder extends RecyclerView.ViewHolder {
         // These are the objects in the view
         ConstraintLayout layoutNotification;
-        //View viewBackground;
         TextView notificationName, notificationTime, notificationDate, welcomeMessage,
-                upcomingExamMessage, unreadNotificationMessage;
+                usernameMessage, upcomingExamMessage, currentNotificationMessage,
+                pastNotificationMessage;
         ProgressBar progressBar;
         RecyclerView notificationsView;
         // Get the application context
@@ -104,21 +105,26 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             // Bind the variables to the view IDs
             notificationsView = itemView.findViewById(R.id.mainNotificationView);
             welcomeMessage = itemView.findViewById(R.id.welcomeMessage);
+            usernameMessage = itemView.findViewById(R.id.userNameMessage);
             upcomingExamMessage = itemView.findViewById(R.id.upcomingExamMessage);
-            unreadNotificationMessage = itemView.findViewById(R.id.unreadNotificationMessage);
+            currentNotificationMessage = itemView.findViewById(R.id.currentNotificationMessage);
+            pastNotificationMessage = itemView.findViewById(R.id.pastNotificationMessage);
             progressBar = itemView.findViewById(R.id.progressBar);
 
             // Generate the user's name from shared preferences
             String first_name = preferenceManager.getString(Constants.User.KEY_FIRSTNAME);
             String last_name = preferenceManager.getString(Constants.User.KEY_LASTNAME);
-            String name = String.format("Welcome %s %s!", first_name, last_name);
-            welcomeMessage.setText(name);
+            String welcome = "Welcome";
+            String name = String.format("%s %s!", first_name, last_name);
+            welcomeMessage.setText(welcome);
+            usernameMessage.setText(name);
 
             // Get the data from the database
             database = FirebaseFirestore.getInstance();
             String userID = preferenceManager.getString(Constants.User.KEY_USERID);
             // Get the notifications
-            queryNotifications(preferenceManager, upcomingExamMessage, unreadNotificationMessage, notificationsView);
+            queryNotifications(preferenceManager, upcomingExamMessage, currentNotificationMessage,
+                    pastNotificationMessage, notificationsView);
         }
 
         /**
@@ -145,13 +151,14 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
          * This will query the notifications from the firestore database
          * and do the relational sub-queries to put all the information together
          *
-         * @param preferences       This is the preferences for the application
-         * @param latestView        This is the TextView that holds the latest notification
-         * @param numberView        This is the TextView that holds the number of notifications
+         * @param preferences This is the preferences for the application
+         * @param latestView This is the TextView that holds the latest notification
+         * @param numberView This is the TextView that holds the number of notifications
+         * @param pastNumberView This is the TextView that holds the number of notifications
          * @param notificationsView This is the RecycleView that we update the notifications in
          */
         public void queryNotifications(PreferenceManager preferences, TextView latestView, TextView numberView,
-                                       RecyclerView notificationsView) {
+                                       TextView pastNumberView, RecyclerView notificationsView) {
             // Get information from preferences
             String userID = preferences.getString(Constants.User.KEY_USERID);
             loading(true);
@@ -162,12 +169,16 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                     .get()
                     // If no error fetching data
                     .addOnCompleteListener(task -> {
+                        Log.d("MainPageAdaptor success",Boolean.toString(task.isSuccessful()));
+                        Log.d("MainPageAdaptor result",Boolean.toString(task.getResult() != null));
                         if (task.isSuccessful() && task.getResult() != null) {
                             // Finalize the notifications for use in lambda's
                             final List<Notification> notifications = new ArrayList<>();
                             // Get the database document data
                             final List<DocumentSnapshot> documents = task.getResult().getDocuments();
+                            Log.d("MainPageAdaptor documents",Integer.toString(documents.size()));
                             for (DocumentSnapshot document : documents) {
+                                Log.d("MainPageAdaptor for loop","inside");
                                 // Serialize the document to the class
                                 Notification notification = document.toObject(Notification.class);
                                 if (notification != null && Objects.equals(notification.type, "exam")) {
@@ -197,13 +208,22 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
                                                             notifications.add(notification);
                                                             // When we have processed all callbacks for each notification
                                                             if (notifications.size() == documents.size()) {
-                                                                updateHomePage(notifications, latestView, numberView, notificationsView);
+                                                                updateHomePage(notifications, latestView, numberView, pastNumberView, notificationsView);
                                                                 loading(false);
                                                             }
                                                         });
                                             });
                                 }
                             }
+                            // Empty data set
+                            loading(false);
+                            // String formatters
+                            String latestNotification = "No notifications available for user";
+                            String sizeNotifications = "Zero Notifications";
+                            // Update the UI
+                            latestView.setText(latestNotification);
+                            numberView.setText(sizeNotifications);
+                            pastNumberView.setText("");
                         }
                     });
         }
@@ -217,7 +237,9 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
          * @param notificationsView This is the RecycleView that we update the notifications in
          */
         public void updateHomePage(List<Notification> notifications, TextView latestView, TextView numberView,
-                                   RecyclerView notificationsView) {
+                                   TextView pastNumberView, RecyclerView notificationsView) {
+            // Private variables
+            int future = 0, past = 0;
             // Find the latest date
             int index = TimeConverter.findClosestDate(notifications);
             Notification latest = notifications.get(index);
@@ -226,15 +248,21 @@ public class MainPageAdaptor extends RecyclerView.Adapter<MainPageAdaptor.MainPa
             String date = TimeConverter.localizeDate(latest.examDate);
             // String formatters
             String latestNotification = String.format("%s - %s on %s", latest.examName, time, date);
-            String sizeNotifications = String.format("Unread Notifications: %d", notifications.size());
+            // Iterate through the notifications to determine past or present
+            for (Notification notification : notifications) {
+                if (notification.examDate.toDate().before(new Date())) {
+                    past++;
+                }
+                else future++;
+            }
+            String futureNotifications = String.format("Future Exam Notifications: %d", future);
+            String pastNotifications = String.format("Past Exam Notifications: %d", past);
             // Update the UI
             latestView.setText(latestNotification);
-            numberView.setText(sizeNotifications);
-
+            numberView.setText(futureNotifications);
+            pastNumberView.setText(pastNotifications);
             // Convert the notifications into month groups
             LinkedHashMap<String, List<Notification>> groupedByMonth = TimeConverter.sortByMonth(notifications);
-
-
             // Set the adaptor with the current notifications
             final NotificationMonthAdaptor notificationMonthAdaptor = new NotificationMonthAdaptor(groupedByMonth);
             notificationsView.setAdapter(notificationMonthAdaptor);

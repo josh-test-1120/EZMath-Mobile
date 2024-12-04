@@ -10,37 +10,32 @@
     <LinearLayout
         android:id="@+id/reminderHeader"
         android:layout_width="match_parent"
-        android:layout_height="110dp"
+        android:layout_height="wrap_content"
         android:orientation="vertical"
         android:gravity="center_vertical"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent">
 
-        <ImageView
-            android:id="@+id/logoImage"
-            android:layout_width="75dp"
-            android:layout_height="75dp"
-            app:srcCompat="@drawable/ic_bell"
-            android:layout_gravity="center"
-            android:scaleType="fitXY"/>
-
         <TextView
             android:id="@+id/titleName"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:gravity="center"
+            android:layout_height="wrap_content"
             android:text="@string/reminders"
-            android:textSize="29sp"
-            android:textColor="@color/white">
-        </TextView>
+            android:gravity="center"
+            android:textSize="35sp"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent" />
 
     </LinearLayout>
 
     <LinearLayout
         android:id="@+id/orangeSeparator"
         android:layout_width="match_parent"
-        android:layout_height="2dp"
+        android:layout_height="3dp"
         android:orientation="horizontal"
         app:layout_constraintTop_toBottomOf="@id/reminderHeader"
         android:background="@drawable/redseparator"/>

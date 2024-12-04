@@ -2,6 +2,8 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.USE_EXACT_ALARM" />
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -17,14 +19,10 @@
             android:exported="false" />
         <activity
             android:name=".activities.SignInActivity"
-            android:exported="false" >
-        </activity>
+            android:exported="false" />
         <activity
             android:name=".activities.SignUpActivity"
             android:exported="false" />
-        <activity
-            android:name=".activities.NavigationBarActivity"
-            android:exported="false"/>
         <activity
             android:name=".activities.RemindersActivity"
             android:exported="false"/>
@@ -48,7 +46,7 @@
                 <action android:name="com.google.firebase.MESSAGING_EVENT"/>
             </intent-filter>
         </service>
-
+        <receiver android:name=".utilities.TimeCheckReceiver" />
     </application>
 
 </manifest>

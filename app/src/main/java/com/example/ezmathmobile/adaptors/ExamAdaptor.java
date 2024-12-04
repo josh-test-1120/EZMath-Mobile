@@ -1,37 +1,38 @@
 package com.example.ezmathmobile.adaptors;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
 import android.widget.ProgressBar;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.appcompat.app.AppCompatActivity;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.databinding.ActivityMainBinding;
 import com.example.ezmathmobile.databinding.ActivityTestManagerBinding;
 import com.example.ezmathmobile.databinding.ExamItemContainerBinding;
-import com.example.ezmathmobile.databinding.ExamMonthContainerBinding;
+import com.example.ezmathmobile.fragments.TestAddFragment;
+import com.example.ezmathmobile.fragments.TestPageFragment;
 import com.example.ezmathmobile.models.Exam;
-import com.example.ezmathmobile.models.Notification;
 import com.example.ezmathmobile.models.Scheduled;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 import com.example.ezmathmobile.utilities.TimeConverter;
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 
-import java.util.ArrayList;
 import java.util.List;
+import java.util.HashMap;
 
 /**
  * This is the NotificationAdaptor that is used in the RecycleView Adaptor
@@ -95,11 +96,12 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         private PreferenceManager preferenceManager;
         private FirebaseFirestore database;
         private Context mainPageLayout;
+        private FragmentManager fragmentManager;
         // View Objects
         private ExamItemContainerBinding binding;
         private ActivityMainBinding mainBinding;
         private ActivityTestManagerBinding testBinding;
-        private RecyclerView contentView;
+        private FragmentContainerView contentView;
         private ProgressBar progressBar;
 
         /**
@@ -113,6 +115,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             mainPageLayout = itemView.getContext();
             // Bind the objects to the view ID
             layoutExam = itemView.findViewById(R.id.testContainer);
+            // Attach the preferences
+            preferenceManager = new PreferenceManager(layoutExam.getContext().getApplicationContext());
             // Attach the binding
             this.binding = ExamItemContainerBinding.bind(itemView);
             // Bind the content view ID
@@ -121,6 +125,8 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             progressBar = mainParent.findViewById(R.id.progressBar);;
             // Bind the database object
             database = FirebaseFirestore.getInstance();
+            // Bind the fragment manager
+            fragmentManager = ((AppCompatActivity)mainPageLayout).getSupportFragmentManager();
         }
 
         /**
@@ -141,7 +147,10 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
             binding.testDate.setText(date);
 
             //Add some listeners for the delete and edit test buttons
-            binding.testDelete.setOnClickListener(v -> deleteTest(exam.getId()));
+            binding.testDelete.setOnClickListener(v -> {
+                deleteTest(exam.getId());
+                AddDeletionReminder(exam.name);
+            });
             binding.testEdit.setOnClickListener(v -> getExamTimes(exam.getExamid(),exam));
         }
 
@@ -164,14 +173,21 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                     .get()
                     .addOnSuccessListener(queryDocumentSnapshots -> {
                         for (QueryDocumentSnapshot document : queryDocumentSnapshots) {
+                            // Serialize the document to the class
+                            Scheduled test = queryDocumentSnapshots.getDocuments().get(0).toObject(Scheduled.class);
+                            test.setId(document.getId());
+                            // Unsynchronize the dependent collections
+                            Log.d("Scheduled Delete","unsynchronize");
+                            test.unSyncCollections();
                             database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
                                     .document(document.getId())
                                     .delete()
                                     .addOnSuccessListener(unused -> {
                                         Toast.makeText(mainPageLayout, "Test successfully deleted", Toast.LENGTH_SHORT).show();
-                                        // Set the adaptor with the current Test Manager page
-                                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-                                        contentView.setAdapter(examPageAdaptor);
+//                                        // Set the adaptor with the current Test Manager page
+//                                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
+//                                        contentView.setAdapter(examPageAdaptor);
+                                        redirect();
                                     })
                                     .addOnFailureListener(e -> {
                                         loading(false);
@@ -186,6 +202,31 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
         }
 
         /**
+         * A method that adds a test deletion confirmation reminder in the Firebase database.
+         * @param examName The name of the exam to be displayed in the Reminder database.
+         */
+        private void AddDeletionReminder(String examName) {
+            // Declaring Hashmap
+            HashMap<String, Object> hashMap = new HashMap<>();
+
+            // Adding data to the Hashmap
+            // Datetime
+            hashMap.put(Constants.Reminders.KEY_REMINDER_DATETIME, com.google.firebase.Timestamp.now());
+            // Adding text
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TEXT, examName + " test has been successfully" +
+                    " deleted");
+            // Adding type
+            hashMap.put(Constants.Reminders.KEY_REMINDER_TYPE, "red");
+
+            // Adding userid
+            hashMap.put(Constants.User.KEY_USERID, preferenceManager.getString(Constants.User.KEY_USERID));
+
+            // Adding Reminder data into the database
+            database.collection(Constants.Reminders.KEY_COLLECTION_REMINDERS)
+                    .add(hashMap);
+        }
+
+        /**
          * With the edit test method, we will return to the addtest activity. However, we will take the
          * information within that view and return it to the addtest activity, wherein that activity can
          * populate the edit text areas with that information.
@@ -193,12 +234,31 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
          */
         private void editTest(String examID, Scheduled test, Exam exam) {
             Log.d("ExamMonth Edit",examID);
-            // Set the adaptor with the current main page
-            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
-            contentView.setAdapter(examAddAdaptor);
+//            // Set the adaptor with the current main page
+//            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor(test, examID, exam.getName(), test.getDate(), exam.getTimes());
+//            contentView.setAdapter(examAddAdaptor);
+//            // Load the fragment for the Exam Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            bundle.putString("examID", examID);
+            bundle.putSerializable("test", test);
+            bundle.putSerializable("exam", exam);
+//
+//            fragmentManager.beginTransaction()
+//                    .replace(R.id.contentView, TestAddFragment.class, bundle)
+//                    .setReorderingAllowed(true)
+//                    .addToBackStack("TestAddManager") // Name can be null
+//                    .commit();
+            // Load the fragment for the Exam Add Page
+            redirectAddTest(bundle);
 
         }
 
+        /**
+         * Get the examTimes from the database based on the scheduled exam name
+         * @param examID this is the examID
+         * @param test this is the scheduled test object
+         */
         private void getExamTimes(String examID, Scheduled test) {
             // Get the exam details
             database.collection(Constants.Exam.KEY_COLLECTION_EXAMS)
@@ -212,6 +272,34 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
                     .addOnFailureListener(exception -> {
                         showToast("Exception getting exam times: " + exception.getMessage());
                     });
+        }
+
+        /**
+         * Redirect back to the main Exam Page adaptor
+         */
+        private void redirect() {
+            // Load the fragment for the Exam Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            //bundle.put("some_int", 0);
+
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, TestPageFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("TestManager") // Name can be null
+                    .commit();
+        }
+
+        /**
+         * Redirect back to the main Exam Page adaptor
+         */
+        private void redirectAddTest(Bundle bundle) {
+            // Load the fragment for the Exam Page
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, TestAddFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("TestAddManager") // Name can be null
+                    .commit();
         }
 
         /**

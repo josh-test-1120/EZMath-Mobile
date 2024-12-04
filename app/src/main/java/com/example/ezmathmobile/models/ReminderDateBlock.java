@@ -4,9 +4,11 @@
  */
 package com.example.ezmathmobile.models;
 
-
 import java.util.List;
 
+/**
+ * This is the ReminderDateBlock class
+ */
 public class ReminderDateBlock {
     /**
      * ReminderDateBlock fields that includes List of reminders and their corresponding date

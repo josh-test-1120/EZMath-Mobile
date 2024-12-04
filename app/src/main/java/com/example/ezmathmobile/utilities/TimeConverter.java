@@ -13,20 +13,24 @@ import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
+/**
+ * This is the time converter class that handles export and import
+ * of dates and times into a timestamp
+ * multiplexor and demultiplexor for dates and times wrapped together inside timestamps
+ */
 public class TimeConverter {
 
     // Constants
-    public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss";
+    public static final String TimestampPattern = "yyyy-MM-dd HH:mm:ss"; // direct export
+    public static final String AdjustedTimestampPattern = "MMM dd, yyyy hh:mm:ss a"; // custom export
 
     /**
      * This will convert a Firebase Timestamp into a localized date
@@ -146,6 +150,7 @@ public class TimeConverter {
     /**
      * This will convert a string representation of firestore timestamp
      * to a timestamp object
+     * Must adhere to the following string pattern: "yyyy-MM-dd HH:mm:ss"
      * @param timestampString the string representation of the timestamp
      * @return Timestamp object from the string
      */
@@ -168,6 +173,42 @@ public class TimeConverter {
         }
     }
 
+    /**
+     * This will take in a custom pattern and parse a string of date
+     * and time and create a timestamp from both sets of stringified results
+     * @param date this is a string of date formatted
+     * @param time this is a string of time formatted
+     * @return a timestamp object that reflects the supplied date and time
+     */
+    public static Timestamp customStringToTimestamp(String date, String time) {
+        // Combine the strings
+        String combinedString = date + " " + time;
+        // Try catch to handle exceptions from conversion
+        try {
+            // Setup the formatter for the conversion
+            SimpleDateFormat formatter = new SimpleDateFormat(AdjustedTimestampPattern);
+            // Create the new date object from the string
+            Date dateObject = formatter.parse(combinedString);
+            // Log the output
+            Log.d("TimeConverter: String->Timestamp",new Timestamp(dateObject).toString());
+            // return a Timestamp object from the Date object
+            return new Timestamp(dateObject);
+            // Handle the exceptions
+        } catch (Exception e) {
+            e.printStackTrace();
+            // Handle parsing errors appropriately
+            return null;
+        }
+    }
+
+    /**
+     * Take calendar information and turn it into a timestamp
+     * that can be passed around the views and stored in the database
+     * @param day an integer of the day of month
+     * @param month and integer of the month of year
+     * @param year an integer of the year in 4 digits
+     * @return a timestamp object created from calendar information
+     */
     public static Timestamp calendarInfoToTimestamp(int day, int month, int year) {
         // Initialize the calendar object
         Calendar calendar = Calendar.getInstance();
@@ -181,6 +222,11 @@ public class TimeConverter {
         return new Timestamp(date);
     }
 
+    /**
+     * Sort the list of Notifications to by timestamps
+     * @param notifications this is a list of notifications
+     * @return a LinkedHashMap that orders the notifications by month in sorted order
+     */
     public static LinkedHashMap<String,List<Notification>> sortByMonth(final List<Notification> notifications) {
         // Variables
         HashMap<String,List<Notification>> monthlyNotifications = new HashMap<>();
@@ -226,7 +272,12 @@ public class TimeConverter {
         return sortedNotifications;
     }
 
-    public static <T> LinkedHashMap<String,List<Scheduled>> sortByMonthExams(final List<Scheduled> exams) {
+    /**
+     * Sort the list of scheduled exams to by timestamps
+     * @param exams this is a list of scheduled exams
+     * @return a LinkedHashMap that orders the scheduled exams by month in sorted order
+     */
+    public static LinkedHashMap<String,List<Scheduled>> sortByMonthExams(final List<Scheduled> exams) {
         // Variables
         HashMap<String,List<Scheduled>> monthlyScheduled = new HashMap<>();
         LinkedHashMap<String,List<Scheduled>> sortedScheduled = new LinkedHashMap<>();

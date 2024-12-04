@@ -20,6 +20,9 @@ import com.example.ezmathmobile.models.ReminderDateBlock;
 
 import java.util.List;
 
+/**
+ * This is the reminder adaptor for handling grouping of reminders
+ */
 public class ReminderGroupAdapter extends RecyclerView.Adapter<ReminderGroupAdapter.ReminderGroupViewHolder> {
 
     /**
