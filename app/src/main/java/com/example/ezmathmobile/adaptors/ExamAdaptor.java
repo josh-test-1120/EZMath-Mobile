@@ -74,7 +74,7 @@ public class ExamAdaptor extends RecyclerView.Adapter<ExamAdaptor.ExamViewHolder
      */
     @Override
     public void onBindViewHolder(@NonNull ExamViewHolder holder, int position) {
-        if (position < exams.size()) holder.bindExam(exams.get(position));
+        holder.bindExam(exams.get(position));
     }
 
     /**

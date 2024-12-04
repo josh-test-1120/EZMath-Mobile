@@ -5,6 +5,7 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -37,7 +38,7 @@ import java.util.List;
 public class TestPageFragment extends Fragment {
     // These are the private variables
     // These are the objects in the view
-    private ConstraintLayout layoutExam;
+    private ScrollView layoutExam;
     // Dependency Objects
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
