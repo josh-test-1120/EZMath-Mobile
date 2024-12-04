@@ -40,6 +40,8 @@ android {
 }
 
 dependencies {
+    // Fragment version
+    val fragment_version = "1.8.5"
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.appcompat)
@@ -50,6 +52,7 @@ dependencies {
     implementation(libs.firebase.messaging)
     implementation(libs.firebase.firestore)
     implementation(libs.firebase.ui.firestore)
+    implementation("androidx.fragment:fragment:$fragment_version")
     testImplementation(libs.junit)
     androidTestImplementation(libs.androidx.junit)
     androidTestImplementation(libs.androidx.espresso.core)

@@ -27,30 +27,24 @@ import androidx.core.content.ContextCompat;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
-import com.example.ezmathmobile.adaptors.MainPageAdaptor;
+import androidx.fragment.app.FragmentContainerView;
+import androidx.fragment.app.FragmentManager;
 import com.example.ezmathmobile.adaptors.NavigationAdaptor;
-import com.example.ezmathmobile.adaptors.ReminderPageAdaptor;
 import com.example.ezmathmobile.R;
+import com.example.ezmathmobile.fragments.MainPageFragment;
+import com.example.ezmathmobile.fragments.ReminderPageFragment;
+import com.example.ezmathmobile.fragments.TestPageFragment;
 import com.example.ezmathmobile.models.NavigationCard;
 import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 
 import com.example.ezmathmobile.utilities.TimeCheckReceiver;
-import com.example.ezmathmobile.utilities.TimeConverter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -64,7 +58,7 @@ public class MainActivity extends AppCompatActivity {
     // These are the objects in the view
     private GridView navigationGrid;
     //private ImageView homeButton, testManagerButton, remindersButton;
-    private RecyclerView contentView;
+    private FragmentContainerView contentView;
     private RoundedImageView imageProfile;
 
     private PreferenceManager preferenceManager;
@@ -80,6 +74,17 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         // Attach the preferences
         preferenceManager = new PreferenceManager(getApplicationContext());
+
+        if (savedInstanceState == null) {
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            //bundle.put("some_int", 0);
+
+            getSupportFragmentManager().beginTransaction()
+                    .setReorderingAllowed(true)
+                    .add(R.id.contentView, MainPageFragment.class, bundle)
+                    .commit();
+        }
         // Default listener Insets
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -105,9 +110,17 @@ public class MainActivity extends AppCompatActivity {
 
         // If logged in, we have enough information to load the main page
         if (loggedIn) {
-            // Set the adaptor with the current main page
-            final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
-            contentView.setAdapter(mainPageAdaptor);
+            // Load the fragment for the Main Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            //bundle.put("some_int", 0);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, MainPageFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("MainPage") // Name can be null
+                    .commit();
         }
         // else we need to load the SignIn Activity
         else {
@@ -183,6 +196,9 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                 ImageView button = view.findViewById(R.id.cardImage);
+                Bundle bundle;
+                FragmentManager fragmentManager;
+
                 // Handle the position in the grid
                 switch (position) {
                     case 0:
@@ -195,9 +211,17 @@ public class MainActivity extends AppCompatActivity {
                                 button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.home));
                             }
                         }, 500);
-                        // Set the adaptor with the current main page
-                        final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
-                        contentView.setAdapter(mainPageAdaptor);
+                        // Load the fragment for the Main Page
+                        // Create a new bundle for passed data
+                        bundle = new Bundle();
+                        //bundle.put("some_int", 0);
+
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.contentView, MainPageFragment.class, bundle)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("MainPage") // Name can be null
+                                .commit();
                         break;
                     case 1:
                         // change the color of the current image view button
@@ -209,9 +233,17 @@ public class MainActivity extends AppCompatActivity {
                                 button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.calendar));
                             }
                         }, 500);
-                        // Set the adaptor with the current main page
-                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-                        contentView.setAdapter(examPageAdaptor);
+                        // Load the fragment for the Exam Page
+                        // Create a new bundle for passed data
+                        bundle = new Bundle();
+                        //bundle.put("some_int", 0);
+
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.contentView, TestPageFragment.class, bundle)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("ExamManager") // Name can be null
+                                .commit();
                         break;
                     case 2:
                         // change the color of the current image view button
@@ -223,9 +255,18 @@ public class MainActivity extends AppCompatActivity {
                                 button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.reminder_bell));
                             }
                         }, 500);
-                        // Change to RemindersActivity if remindersButton clicked
-                        final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
-                        contentView.setAdapter(reminderPageAdaptor);
+                        // Load the fragment for the Reminder Page
+                        // Create a new bundle for passed data
+                        bundle = new Bundle();
+                        //bundle.put("some_int", 0);
+
+                        fragmentManager = getSupportFragmentManager();
+                        fragmentManager.beginTransaction()
+                                .replace(R.id.contentView, ReminderPageFragment.class, bundle)
+                                .setReorderingAllowed(true)
+                                .addToBackStack("ReminderManager") // Name can be null
+                                .commit();
+
                         break;
                         // Test case for logout in Navigation bar
                     case 3:

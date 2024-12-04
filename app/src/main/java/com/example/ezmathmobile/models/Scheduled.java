@@ -1,15 +1,12 @@
 package com.example.ezmathmobile.models;
 
 import android.util.Log;
-import android.widget.Toast;
 
-import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
 import com.example.ezmathmobile.utilities.Constants;
 import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.QueryDocumentSnapshot;
 
+import java.io.Serializable;
 import java.util.Date;
 import java.util.HashMap;
 
@@ -17,7 +14,7 @@ import java.util.HashMap;
  * This is the Scheduled Exam object
  * Extends comparable to be used in sorting
  */
-public class Scheduled implements Comparable {
+public class Scheduled implements Comparable, Serializable {
     // Private variables
     public String id, name, examid, userid;
     public Timestamp date;
