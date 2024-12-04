@@ -77,7 +77,6 @@ public class TestAddFragment extends Fragment {
             testID = test.getId();
         }
         else {
-            test = null;
             examDate = null;
             testID = null;
         }
@@ -87,7 +86,6 @@ public class TestAddFragment extends Fragment {
             examTimes = exam.getTimes();
         }
         else {
-            exam = null;
             examName = null;
             examTimes = null;
         }
@@ -289,26 +287,45 @@ public class TestAddFragment extends Fragment {
         loading(true);
         // Initialize the database
         FirebaseFirestore database = FirebaseFirestore.getInstance();
-        // Add to the database the new HashMap
+
+        // Check for duplicate exam entries
         database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
-                .add(test)
-                .addOnSuccessListener(queryDocument -> {
-                    showToast("Test Added");
-                    loading(false);
-                    // Update the preferences
-                    updatePreferences(binding);
-                    // Update the dependent collections
-                    queryDocument.get().addOnSuccessListener(documentSnapshot -> {
-                        Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
-                        scheduled.setId(documentSnapshot.getId());
-                        if (scheduled != null) scheduled.syncCollections();
-                    });
-                    // Redirect to the Main test page
-                    redirect();
+                .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_EXAMID,test.get(Constants.Scheduled.KEY_SCHEDULED_EXAMID))
+                .whereEqualTo(Constants.Scheduled.KEY_SCHEDULED_DATE,(Timestamp)test.get(Constants.Scheduled.KEY_SCHEDULED_DATE))
+                .whereEqualTo(Constants.User.KEY_USERID,test.get(Constants.User.KEY_USERID))
+                .get()
+                .addOnSuccessListener(queryDocumentSnapshots -> {
+                    if (!queryDocumentSnapshots.getDocuments().isEmpty()) {
+                        showToast("Exam is already scheduled on this date");
+                        loading(false);
+                    }
+                    else {
+                        // Add to the database the new HashMap
+                        database.collection(Constants.Scheduled.KEY_COLLECTION_SCHEDULED)
+                                .add(test)
+                                .addOnSuccessListener(queryDocument -> {
+                                    showToast("Test Added");
+                                    loading(false);
+                                    // Update the preferences
+                                    updatePreferences(binding);
+                                    // Update the dependent collections
+                                    queryDocument.get().addOnSuccessListener(documentSnapshot -> {
+                                        Scheduled scheduled = documentSnapshot.toObject(Scheduled.class);
+                                        scheduled.setId(documentSnapshot.getId());
+                                        if (scheduled != null) scheduled.syncCollections();
+                                    });
+                                    // Redirect to the Main test page
+                                    redirect();
+                                })
+                                .addOnFailureListener(exception -> {
+                                    loading(false);
+                                    showToast(exception.getMessage());
+                                });
+                    }
                 })
                 .addOnFailureListener(exception -> {
+                    showToast("Database Collection Exception: " + exception.getMessage());
                     loading(false);
-                    showToast(exception.getMessage());
                 });
     }
 
@@ -398,9 +415,6 @@ public class TestAddFragment extends Fragment {
                 .setReorderingAllowed(true)
                 .addToBackStack("ReminderManager") // Name can be null
                 .commit();
-//        // Set the adaptor with the current main page
-//        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-//        contentView.setAdapter(examPageAdaptor);
     }
 
     /**
