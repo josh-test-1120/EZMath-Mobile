@@ -12,6 +12,7 @@ import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Calendar;
 import java.util.Collections;
 import java.util.Date;
@@ -241,7 +242,7 @@ public class TimeConverter {
                 // Convert Date to LocalDate
                 LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
                 // Get the integer month
-                String month = localDate.getMonth().toString();
+                String month = localDate.getMonth().toString() + localDate.getYear();
                 // Get the List from the Map
                 groupedNotifications = monthlyNotifications.get(month);
                 // Ensure the list exists
@@ -256,18 +257,47 @@ public class TimeConverter {
         // Get the months and sort them
         Set<String> months = monthlyNotifications.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
+        List<String> years2025 = new ArrayList<>();
         Collections.sort(monthsSorted);
+        Log.d("TimeConverter: sortByMonth -> Year check", monthsSorted.toString());
+
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order
+        // Handle 2024
         for (String month : monthsSorted) {
-            // Get the List from the Map
-            groupedNotifications = monthlyNotifications.get(month);
-            // Convert timestamp into date
-            if (groupedNotifications != null) Collections.sort(groupedNotifications, Collections.reverseOrder());
-            // Put the list back into the hash map
-            sortedNotifications.put(month,groupedNotifications);
+            if (month.contains("2024")) {
+                // Get the List from the Map
+                groupedNotifications = monthlyNotifications.get(month);
+                // Convert timestamp into date
+                if (groupedNotifications != null) Collections.sort(groupedNotifications);
+                // Sanitize the year from the month
+                month = month.replace("2024", "");
+                // Put the list back into the hash map
+                sortedNotifications.put(month,groupedNotifications);
+            }
+            // Send to 2025 list
+            else years2025.add(month);
         }
+        // Sort the 2025 months in reverse order
+        Collections.sort(years2025, Collections.reverseOrder());
+        // Handle 2025
+        for (String month : years2025) {
+            if (month.contains("2025")) {
+                // Get the List from the Map
+                groupedNotifications = monthlyNotifications.get(month);
+                Log.d("TimeConverter: sortByMonth -> Group notifs", groupedNotifications.toString());
+                // Convert timestamp into date
+                if (groupedNotifications != null) Collections.sort(groupedNotifications);
+                // Sanitize the year from the month
+                month = month.replace("2025", "");
+                // Put the list back into the hash map
+                sortedNotifications.put(month,groupedNotifications);
+                //years2025.add(month);
+            }
+        }
+        Log.d("TimeConverter: sortByMonth -> Final sorted", sortedNotifications.keySet().toString());
+
         // return the sorted HashMap
         return sortedNotifications;
     }
@@ -291,7 +321,7 @@ public class TimeConverter {
                 // Convert Date to LocalDate
                 LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
                 // Get the integer month
-                String month = localDate.getMonth().toString();
+                String month = localDate.getMonth().toString() + localDate.getYear();
                 // Get the List from the Map
                 groupedScheduled = monthlyScheduled.get(month);
                 // Ensure the list exists
@@ -303,21 +333,50 @@ public class TimeConverter {
                 monthlyScheduled.put(month,groupedScheduled);
             }
         }
+
         // Get the months and sort them
         Set<String> months = monthlyScheduled.keySet();
         List<String> monthsSorted = new ArrayList<>(months);
+        List<String> years2025 = new ArrayList<>();
         Collections.sort(monthsSorted);
+        Log.d("TimeConverter: sortByMonthExams -> Year check", monthsSorted.toString());
 
         // Sort the collections and put them in a LinkedHashMap
         // to preserve order
+        // Handle 2024
         for (String month : monthsSorted) {
-            // Get the List from the Map
-            groupedScheduled = monthlyScheduled.get(month);
-            // Convert timestamp into date
-            if (groupedScheduled != null) Collections.sort(groupedScheduled, Collections.reverseOrder());
-            // Put the list back into the hash map
-            sortedScheduled.put(month,groupedScheduled);
+            if (month.contains("2024")) {
+                // Get the List from the Map
+                groupedScheduled = monthlyScheduled.get(month);
+                // Convert timestamp into date
+                if (groupedScheduled != null) Collections.sort(groupedScheduled);
+                // Sanitize the year from the month
+                month = month.replace("2024", "");
+                // Put the list back into the hash map
+                sortedScheduled.put(month,groupedScheduled);
+            }
+            // Send to 2025 list
+            else years2025.add(month);
         }
+        // Sort the 2025 months in reverse order
+        Collections.sort(years2025, Collections.reverseOrder());
+        // Handle 2025
+        for (String month : years2025) {
+            if (month.contains("2025")) {
+                // Get the List from the Map
+                groupedScheduled = monthlyScheduled.get(month);
+                Log.d("TimeConverter: sortByMonthExams -> Group notifs ", groupedScheduled.toString());
+                // Convert timestamp into date
+                if (groupedScheduled != null) Collections.sort(groupedScheduled);
+                // Sanitize the year from the month
+                month = month.replace("2025", "");
+                // Put the list back into the hash map
+                sortedScheduled.put(month,groupedScheduled);
+                //years2025.add(month);
+            }
+        }
+        Log.d("TimeConverter: sortByMonthExams -> Final sorted", sortedScheduled.keySet().toString());
+
         // return the sorted HashMap
         return sortedScheduled;
     }
