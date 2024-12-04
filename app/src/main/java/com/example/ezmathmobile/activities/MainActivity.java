@@ -29,12 +29,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 import androidx.fragment.app.FragmentContainerView;
 import androidx.fragment.app.FragmentManager;
-import androidx.recyclerview.widget.RecyclerView;
-
-import com.example.ezmathmobile.adaptors.ExamPageAdaptor;
-import com.example.ezmathmobile.adaptors.MainPageAdaptor;
 import com.example.ezmathmobile.adaptors.NavigationAdaptor;
-import com.example.ezmathmobile.adaptors.ReminderPageAdaptor;
 import com.example.ezmathmobile.R;
 import com.example.ezmathmobile.fragments.MainPageFragment;
 import com.example.ezmathmobile.fragments.ReminderPageFragment;
@@ -44,18 +39,12 @@ import com.example.ezmathmobile.utilities.Constants;
 import com.example.ezmathmobile.utilities.PreferenceManager;
 
 import com.example.ezmathmobile.utilities.TimeCheckReceiver;
-import com.example.ezmathmobile.utilities.TimeConverter;
-import com.firebase.ui.firestore.FirestoreRecyclerOptions;
-import com.google.firebase.Timestamp;
-import com.google.firebase.firestore.DocumentSnapshot;
 
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
-import java.util.List;
-import java.util.Objects;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -121,9 +110,17 @@ public class MainActivity extends AppCompatActivity {
 
         // If logged in, we have enough information to load the main page
         if (loggedIn) {
-//            // Set the adaptor with the current main page
-//            final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
-//            contentView.setAdapter(mainPageAdaptor);
+            // Load the fragment for the Main Page
+            // Create a new bundle for passed data
+            Bundle bundle = new Bundle();
+            //bundle.put("some_int", 0);
+
+            FragmentManager fragmentManager = getSupportFragmentManager();
+            fragmentManager.beginTransaction()
+                    .replace(R.id.contentView, MainPageFragment.class, bundle)
+                    .setReorderingAllowed(true)
+                    .addToBackStack("MainPage") // Name can be null
+                    .commit();
         }
         // else we need to load the SignIn Activity
         else {
@@ -225,10 +222,6 @@ public class MainActivity extends AppCompatActivity {
                                 .setReorderingAllowed(true)
                                 .addToBackStack("MainPage") // Name can be null
                                 .commit();
-
-//                        // Set the adaptor with the current main page
-//                        final MainPageAdaptor mainPageAdaptor = new MainPageAdaptor();
-//                        contentView.setAdapter(mainPageAdaptor);
                         break;
                     case 1:
                         // change the color of the current image view button
@@ -251,9 +244,6 @@ public class MainActivity extends AppCompatActivity {
                                 .setReorderingAllowed(true)
                                 .addToBackStack("ExamManager") // Name can be null
                                 .commit();
-//                        // Set the adaptor with the current main page
-//                        final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-//                        contentView.setAdapter(examPageAdaptor);
                         break;
                     case 2:
                         // change the color of the current image view button
@@ -265,7 +255,7 @@ public class MainActivity extends AppCompatActivity {
                                 button.setImageDrawable(ContextCompat.getDrawable(button.getContext(), R.drawable.reminder_bell));
                             }
                         }, 500);
-                        // Load the fragment for the Exam Page
+                        // Load the fragment for the Reminder Page
                         // Create a new bundle for passed data
                         bundle = new Bundle();
                         //bundle.put("some_int", 0);
@@ -277,9 +267,6 @@ public class MainActivity extends AppCompatActivity {
                                 .addToBackStack("ReminderManager") // Name can be null
                                 .commit();
 
-//                        // Change to RemindersActivity if remindersButton clicked
-//                        final ReminderPageAdaptor reminderPageAdaptor = new ReminderPageAdaptor();
-//                        contentView.setAdapter(reminderPageAdaptor);
                         break;
                         // Test case for logout in Navigation bar
                     case 3:

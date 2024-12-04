@@ -40,6 +40,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Locale;
 
+/**
+ * This is the Test Add Fragment
+ */
 public class TestAddFragment extends Fragment {
     // These are the private variables
     // These are the objects in the view
@@ -58,10 +61,25 @@ public class TestAddFragment extends Fragment {
     private Boolean dateValid = false;
     private List<Timestamp> examTimes;
 
+    /**
+     * This is the default constructor
+     */
     public TestAddFragment() {
         super(R.layout.activity_test_add);
     }
 
+    /**
+     * Override for the onCreateView method
+     * @param inflater The LayoutInflater object that can be used to inflate
+     * any views in the fragment,
+     * @param container If non-null, this is the parent view that the fragment's
+     * UI should be attached to.  The fragment should not add the view itself,
+     * but this can be used to generate the LayoutParams of the view.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     *
+     * @return the View to be rendered
+     */
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container,
@@ -98,7 +116,12 @@ public class TestAddFragment extends Fragment {
         return super.onCreateView(inflater, container, savedInstanceState);
     }
 
-
+    /**
+     * Override for the onViewCreated method
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -106,12 +129,6 @@ public class TestAddFragment extends Fragment {
         ViewGroup parent = (ViewGroup) view.getParent();
         // Get the page context
         mainPageLayout = view.getContext();
-        // Initialize the variables
-//        if (test != null) {
-//            Log.d("Exam Add Test Object",test.toString());
-//            this.testID = test.getId();
-//        }
-//        else this.testID = null;
 
         this.examDateOrignal = examDate;
         if (this.examDate != null) Log.d("Exam Add Constructor Exam Date",this.examDate.toString());
@@ -159,9 +176,6 @@ public class TestAddFragment extends Fragment {
         // Setup the cancel button listener
         binding.buttonCancel.setOnClickListener(v -> {
             redirect();
-//            // Set the adaptor with the current main page
-//            final ExamPageAdaptor examPageAdaptor = new ExamPageAdaptor();
-//            contentView.setAdapter(examPageAdaptor);
         });
         // Set the listener for the exam name spinner
         binding.inputTestExam.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {

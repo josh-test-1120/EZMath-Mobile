@@ -32,6 +32,9 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 
+/**
+ * This is the Test Manager Page Fragment
+ */
 public class TestPageFragment extends Fragment {
     // These are the private variables
     // These are the objects in the view
@@ -46,10 +49,19 @@ public class TestPageFragment extends Fragment {
     private ViewGroup parent;
     private RecyclerView testContainer;
 
+    /**
+     * This is the default constructor
+     */
     public TestPageFragment() {
         super(R.layout.activity_test_manager);
     }
 
+    /**
+     * This is the onViewCreated override method
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
@@ -71,9 +83,7 @@ public class TestPageFragment extends Fragment {
         testContainer = view.findViewById(R.id.testContainer);
         // Set the binding for the add new schedule button
         binding.buttonAddTest.setOnClickListener(v -> {
-            // Set the adaptor with the current main page
-//            final ExamAddAdaptor examAddAdaptor = new ExamAddAdaptor();
-//            contentView.setAdapter(examAddAdaptor);
+            // Redirect to the Add Test Fragment
             redirectAddTest();
         });
         // Populate the view
@@ -166,6 +176,9 @@ public class TestPageFragment extends Fragment {
         }
     }
 
+    /**
+     * This is the method that will load the Test Add Fragment
+     */
     private void redirectAddTest() {
         // Load the fragment for the Exam Page
         // Create a new bundle for passed data

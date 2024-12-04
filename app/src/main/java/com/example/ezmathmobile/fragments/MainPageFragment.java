@@ -30,6 +30,9 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Objects;
 
+/**
+ * This is the Main Page Fragment
+ */
 public class MainPageFragment extends Fragment {
 
     // These are the private objects in the view
@@ -44,10 +47,19 @@ public class MainPageFragment extends Fragment {
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
 
+    /**
+     * This is the default constructor
+     */
     public MainPageFragment() {
         super(R.layout.main_container);
     }
 
+    /**
+     * This is the override for the onViewCreated method
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);

@@ -31,6 +31,9 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
+/**
+ * This is the Reminder Page Fragment
+ */
 public class ReminderPageFragment extends Fragment {
     // These are the private variables
     // These are the objects in the view
@@ -42,10 +45,19 @@ public class ReminderPageFragment extends Fragment {
     private Context mainPageLayout;
     private FragmentContainerView contentView;
 
+    /**
+     * This is the default constructor
+     */
     public ReminderPageFragment() {
         super(R.layout.activity_reminders);
     }
 
+    /**
+     * This is the onViewCreated override method
+     * @param view The View returned by {@link #onCreateView(LayoutInflater, ViewGroup, Bundle)}.
+     * @param savedInstanceState If non-null, this fragment is being re-constructed
+     * from a previous saved state as given here.
+     */
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
