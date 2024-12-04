@@ -68,7 +68,7 @@ public class ExamMonthAdaptor extends RecyclerView.Adapter<ExamMonthAdaptor.Exam
     public void onBindViewHolder(@NonNull ExamMonthViewHolder holder, int position) {
         Object[] keys = exams.keySet().toArray();
         String month = (String) keys[position];
-        if (position < exams.size()) holder.bindMonth(exams.get(month),month);
+        holder.bindMonth(exams.get(month),month);
     }
 
     /**
