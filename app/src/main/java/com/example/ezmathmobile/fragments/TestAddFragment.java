@@ -681,15 +681,4 @@ public class TestAddFragment extends Fragment {
             return false;
         });
     }
-
-//    /**
-//     * Using InputMethodManager we can hide the keyboard when clicked outside of the edit text fields
-//     */
-//    private void hideKeyboard() {
-//        InputMethodManager imm = (InputMethodManager) mainPageLayout.getSystemService(Context.INPUT_METHOD_SERVICE);
-//        View currentFocus = itemView.findFocus();
-//        if (imm != null && currentFocus != null) {
-//            imm.hideSoftInputFromWindow(currentFocus.getWindowToken(), 0);
-//        }
-//    }
 }
