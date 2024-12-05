@@ -168,6 +168,9 @@ public class TestAddFragment extends Fragment {
     private void onListeners() {
         // Setup the submit button listener
         binding.buttonSubmit.setOnClickListener(v -> {
+            Timestamp timestamp = multiplexDateAndTime();
+            Log.d("Exam Add Date Check", timestamp.toString());
+            Boolean valid = validateDate(timestamp);
             if (isValidExamDetails()) {
                 AddTest();
                 // Adding Green reminder to database
@@ -271,7 +274,7 @@ public class TestAddFragment extends Fragment {
         FirebaseFirestore database = FirebaseFirestore.getInstance();
         // Get the details from the preference manager
         String userID = preferenceManager.getString(Constants.User.KEY_USERID);
-        String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
+        //String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
         // Format for firebase object storage
         HashMap<String, Object> test = new HashMap<>();
         // Get the combined date and time
@@ -384,11 +387,11 @@ public class TestAddFragment extends Fragment {
     /**
      * This will multiplex the date and time into a single
      * timestamp
+     * @param dateString this is the string of the date to multiplex
      * @return a timestamp object of the date and time
      */
-    private Timestamp multiplexDateAndTime() {
-        // Get information from preferences
-        final String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
+    private Timestamp multiplexDateAndTime(String dateString) {
+        Log.d("Exam Add Date Stamp Inner",dateString);
         // Convert into strings for multiplexing of time and date into timestamp
         Timestamp dateStamp = TimeConverter.stringToTimestamp(dateString);
         String dateFormatted = TimeConverter.localizeDate(dateStamp);
@@ -398,6 +401,18 @@ public class TestAddFragment extends Fragment {
         String timeFormatted = TimeConverter.localizeTime(timeObject.getTime());
         // Combine the Strings into a multiplexed timestamp
         return TimeConverter.customStringToTimestamp(dateFormatted,timeFormatted);
+    }
+
+    /**
+     * This will multiplex the date and time into a single
+     * timestamp
+     * @return a timestamp object of the date and time
+     */
+    private Timestamp multiplexDateAndTime() {
+        Log.d("Exam Add Date Stamp Outer","");
+        // Get information from preferences
+        final String dateString = preferenceManager.getString(Constants.Scheduled.KEY_SCHEDULED_DATE);
+        return multiplexDateAndTime(dateString);
     }
 
     /**
@@ -513,26 +528,76 @@ public class TestAddFragment extends Fragment {
                 Log.d("CalendarSetup: ",month + " " + dayOfMonth);
                 Timestamp timestamp = TimeConverter.calendarInfoToTimestamp(dayOfMonth,
                         month, year);
-                // Iterate through the valid dates and see if it matches
-                Boolean valid = false;
-                for (Timestamp validTime : examTimes) {
-                    String date = TimeConverter.localizeDate(timestamp);
-                    String validDate = TimeConverter.localizeDate(validTime);
-                    Log.d("ExamAdaptor new Add:",date);
-                    Log.d("ExamAdaptor valid Add:",validDate);
-                    if (date.equals(validDate)) valid = true;
-                }
-                // Handle date check
-                if (valid) {
-                    // Update the preference manager
-                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
-                            TimeConverter.timestampToString(timestamp));
-                    dateValid = true;
-                }
-                // Otherwise set valid to false so validation can catch
-                else { dateValid = false; }
+                Boolean valid = validateDate(timestamp);
+
+//                // Iterate through the valid dates and see if it matches
+//                Boolean valid = false;
+//                for (Timestamp validTime : examTimes) {
+//                    String date = TimeConverter.localizeDate(timestamp);
+//                    String validDate = TimeConverter.localizeDate(validTime);
+//
+//                    // Multiplex the date and time
+//                    Timestamp dateTimestamp = multiplexDateAndTime(date);
+//
+//                    Log.d("ExamAdaptor new Add:",date);
+//                    Log.d("ExamAdaptor valid Add:",validDate);
+//                    // Ensure timestamps match and that it is not in the past
+//                    Log.d("TestAddFragment calendar date: ",dateTimestamp.toString());
+//                    Log.d("TestAddFragment calendar date: ",timestamp.toString());
+//                    if (date.equals(validDate) && dateTimestamp.toDate().after(new Date()))
+//                    {
+//                        valid = true;
+//                    }
+//                }
+//                // Handle date check
+//                if (valid) {
+//                    // Update the preference manager
+//                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
+//                            TimeConverter.timestampToString(timestamp));
+//                    dateValid = true;
+//                }
+//                // Otherwise set valid to false so validation can catch
+//                else { dateValid = false; }
             }
         });
+    }
+
+    private Boolean validateDate(Timestamp timestamp) {
+        // Iterate through the valid dates and see if it matches
+        Boolean valid = false;
+        for (Timestamp validTime : examTimes) {
+            String date = TimeConverter.localizeDate(timestamp);
+            String validDate = TimeConverter.localizeDate(validTime);
+
+            Log.d("Exam Add Test Date Submit",timestamp.toString());
+            // Convert the timestamp to string
+            String timestampString = TimeConverter.timestampToString(timestamp);
+            // Multiplex the date and time
+            Timestamp dateTimestamp = multiplexDateAndTime(timestampString);
+
+            Log.d("ExamAdaptor new Add:",date);
+            Log.d("ExamAdaptor valid Add:",validDate);
+            // Ensure timestamps match and that it is not in the past
+            Log.d("TestAddFragment calendar date: ",dateTimestamp.toString());
+            Log.d("TestAddFragment calendar date: ",timestamp.toString());
+            if (date.equals(validDate) && dateTimestamp.toDate().after(new Date()))
+            {
+                valid = true;
+            }
+        }
+        // Handle date check
+        if (valid) {
+            // Update the preference manager
+            preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
+                    TimeConverter.timestampToString(timestamp));
+            dateValid = true;
+        }
+        // Otherwise set valid to false so validation can catch
+        else {
+            showToast("This date is in the past");
+            dateValid = false;
+        }
+        return valid;
     }
 
     /**
