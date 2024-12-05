@@ -529,35 +529,6 @@ public class TestAddFragment extends Fragment {
                 Timestamp timestamp = TimeConverter.calendarInfoToTimestamp(dayOfMonth,
                         month, year);
                 Boolean valid = validateDate(timestamp);
-
-//                // Iterate through the valid dates and see if it matches
-//                Boolean valid = false;
-//                for (Timestamp validTime : examTimes) {
-//                    String date = TimeConverter.localizeDate(timestamp);
-//                    String validDate = TimeConverter.localizeDate(validTime);
-//
-//                    // Multiplex the date and time
-//                    Timestamp dateTimestamp = multiplexDateAndTime(date);
-//
-//                    Log.d("ExamAdaptor new Add:",date);
-//                    Log.d("ExamAdaptor valid Add:",validDate);
-//                    // Ensure timestamps match and that it is not in the past
-//                    Log.d("TestAddFragment calendar date: ",dateTimestamp.toString());
-//                    Log.d("TestAddFragment calendar date: ",timestamp.toString());
-//                    if (date.equals(validDate) && dateTimestamp.toDate().after(new Date()))
-//                    {
-//                        valid = true;
-//                    }
-//                }
-//                // Handle date check
-//                if (valid) {
-//                    // Update the preference manager
-//                    preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
-//                            TimeConverter.timestampToString(timestamp));
-//                    dateValid = true;
-//                }
-//                // Otherwise set valid to false so validation can catch
-//                else { dateValid = false; }
             }
         });
     }
