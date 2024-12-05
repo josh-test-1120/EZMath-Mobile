@@ -38,13 +38,14 @@ public class TimeConverter {
      * @param timestamp this is the timestamp to convert to local date
      */
     public static String localizeDate(final Timestamp timestamp) {
+        Log.d("TimeConverter: Timestamp->Date Start",timestamp.toString());
         // Convert timestamp into date
         Date date = timestamp.toDate();
         // Convert Date to LocalDate
         LocalDate localDate = LocalDate.ofInstant(date.toInstant(), ZoneId.systemDefault());
         // Convert LocalDate to date String and format it
         String dateString = localDate.format(DateTimeFormatter.ofPattern("MMM dd, yyyy").withLocale(Locale.US));
-        Log.d("TimeConverter: Timestamp->Date",dateString);
+        Log.d("TimeConverter: Timestamp->Date End",dateString);
         return dateString;
     }
 

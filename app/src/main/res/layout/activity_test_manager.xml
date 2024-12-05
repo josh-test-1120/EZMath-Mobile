@@ -23,7 +23,7 @@
             android:textStyle="bold"
             app:layout_constraintTop_toTopOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"/>
+            app:layout_constraintStart_toStartOf="parent" />
 
         <LinearLayout
             android:id="@+id/blueSeperator"
@@ -31,7 +31,7 @@
             android:layout_height="3dp"
             android:orientation="horizontal"
             app:layout_constraintTop_toBottomOf="@id/topText"
-            android:background="@drawable/redseparator"/>
+            android:background="@drawable/redseparator" />
 
         <androidx.recyclerview.widget.RecyclerView
             android:id="@+id/testContainer"
