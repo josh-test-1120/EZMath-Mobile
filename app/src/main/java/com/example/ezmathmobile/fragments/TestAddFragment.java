@@ -60,6 +60,7 @@ public class TestAddFragment extends Fragment {
     private ExamNameAdaptor examNameAdaptor;
     private ExamTimeAdaptor examTimeAdaptor;
     private Boolean dateValid = false;
+    private Boolean datePast = false;
     private List<Timestamp> examTimes;
 
     /**
@@ -171,7 +172,7 @@ public class TestAddFragment extends Fragment {
             Timestamp timestamp = multiplexDateAndTime();
             Log.d("Exam Add Date Check", timestamp.toString());
             Boolean valid = validateDate(timestamp);
-            if (isValidExamDetails()) {
+            if (isValidExamDetails() && datePast) {
                 AddTest();
                 // Adding Green reminder to database
                 AddReminder();
@@ -453,6 +454,7 @@ public class TestAddFragment extends Fragment {
      */
     private Boolean isValidExamDetails() {
         if (!dateValid) {
+            if (datePast) showToast("This date is in the past");
             showToast("Please select a valid date");
             return false;
         } else if (binding.inputTestExam.getAdapter().getCount() == 0) {
@@ -562,10 +564,11 @@ public class TestAddFragment extends Fragment {
             preferenceManager.putString(Constants.Scheduled.KEY_SCHEDULED_DATE,
                     TimeConverter.timestampToString(timestamp));
             dateValid = true;
+            datePast = false;
         }
         // Otherwise set valid to false so validation can catch
         else {
-            showToast("This date is in the past");
+            datePast = true;
             dateValid = false;
         }
         return valid;
