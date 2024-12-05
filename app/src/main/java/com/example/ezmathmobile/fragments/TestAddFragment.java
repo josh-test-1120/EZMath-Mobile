@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.CalendarView;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -46,7 +47,7 @@ import java.util.Locale;
 public class TestAddFragment extends Fragment {
     // These are the private variables
     // These are the objects in the view
-    private ConstraintLayout layoutAddExam;
+    private ScrollView layoutAddExam;
     // Dependency Objects
     private PreferenceManager preferenceManager;
     private FirebaseFirestore database;
