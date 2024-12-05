@@ -31,8 +31,10 @@
         android:layout_width="match_parent"
         android:layout_height="2dp"
         android:orientation="horizontal"
+        android:layout_marginHorizontal="50dp"
+        android:background="@drawable/whiteseparator"
         app:layout_constraintTop_toBottomOf="@+id/monthLayout"
-        android:background="@drawable/whiteseparator"/>
+        app:layout_constraintStart_toStartOf="parent"/>
 
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/notificationsView"

@@ -45,6 +45,7 @@ import com.makeramen.roundedimageview.RoundedImageView;
 
 import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.Date;
 
 /**
  * This is the Main Activity view that implements PosterListener
@@ -296,10 +297,12 @@ public class MainActivity extends AppCompatActivity {
      * into the home page
      */
     private void loadUserDetails() {
-        byte[] bytes = Base64.decode(preferenceManager.getString(Constants.User.KEY_IMAGE),Base64.DEFAULT);
-        Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
-        Log.d("Image Info:",preferenceManager.getString(Constants.User.KEY_IMAGE));
-        imageProfile.setImageBitmap(bitmap);
+        if (preferenceManager.getString(Constants.User.KEY_IMAGE) != null) {
+            byte[] bytes = Base64.decode(preferenceManager.getString(Constants.User.KEY_IMAGE),Base64.DEFAULT);
+            Bitmap bitmap = BitmapFactory.decodeByteArray(bytes,0,bytes.length);
+            Log.d("Image Info:",preferenceManager.getString(Constants.User.KEY_IMAGE));
+            imageProfile.setImageBitmap(bitmap);
+        }
     }
 
     /**
